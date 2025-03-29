@@ -28,18 +28,21 @@ export const AcmeLogo = () => {
   );
 };
 
-export default function App() {
+export default function Header() {
   return (
-    <NavbarComponent isBordered maxWidth="2xl">
+    <NavbarComponent className="bg-mono_100" maxWidth="2xl">
       <NavbarContent justify="start">
         <NavbarBrand className="">
-          <h1 className="hidden sm:block text-2xl font-bold text-inherit">
+          <h1 className="hidden sm:block text-2xl font-black font-point text-mono_600 text-inherit">
             Gym<span className="text-main">M</span>ate
           </h1>
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent className="gap-10" justify="end">
-        <NavbarContent className="hidden sm:flex gap-6" justify="end">
+        <NavbarContent
+          className="hidden font-semibold text-mono_600 sm:flex gap-8"
+          justify="end"
+        >
           <NavbarItem>
             <Link color="foreground" href="#">
               PT정보
@@ -53,6 +56,11 @@ export default function App() {
           <NavbarItem>
             <Link color="foreground" href="#">
               나의운동
+            </Link>
+          </NavbarItem>
+          <NavbarItem>
+            <Link color="foreground" href="#">
+              헬스용품
             </Link>
           </NavbarItem>
         </NavbarContent>

@@ -44,7 +44,7 @@ export const hero_ui_config = {
         warning: { foreground: '#FAFAF9', DEFAULT: '#f5a524' },
         danger: { foreground: '#FAFAF9', DEFAULT: '#f31260' },
         primary: { foreground: '#FAFAF9', DEFAULT: '#aa2e3f' },
-        background: '#000000',
+        background: '#202020',
         foreground: '#ffffff',
         mono_000: '#000000',
         mono_050: '#141414',
