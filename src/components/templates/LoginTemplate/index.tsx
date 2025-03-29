@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, Fragment } from 'react';
+
 import LoginTab from '@/app/login/components/LoginTab';
 import SocialLoginButton from '@/app/login/components/SocialLoginButton';
 import HomeLink from '@/app/login/components/HomeLink';
@@ -43,16 +44,16 @@ const LoginTemplate = () => {
         ) : (
           <Fragment>
             <ProgressBar
-              percent={progress}
               showValueLabel
               className="w-[452px] h-2 rounded-full"
+              percent={progress}
             />
             {step === 1 ? (
               <Step1Form
-                setFormData={setFormData}
-                setStep={setStep}
                 birth={birth}
                 setBirth={setBirth}
+                setFormData={setFormData}
+                setStep={setStep}
               />
             ) : (
               <Step2Form
