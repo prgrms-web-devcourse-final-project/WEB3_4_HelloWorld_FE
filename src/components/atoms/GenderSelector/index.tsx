@@ -1,9 +1,10 @@
 'use client';
 
 import { RadioGroup } from '@headlessui/react';
-import { useState } from 'react';
 
 interface GenderSelectorProps {
+  selectedGender: string;
+  setSelectedGender: (gender: string) => void;
   width?: string;
   height?: string;
   marginBottom?: string;
@@ -12,14 +13,14 @@ interface GenderSelectorProps {
 const genderOptions = ['남성', '여성'];
 
 const GenderSelector = ({
+  selectedGender,
+  setSelectedGender,
   width = '214px',
   height = '40px',
   marginBottom = '60px',
 }: GenderSelectorProps) => {
-  const [selectedGender, setSelectedGender] = useState('남성');
-
   return (
-    <div className="flex flex-col gap-2 mb-6">
+    <div className="flex flex-col gap-2" style={{ marginBottom }}>
       <label className="text-sm font-medium">
         성별 <span className="text-main">*</span>
       </label>
@@ -28,7 +29,6 @@ const GenderSelector = ({
         value={selectedGender}
         onChange={setSelectedGender}
         className="flex gap-6"
-        style={{ marginBottom }}
       >
         {genderOptions.map((gender) => (
           <RadioGroup.Option

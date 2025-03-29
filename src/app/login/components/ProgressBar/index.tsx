@@ -28,7 +28,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       <span
         className={`text-sm font-medium text-mono_700 ${
           percent === 100
-            ? 'absolute right-[390px] top-[12px]'
+            ? 'absolute right-[520px] top-[12px]'
             : 'self-center text-center'
         }`}
       >

@@ -1,25 +1,35 @@
 'use client';
 
-import { useState, Fragment } from 'react';
-
-import LoginTab from '@/app/login/components/LoginTab';
-import SocialLoginButton from '@/app/login/components/SocialLoginButton';
-import HomeLink from '@/app/login/components/HomeLink';
-import Step1Form from '@/components/templates/LoginTemplate/UserLoginOne';
-import Step2Form from '@/components/templates/LoginTemplate/UserLoginTwo';
-import ProgressBar from '@/app/login/components/ProgressBar';
-import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
+import { useState, useEffect } from 'react';
+import StepZero from '@/components/molecules/LoginTemplatesForm/StepZero';
+import StepUser from '@/components/molecules/LoginTemplatesForm/StepUser';
+import StepTrainer from '@/components/molecules/LoginTemplatesForm/StepTrainer';
+import ProgressWrapper from '@/components/molecules/LoginTemplatesForm/ProgressWrapper';
 
 const LoginTemplate = () => {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({});
   const [birth, setBirth] = useState('');
+  const [selectedTab, setSelectedTab] = useState<'user' | 'trainer'>('user');
+  const [selectedTrainerRole, setSelectedTrainerRole] = useState<
+    'owner' | 'trainer' | null
+  >(null);
+  const [progress, setProgress] = useState(0);
 
-  const progress = step === 1 ? 50 : step === 2 ? 100 : 0;
+  const handleSocialLogin = () => setStep(1);
 
-  const handleKakaoLogin = () => {
-    setStep(1);
+  const handleSelectTrainerRole = (role: 'owner' | 'trainer') => {
+    setSelectedTrainerRole(role);
+    setStep(2);
   };
+
+  useEffect(() => {
+    if (selectedTab === 'trainer') {
+      setProgress(step === 2 ? 100 : step === 1 ? 50 : 0);
+    } else {
+      setProgress(step === 2 ? 100 : step === 1 ? 50 : 0);
+    }
+  }, [selectedTab, step]);
 
   return (
     <div className="w-full flex justify-center">
@@ -29,41 +39,37 @@ const LoginTemplate = () => {
         </h1>
 
         {step === 0 ? (
-          <Fragment>
-            <LoginTab />
-            <div className="flex flex-col gap-y-[45px]">
-              <SocialLoginButton type="kakao" onClick={handleKakaoLogin} />
-              <SocialLoginButton type="naver" />
-              <SocialLoginButton type="google" />
-              <SocialLoginButton type="apple" />
-            </div>
-            <p className="text-sm text-mono_400">
-              Thank you for using it. <HomeLink />
-            </p>
-          </Fragment>
+          <StepZero
+            selectedTab={selectedTab}
+            setSelectedTab={(tab) => {
+              setSelectedTab(tab);
+              setSelectedTrainerRole(null);
+              setStep(0);
+            }}
+            onSocialLogin={handleSocialLogin}
+          />
         ) : (
-          <Fragment>
-            <ProgressBar
-              showValueLabel
-              className="w-[452px] h-2 rounded-full"
-              percent={progress}
-            />
-            {step === 1 ? (
-              <Step1Form
+          <ProgressWrapper progress={progress}>
+            {selectedTab === 'user' ? (
+              <StepUser
+                step={step}
+                setStep={setStep}
+                formData={formData}
+                setFormData={setFormData}
                 birth={birth}
                 setBirth={setBirth}
-                setFormData={setFormData}
-                setStep={setStep}
               />
             ) : (
-              <Step2Form
+              <StepTrainer
+                step={step}
                 formData={formData}
                 setFormData={setFormData}
                 setStep={setStep}
+                selectedTrainerRole={selectedTrainerRole}
+                setSelectedTrainerRole={handleSelectTrainerRole}
               />
             )}
-            <ReturnHomeMessage />
-          </Fragment>
+          </ProgressWrapper>
         )}
       </div>
     </div>
