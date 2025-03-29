@@ -6,6 +6,7 @@ import AddressInput from '@/components/molecules/AddressInput';
 import ExerciseInputs from '@/components/molecules/ExerciseInputs';
 import CustomButton from '@/app/login/components/CustomButton';
 import GenderSelector from '@/components/atoms/GenderSelector';
+import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
 interface UserInfoFormProps {
   setFormData: React.Dispatch<React.SetStateAction<any>>;
   formData: any;
@@ -37,16 +38,26 @@ const UserInfoForm = ({
       onSubmit={handleSubmit}
       className="flex flex-col items-center w-full mt-[25px]"
     >
-      <GenderSelector marginBottom="30px" />
+      <GenderSelector
+        selectedGender={selectedGender}
+        setSelectedGender={setSelectedGender}
+        marginBottom="50px"
+      />
       <MeasurementInputs />
       <AddressInput />
       <ExerciseInputs />
 
       <div>
-        <CustomButton type="submit" width="452px" height="48px">
+        <CustomButton
+          type="submit"
+          width="452px"
+          height="48px"
+          className="mb-[20px]"
+        >
           완료하기
         </CustomButton>
       </div>
+      <ReturnHomeMessage />
     </form>
   );
 };
