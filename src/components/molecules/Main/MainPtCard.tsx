@@ -17,7 +17,7 @@ export default function MainPtCard({
 }: MainPtCardProps) {
   return (
     <div
-      className={`pt-card m-2 transform perspective-[800px] max-w-fit cursor-pointer group ${className}`}
+      className={`pt-card m-2 transform perspective-[800px] antialiased max-w-fit cursor-pointer group ${className}`}
       style={{ transformStyle: 'preserve-3d' }}
     >
       <div
@@ -40,18 +40,18 @@ export default function MainPtCard({
         <div
           className="
             p-5 w-full absolute bottom-0 text-white transform translate-y-[20%]
-            transition duration-600 delay-500 ease-[cubic-bezier(0.215,0.61,0.355,1)]
+            transition duration-600  ease-[cubic-bezier(0.215,0.61,0.355,1)]
             group-hover:transform group-hover:translate-y-0
             after:content-[''] after:absolute after:top-0 after:left-0 after:z-0
             after:w-full after:h-full after:rounded-lg
             after:backdrop-blur-md after:from-transparent after:to-[rgba(0,0,0,0.8)]
             after:opacity-0 after:transform after:translate-y-full
-            after:transition after:duration-500 after:ease-out
+            after:transition after:duration-300 after:ease-out
             group-hover:after:opacity-100 group-hover:after:transform group-hover:after:translate-y-0
           "
         >
           <div className="flex  py-1 items-center justify-between">
-            <h1 className="text-medium font-semibold text-shadow-[0_10px_10px_rgba(0,0,0,0.5)] relative z-[1]">
+            <h1 className="text-lg font-semibold text-shadow-[0_10px_10px_rgba(0,0,0,0.5)] relative z-[1]">
               {title}
             </h1>
             <div className="z-10 flex items-center mb-1 gap-1">
@@ -62,23 +62,25 @@ export default function MainPtCard({
           <div
             className="
               opacity-0 h-0 text-shadow-[0_2px_3px_rgba(0,0,0,1)]
-              transition duration-300 delay-300 ease-[cubic-bezier(0.215,0.61,0.355,1)]
+              transition duration-700 delay-500 ease-[cubic-bezier(0.215,0.61,0.355,1)]
               relative z-[1]
               group-hover:opacity-100 group-hover:h-full
             "
           >
-            <div className=" w-full flex flex-col items-start">
-              <div className="w-full ">
-                <p className="pb-2 ">수상이력</p>
+            <div className=" w-full py-3 flex flex-col items-start">
+              <div className="w-full py-2">
+                <p className="pb-2 font-semibold text-base text-stone-300">
+                  수상이력
+                </p>
                 <div className=" w-full flex flex-col items-start">
                   <p>어떤 트레이너 대회 우승</p>
                   <p>어떤 트레이너 대회 우승</p>
                   <p>어떤 트레이너 대회 우승</p>
                 </div>
               </div>
-              <div className="w-full ">
-                <p className="pb-2 ">소개</p>
-                <div className="px-2 py-2 w-full  rounded-lg bg-stone-900/30">
+              <div className="w-full py-2 ">
+                <p className="pb-2 font-semibold text-stone-300 ">소개</p>
+                <div className="px-2 line-clamp-3 py-2 w-full  rounded-lg bg-stone-900/30">
                   {content}
                 </div>
               </div>
