@@ -8,7 +8,17 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
 
-const TrainerLoginForm = () => {
+interface TrainerLoginFormProps {
+  formData: Record<string, any>;
+  setFormData: (data: Record<string, any>) => void;
+  setStep: (step: number) => void;
+}
+
+const TrainerLoginForm = ({
+  formData,
+  setFormData,
+  setStep,
+}: TrainerLoginFormProps) => {
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
 
@@ -24,6 +34,8 @@ const TrainerLoginForm = () => {
     };
 
     console.log('트레이너 전송 데이터:', finalData);
+
+    setFormData(finalData);
   };
 
   return (
