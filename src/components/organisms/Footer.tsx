@@ -2,7 +2,7 @@
 
 export default function Footer() {
   return (
-    <footer className=" absolute bottom-0 text-gray-300 w-full ">
+    <footer className="   text-gray-300 w-full ">
       <div className="h-48 bg-mono_100" />
       <div className="bg-[#202020]">
         <div className="max-w-screen-2xl  container mx-auto py-10 px-6">
@@ -16,7 +16,7 @@ export default function Footer() {
                 <span className="font-semibold">GymMate</span>{' '}
               </p>
             </div>
-            <div className="flex  gap-x-2">
+            <div className="md:flex hidden gap-x-2">
               <ul className="flex gap-x-16 items-start">
                 <li className="flex flex-col justify-center gap-y-2 items-center">
                   <div>

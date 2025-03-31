@@ -6,8 +6,7 @@ import { Providers } from './providers';
 
 import { siteConfig } from '@/config/site';
 import { fontSans, paperlogy, pretendard } from '@/config/fonts';
-import Navbar from '@/components/templates/navbar';
-import Footer from '@/components/templates/footer';
+import MainLayout from '@/components/templates/LoginTemplate/MainLayout';
 
 export const metadata: Metadata = {
   title: {
@@ -37,18 +36,16 @@ export default function RootLayout({
       <head />
       <body
         className={clsx(
-          'min-h-screen bg-background font-pretendard antialiased',
+          ' bg-background font-pretendard w-full antialiased',
           fontSans.variable,
           pretendard.variable,
           paperlogy.variable,
         )}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
-          <Navbar />
-          <main className="container mx-auto max-w-screen-2xl pt-16 px-6 flex-grow">
-            {children}
-          </main>
-          <Footer />
+          <MainLayout>
+            <div className="w-full h-full">{children}</div>
+          </MainLayout>
         </Providers>
       </body>
     </html>
