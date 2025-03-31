@@ -19,5 +19,8 @@ export default {
     },
   },
   darkMode: 'class',
-  plugins: [heroui(hero_ui_config)],
+  plugins: [
+    heroui(hero_ui_config),
+    require('tailwind-scrollbar')({ nocompatible: true }),
+  ],
 };
