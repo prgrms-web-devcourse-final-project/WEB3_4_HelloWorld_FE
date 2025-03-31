@@ -2,7 +2,7 @@ import { useState } from 'react';
 import InputField from '@/app/login/components/InputField';
 import BirthdayInputGroup from '@/components/molecules/BirthdayInputGroup';
 import CustomButton from '@/app/login/components/CustomButton';
-
+import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
 interface Step1FormProps {
   setFormData: React.Dispatch<React.SetStateAction<any>>;
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -59,9 +59,15 @@ export default function Step1Form({ setFormData, setStep }: Step1FormProps) {
 
       <BirthdayInputGroup onBirthChange={setBirth} />
 
-      <CustomButton type="submit" width="452px" height="48px">
+      <CustomButton
+        type="submit"
+        width="452px"
+        height="48px"
+        className="mb-[20px]"
+      >
         다음으로
       </CustomButton>
+      <ReturnHomeMessage />
     </form>
   );
 }
