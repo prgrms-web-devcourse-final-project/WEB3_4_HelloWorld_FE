@@ -1,6 +1,6 @@
 'use client';
-
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/stores/authStore';
 import StepZero from '@/components/molecules/LoginTemplatesForm/StepZero';
 import StepUser from '@/components/molecules/LoginTemplatesForm/StepUser';
 import StepTrainer from '@/components/molecules/LoginTemplatesForm/StepTrainer';
@@ -16,20 +16,24 @@ const LoginTemplate = () => {
   >(null);
   const [progress, setProgress] = useState(0);
 
-  const handleSocialLogin = () => setStep(1);
+  const { isLoggedIn, handleLogin } = useAuthStore();
 
-  const handleSelectTrainerRole = (role: 'owner' | 'trainer') => {
-    setSelectedTrainerRole(role);
-    setStep(2);
+  // 로그인 상태가 이미 true면 로그인 페이지 대신 메인 등으로 리다이렉션할 수 있음.
+  useEffect(() => {
+    if (isLoggedIn) {
+      window.location.href = '/'; // 예: 메인 페이지로 이동
+    }
+  }, [isLoggedIn]);
+
+  // StepZero에서 소셜 로그인 버튼 클릭 시 호출되는 함수.
+  // 선택된 탭에 따라 'MEMBER' 또는 'TRAINER' 역할을 전달.
+  const handleSocialLogin = (role: 'MEMBER' | 'TRAINER') => {
+    handleLogin(role);
   };
 
   useEffect(() => {
-    if (selectedTab === 'trainer') {
-      setProgress(step === 2 ? 100 : step === 1 ? 50 : 0);
-    } else {
-      setProgress(step === 2 ? 100 : step === 1 ? 50 : 0);
-    }
-  }, [selectedTab, step]);
+    setProgress(step === 2 ? 100 : step === 1 ? 50 : 0);
+  }, [step]);
 
   return (
     <div className="w-full flex justify-center">
@@ -66,7 +70,7 @@ const LoginTemplate = () => {
                 setFormData={setFormData}
                 setStep={setStep}
                 selectedTrainerRole={selectedTrainerRole}
-                setSelectedTrainerRole={handleSelectTrainerRole}
+                setSelectedTrainerRole={setSelectedTrainerRole}
               />
             )}
           </ProgressWrapper>

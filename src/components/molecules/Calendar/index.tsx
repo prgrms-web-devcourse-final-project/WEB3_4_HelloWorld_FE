@@ -34,18 +34,23 @@ const Calendar = () => {
   };
 
   return (
-    <div style={{ width: 554, height: 408 }}>
-      <div className="flex justify-center items-center gap-2 mb-4">
+    <div
+      style={{
+        width: 554,
+        height: 408,
+      }}
+    >
+      <div className="flex justify-center items-center gap-6 mb-4">
         <button
           onClick={() => setCurrentMonth((prev) => prev.subtract(1, 'month'))}
         >
-          <ChevronLeftIcon className="w-5 h-5 text-black hover:text-gray-600" />
+          <ChevronLeftIcon className="w-5 h-5 text-mono_500 hover:text-mono_600" />
         </button>
         <div className="text-lg font-bold">
           {currentMonth.format('YYYY.MM')}
         </div>
         <button onClick={() => setCurrentMonth((prev) => prev.add(1, 'month'))}>
-          <ChevronRightIcon className="w-5 h-5 text-black hover:text-gray-600" />
+          <ChevronRightIcon className="w-5 h-5 text-mono_500 hover:text-mono_600" />
         </button>
       </div>
 
@@ -61,7 +66,7 @@ const Calendar = () => {
             className="h-16 flex flex-col items-center justify-center"
           >
             <div
-              className={`cursor-pointer text-sm ${day ? 'text-black' : 'text-transparent'}`}
+              className={`cursor-pointer text-sm ${day ? 'text-mono-500' : 'text-transparent'}`}
               onClick={() => handleClick(day)}
             >
               {day}
