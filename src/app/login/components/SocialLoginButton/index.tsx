@@ -1,3 +1,5 @@
+'use client';
+
 type SocialType = 'kakao' | 'naver' | 'google' | 'apple';
 
 interface Props {
