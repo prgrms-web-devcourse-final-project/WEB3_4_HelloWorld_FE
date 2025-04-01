@@ -16,6 +16,22 @@ export default {
         point: ['var(--font-paperlogy)'],
         subPoint: ['var(--font-samliphopang)'],
       },
+      keyframes: {
+        'move-forever': {
+          '0%': { transform: 'translate3d(-90px,0,0)' },
+          '100%': { transform: 'translate3d(85px,0,0)' },
+        },
+      },
+      animation: {
+        'wave-1':
+          'move-forever 7s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite -2s',
+        'wave-2':
+          'move-forever 10s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite -3s',
+        'wave-3':
+          'move-forever 13s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite -4s',
+        'wave-4':
+          'move-forever 20s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite -5s',
+      },
     },
   },
   darkMode: 'class',
