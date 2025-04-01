@@ -1,37 +1,67 @@
 'use client';
 
-import { useCalendarStore } from '@/stores/calendarStore';
-import dayjs from '@/utils/dayjsSetup';
-import { memo } from 'react';
-import ScrollContainerBox from '@/components/atoms/ScrollShadowBox';
+import Calendar from '@/components/molecules/Calendar';
+import CalenderView from '@/components/templates/ScheduleView/CalenderView';
+import CalendarSummaryCards from '@/app/myfitness/components/CalendarCards/CalenderCards';
+import ThreeLiftChartsTemplate from '@/components/molecules/Chart';
 
 const ScheduleView = () => {
-  const { selectedSchedules } = useCalendarStore();
+  //임시 데이터
+  const summaryData = [
+    { title: 'GymMate', value: '2500KG' },
+    {
+      title: '벤치 프레스 평균',
+      value: '2500KG',
+      icon: (
+        <img
+          src="/assets/icons/benchPress.svg"
+          alt="벤치 프레스"
+          width={32}
+          height={32}
+        />
+      ),
+    },
+    {
+      title: '데드리프트 평균',
+      value: '2500KG',
+      icon: (
+        <img
+          src="/assets/icons/deadlift.svg"
+          alt="데드리프트"
+          width={32}
+          height={32}
+        />
+      ),
+    },
+    {
+      title: '스쿼트 평균',
+      value: '2500KG',
+      icon: (
+        <img
+          src="/assets/icons/squat.svg"
+          alt="스쿼트"
+          width={32}
+          height={32}
+        />
+      ),
+    },
+  ];
 
   return (
-    <ScrollContainerBox>
-      <div className="flex flex-col gap-6">
-        {selectedSchedules.length > 0 ? (
-          selectedSchedules.map((schedule, idx) => (
-            <div key={`${schedule.date}-${idx}`}>
-              <p className="text-xl font-bold mb-1">
-                {dayjs(schedule.date).format('YYYY.MM.DD일 (dd)')}
-              </p>
-              <p className="bg-[#17c964] inline-block px-2 text-mono-100 rounded-sm text-xs mb-2">
-                {schedule.tag}
-              </p>
-              <h3 className="font-bold text-base mb-2">{schedule.title}</h3>
-              <p className="text-sm text-mono-500 whitespace-pre-wrap">
-                {schedule.description}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p className="text-mono-100">날짜를 클릭해 일정을 추가해보세요.</p>
-        )}
+    <div className="p-6">
+      <h2 className="font-point text-3xl ml-[20px] mb-[50px]">
+        오운했 일정보기
+      </h2>
+      <div className="flex gap-8">
+        <Calendar />
+        <CalenderView />
       </div>
-    </ScrollContainerBox>
+
+      <CalendarSummaryCards data={summaryData} />
+
+      <ThreeLiftChartsTemplate />
+    </div>
   );
 };
 
-export default memo(ScheduleView);
+export default ScheduleView;
