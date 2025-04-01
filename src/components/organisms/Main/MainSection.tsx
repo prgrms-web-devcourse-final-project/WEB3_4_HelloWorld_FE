@@ -22,11 +22,11 @@ export default function MainSectionTitle({
 }: MainSectionProps) {
   return (
     <Section>
-      <div className="flex justify-between  items-end lg:flex-row flex-col">
+      <div className="flex justify-between pb-[3vw] items-end lg:flex-row flex-col">
         <div className="flex flex-col gap-y-3 w-full mb-8 lg:mb-0">
           <p className="text-md font-semibold  text-mono_600">{subTitle}</p>
           <div>
-            <h2 className="text-4xl font-point pb-2 font-semibold text-mono_800">
+            <h2 className="text-4xl font-point hyphens-manual pb-2 font-semibold text-mono_800">
               {title}
             </h2>
             <span className="text-md font-medium text-mono_300">
@@ -47,7 +47,7 @@ export default function MainSectionTitle({
           </div>
         )}
       </div>
-      <section className="mt-8">{children}</section>
+      <section className="">{children}</section>
     </Section>
   );
 }

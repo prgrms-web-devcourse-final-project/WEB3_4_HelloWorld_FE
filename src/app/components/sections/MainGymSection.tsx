@@ -69,7 +69,7 @@ export default function MainGymSection() {
           />
           <MainGymCardItem
             className="w-full"
-            description="전문적으로 PT를 받고싶다면"
+            description={'전문적으로 PT를 받고싶다면'}
             icon={
               <MainMapIcon
                 borderColor="main"

@@ -3,64 +3,58 @@ import { ScrollTrigger } from 'gsap/all';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// interface ScrollTriggerOptions {
+//   trigger: string | Element;
+//   start: string;
+//   end?: string;
+//   scrub: number;
+//   animation: gsap.core.Tween;
+//   markers?: { startColor: string; endColor: string };
+// }
+
 class Animation {
   static layout = {
-    header: (target) => {
-      let trigger = '#visual';
-      const scrollTrigger = (target, option) => {
-        ScrollTrigger.create({
-          trigger: trigger,
-          start: 'top top',
-          scrub: 1,
-          animation: gsap.to(target, option),
-          markers: { startColor: '#111', endColor: '#111' },
-        });
-      };
-
-      scrollTrigger(target.current, {
-        // scaleX:"90%",
-        // scale: 0.7,
-        padding: '0 10vw',
-        // rotation: 1500,
-        // filter: "blur(50px)",
-        // opacity: 0
-      });
-    },
-    main: () => {
-      const scrollTrigger = (target, option) => {
-        ScrollTrigger.create({
-          trigger: '#main',
-          start: 'top top',
-          scrub: 1,
-          animation: gsap.to(target, option),
-          markers: { startColor: '#111', endColor: '#111' },
-        });
-      };
-
-      //   scrollTrigger('#progress', {
-      //     width: '100%',
-      //   });
-      //   const lenis = new Lenis({
-      //     duration: 2,
-      //     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      //     direction: 'vertical', // vertical, horizontal
-      //     gestureDirection: 'vertical', // vertical, horizontal, both
-      //     smooth: true,
-      //   });
-
-      //   function raf(time) {
-      //     lenis.raf(time);
-      //     requestAnimationFrame(raf);
-      //   }
-
-      //   requestAnimationFrame(raf);
-    },
+    // header: (target: AnimationTarget) => {
+    //   const trigger = '#visual';
+    //   const scrollTrigger = (target: Element, option: gsap.TweenVars) => {
+    //     ScrollTrigger.create({
+    //       trigger,
+    //       start: 'top top',
+    //       scrub: 1,
+    //       animation: gsap.to(target, option),
+    //       markers: { startColor: '#111', endColor: '#111' },
+    //     });
+    //   };
+    //   if (target.current) {
+    //     scrollTrigger(target.current, {
+    //       padding: '0 10vw',
+    //     });
+    //   }
+    // },
+    // main: () => {
+    //   const scrollTrigger = (
+    //     target: string | Element,
+    //     option: gsap.TweenVars,
+    //   ) => {
+    //     ScrollTrigger.create({
+    //       trigger: '#main',
+    //       start: 'top top',
+    //       scrub: 1,
+    //       animation: gsap.to(target, option),
+    //       markers: { startColor: '#111', endColor: '#111' },
+    //     });
+    //   };
+    // },
   };
+
   static visual = {
-    main: (ref) => {
-      const scrollTrigger = (target, option) => {
+    main: (ref: HTMLDivElement) => {
+      const scrollTrigger = (
+        target: string | Element,
+        option: gsap.TweenVars,
+      ) => {
         ScrollTrigger.create({
-          trigger: ref.current,
+          trigger: ref,
           start: 'top top',
           end: 'bottom top',
           scrub: 1,
@@ -71,65 +65,101 @@ class Animation {
       scrollTrigger('.visual', {
         height: '100%',
         padding: '0 5vw',
-        // width: 'calc(100% - 10vw)',
         borderRadius: '10%',
         duration: 1.2,
         ease: 'power2.out',
       });
       scrollTrigger('.visual .visual_back', {
-        // padding: '0 10vw',
         borderRadius: '20px',
         duration: 1.2,
         ease: 'power2.out',
       });
     },
   };
+
   static ptSection = {
     main: () => {
-      let mouseLeaveDelay: string | number | NodeJS.Timeout | null | undefined =
-        null;
-      const card: any = document.querySelector('.pt-card');
-      const cardBg: any = document.querySelector('.pt-cardBg');
+      const cards = document.querySelectorAll<HTMLElement>('.pt-card');
+      const cardBgs = document.querySelectorAll<HTMLElement>('.pt-cardBg');
+      const cleanupFunctions: (() => void)[] = [];
 
-      const handleMouseMove = (e: any) => {
-        const { left, top, width, height } = card.getBoundingClientRect();
-        const mouseX = e.clientX - left - width / 2;
-        const mouseY = e.clientY - top - height / 2;
+      cards.forEach((card, index) => {
+        const cardBg = cardBgs[index];
 
-        const rotateX = (mouseY / height) * -30;
-        const rotateY = (mouseX / width) * 30;
-        const translateX = (mouseX / width) * -40;
-        const translateY = (mouseY / height) * -40;
+        if (!cardBg) return;
 
-        gsap.to(card, { rotateX, rotateY, duration: 0.3, ease: 'power2.out' });
-        gsap.to(cardBg, {
-          translateX,
-          translateY,
-          duration: 0.3,
-          ease: 'power2.out',
-        });
-      };
+        let mouseLeaveDelay: NodeJS.Timeout | null = null;
+        const cardRect = card.getBoundingClientRect();
+        const { width, height } = cardRect;
 
-      const handleMouseEnter = () => {
-        if (mouseLeaveDelay) {
-          clearTimeout(mouseLeaveDelay);
-        }
-      };
+        const handleMouseMove = (e: MouseEvent) => {
+          const rect = card.getBoundingClientRect();
+          const mouseX = e.clientX - rect.left - width / 2;
+          const mouseY = e.clientY - rect.top - height / 2;
 
-      const handleMouseLeave = () => {
-        mouseLeaveDelay = setTimeout(() => {
-          gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.5 });
-          gsap.to(cardBg, {
-            translateX: 0,
-            translateY: 0,
-            duration: 0.5,
+          const rotateX = (mouseY / height) * -30;
+          const rotateY = (mouseX / width) * 30;
+          const translateX = (mouseX / width) * -40;
+          const translateY = (mouseY / height) * -40;
+
+          gsap.to(card, {
+            rotateX,
+            rotateY,
+            duration: 0.3,
+            ease: 'power2.out',
           });
-        }, 1000);
-      };
+          gsap.to(cardBg, {
+            translateX,
+            translateY,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        };
 
-      card.addEventListener('mousemove', handleMouseMove);
-      card.addEventListener('mouseenter', handleMouseEnter);
-      card.addEventListener('mouseleave', handleMouseLeave);
+        const handleMouseEnter = () => {
+          if (mouseLeaveDelay) {
+            clearTimeout(mouseLeaveDelay);
+            mouseLeaveDelay = null;
+          }
+        };
+
+        const handleMouseLeave = () => {
+          mouseLeaveDelay = setTimeout(() => {
+            gsap.to(card, {
+              rotateX: 0,
+              rotateY: 0,
+              duration: 0.5,
+              clearProps: 'transform',
+            });
+            gsap.to(cardBg, {
+              translateX: 0,
+              translateY: 0,
+              duration: 0.5,
+              clearProps: 'transform',
+            });
+            mouseLeaveDelay = null;
+          }, 1000);
+        };
+
+        card.addEventListener('mousemove', handleMouseMove);
+        card.addEventListener('mouseenter', handleMouseEnter);
+        card.addEventListener('mouseleave', handleMouseLeave);
+
+        cleanupFunctions.push(() => {
+          if (mouseLeaveDelay) {
+            clearTimeout(mouseLeaveDelay);
+          }
+          card.removeEventListener('mousemove', handleMouseMove);
+          card.removeEventListener('mouseenter', handleMouseEnter);
+          card.removeEventListener('mouseleave', handleMouseLeave);
+          gsap.killTweensOf(card);
+          gsap.killTweensOf(cardBg);
+        });
+      });
+
+      return () => {
+        cleanupFunctions.forEach((cleanup) => cleanup());
+      };
     },
   };
 }
