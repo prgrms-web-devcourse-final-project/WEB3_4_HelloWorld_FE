@@ -10,7 +10,13 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@gsap/react": "^2.1.2",
+=======
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+>>>>>>> 4213c46 (design(gym): 헬스장 등록 및 수정 페이지 /GYMMATE-247)
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@heroui/button": "2.2.16",
