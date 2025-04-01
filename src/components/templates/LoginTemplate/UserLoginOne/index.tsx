@@ -1,9 +1,11 @@
 import { useState } from 'react';
 
+import { formatDate } from '@/utils/formatUtils';
 import InputField from '@/app/login/components/InputField';
 import BirthdayInputGroup from '@/components/molecules/BirthdayInputGroup';
 import CustomButton from '@/app/login/components/CustomButton';
 import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
+
 interface Step1FormProps {
   setFormData: React.Dispatch<React.SetStateAction<any>>;
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -19,8 +21,14 @@ export default function Step1Form({ setFormData, setStep }: Step1FormProps) {
 
     if (!birth) {
       alert('모든 필드 선택해주세요.');
+
+      return;
     }
-    setFormData({ ...result, birth });
+
+    // 생년월일 포매팅 ('YYYYMMDD' 형식으로 변환)
+    const formattedBirth = formatDate(birth);
+
+    setFormData({ ...result, birth: formattedBirth });
     setStep(2);
   };
 
