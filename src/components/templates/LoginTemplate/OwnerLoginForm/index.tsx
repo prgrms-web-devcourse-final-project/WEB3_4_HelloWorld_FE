@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import CustomButton from '@/app/login/components/CustomButton';
 import InputField from '@/app/login/components/InputField';
@@ -8,7 +9,8 @@ import GenderSelector from '@/components/atoms/GenderSelector';
 import BankSelect from '@/app/login/components/BankSelect';
 import OpenDateInputGroup from '@/components/molecules/OpenDateInputGroup';
 import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
-
+import { formatDate, mapGenderToApi } from '@/utils/formatUtils';
+import { registerOwner } from '@/apis/trainerApi';
 interface OwnerLoginFormProps {
   formData: Record<string, any>;
   setFormData: (data: Record<string, any>) => void;
@@ -23,21 +25,34 @@ const OwnerLoginForm = ({
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
   const [openDate, setOpenDate] = useState('');
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formDataObj = new FormData(e.currentTarget);
     const result = Object.fromEntries(formDataObj.entries());
 
     const finalData = {
-      ...result,
-      gender: selectedGender,
-      bank: selectedBank,
-      openDate,
+      trainerName: result.name as string,
+      phoneNumber: result.phone as string,
+      email: result.email as string,
+      gender: mapGenderToApi(selectedGender) as string,
+      bank: selectedBank as string,
+      account: result.account as string,
+      businessNumber: result.businessNumber as string,
+      date: formatDate(openDate) as string,
     };
 
     console.log('사장님 전송 데이터:', finalData);
-    setFormData(finalData);
+
+    try {
+      await registerOwner(finalData);
+      alert('회원가입이 완료되었습니다.');
+      router.push('/');
+    } catch (error) {
+      console.error('등록 실패:', error);
+      alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   return (
