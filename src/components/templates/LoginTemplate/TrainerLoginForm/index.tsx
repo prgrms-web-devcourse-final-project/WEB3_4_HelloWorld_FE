@@ -1,21 +1,22 @@
 'use client';
 
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { useDeprecatedAnimatedState } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 import CustomButton from '@/app/login/components/CustomButton';
 import InputField from '@/app/login/components/InputField';
 import GenderSelector from '@/components/atoms/GenderSelector';
 import BankSelect from '@/app/login/components/BankSelect';
 import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
+import { registerTrainer } from '@/apis/trainerApi';
+import { mapGenderToApi } from '@/utils/formatUtils';
 
 interface TrainerLoginFormProps {
   formData: Record<string, any>;
   setFormData: (data: Record<string, any>) => void;
   setStep: (step: number) => void;
 }
-useDeprecatedAnimatedState;
 
 const TrainerLoginForm = ({
   formData,
@@ -24,21 +25,37 @@ const TrainerLoginForm = ({
 }: TrainerLoginFormProps) => {
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
+  const [gymName, setGymName] = useState<string>('');
+  const [alertTriggered, setAlertTriggered] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // 폼 제출 시 처리하는 함수
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (alertTriggered) return;
     const formDataObj = new FormData(e.currentTarget);
     const result = Object.fromEntries(formDataObj.entries());
 
     const finalData = {
-      ...result,
-      gender: selectedGender,
+      trainerName: result.name as string,
+      phoneNumber: result.phone as string,
+      email: result.email as string,
+      gender: mapGenderToApi(selectedGender),
       bank: selectedBank,
+      account: result.account as string,
+      gymName: gymName,
     };
 
-    console.log('트레이너 전송 데이터:', finalData);
-
-    setFormData(finalData);
+    try {
+      await registerTrainer(finalData);
+      alert('트레이너 회원가입이 완료되었습니다.');
+      setAlertTriggered(true);
+      router.push('/');
+    } catch (error) {
+      console.error('트레이너 등록 실패:', error);
+      alert('등록된 헬스장이 없습니다. 다시 시도해주세요.');
+      setAlertTriggered(true);
+    }
   };
 
   return (
@@ -116,7 +133,9 @@ const TrainerLoginForm = ({
             labelInputGap="5px"
             name="gym"
             placeholder="소속된 헬스장을 검색해주세요."
+            value={gymName}
             width="452px"
+            onChange={(e) => setGymName(e.target.value)}
           />
           <MagnifyingGlassIcon className="w-[25px] h-[25px] absolute right-3 top-[35px] text-mono_400 cursor-pointer" />
         </div>
