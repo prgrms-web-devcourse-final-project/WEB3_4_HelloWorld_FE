@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+
 import CustomButton from '@/app/login/components/CustomButton';
 import InputField from '@/app/login/components/InputField';
 import GenderSelector from '@/components/atoms/GenderSelector';
 import BankSelect from '@/app/login/components/BankSelect';
 import OpenDateInputGroup from '@/components/molecules/OpenDateInputGroup';
-import { useState } from 'react';
 import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
 
 interface OwnerLoginFormProps {
@@ -43,64 +44,64 @@ const OwnerLoginForm = ({
     <form onSubmit={handleSubmit}>
       <div className="w-[452px] flex flex-col mt-[-40px]">
         <InputField
+          required
+          containerMarginBottom="60px"
+          height="62px"
           label="이름"
+          labelInputGap="5px"
           name="name"
           placeholder="이름을 입력해주세요."
-          required
           width="452px"
-          height="62px"
-          containerMarginBottom="60px"
-          labelInputGap="5px"
         />
         <InputField
+          required
+          containerMarginBottom="60px"
+          height="62px"
           label="전화번호"
+          labelInputGap="5px"
           name="phone"
           placeholder="010-0000-0000"
-          required
           width="452px"
-          height="62px"
-          containerMarginBottom="60px"
-          labelInputGap="5px"
         />
         <InputField
+          required
+          containerMarginBottom="60px"
+          height="62px"
           label="이메일"
+          labelInputGap="5px"
           name="email"
           placeholder="ghdrlfehd123@naver.com"
           type="email"
-          required
           width="452px"
-          height="62px"
-          containerMarginBottom="60px"
-          labelInputGap="5px"
         />
 
         <GenderSelector
+          marginBottom="60px"
           selectedGender={selectedGender}
           setSelectedGender={setSelectedGender}
-          marginBottom="60px"
         />
 
         <div className="flex gap-[62px] mb-[60px]">
           <div style={{ width: '150px' }}>
             <BankSelect
+              required
+              height="32px"
               selectedBank={selectedBank}
               setSelectedBank={setSelectedBank}
-              required
               width="150px"
-              height="32px"
             />
           </div>
 
           <div style={{ width: '237px' }}>
             <InputField
+              required
+              containerMarginBottom="0"
+              height="62px"
               label="계좌번호"
+              labelInputGap="5px"
               name="account"
               placeholder="000-0000-0000-00"
-              required
               width="237px"
-              height="62px"
-              containerMarginBottom="0"
-              labelInputGap="5px"
             />
           </div>
         </div>
@@ -108,17 +109,17 @@ const OwnerLoginForm = ({
         <OpenDateInputGroup onDateChange={setOpenDate} />
 
         <InputField
+          required
+          containerMarginBottom="60px"
+          height="62px"
           label="사업자번호"
+          labelInputGap="5px"
           name="businessNumber"
           placeholder="12-123-1234-1231245"
-          required
           width="452px"
-          height="62px"
-          containerMarginBottom="60px"
-          labelInputGap="5px"
         />
 
-        <CustomButton type="submit" className="bg-main text-mono_100 mb-[20px]">
+        <CustomButton className="bg-main text-mono_100 mb-[20px]" type="submit">
           가입 완료
         </CustomButton>
       </div>

@@ -2,6 +2,7 @@
 
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import { useDeprecatedAnimatedState } from 'framer-motion';
 
 import CustomButton from '@/app/login/components/CustomButton';
 import InputField from '@/app/login/components/InputField';
@@ -14,6 +15,7 @@ interface TrainerLoginFormProps {
   setFormData: (data: Record<string, any>) => void;
   setStep: (step: number) => void;
 }
+useDeprecatedAnimatedState;
 
 const TrainerLoginForm = ({
   formData,

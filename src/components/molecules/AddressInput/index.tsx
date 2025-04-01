@@ -27,8 +27,12 @@ const AddressInput = () => {
 
   return (
     <div className="relative">
-      {/* 컨테이너에 onClick 추가 */}
-      <div onClick={handleOpenModal}>
+      <button
+        type="button"
+        onClick={handleOpenModal}
+        aria-label="주소 검색"
+        className="w-full"
+      >
         <InputField
           label="도로명 주소"
           name="address"
@@ -42,7 +46,7 @@ const AddressInput = () => {
           onChange={handleInputChange}
           readOnly
         />
-      </div>
+      </button>
       <MagnifyingGlassIcon
         className="w-[25px] h-[25px] absolute right-3 top-[35px] text-mono_400 cursor-pointer"
         onClick={handleOpenModal}
