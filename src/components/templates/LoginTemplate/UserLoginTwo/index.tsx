@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import MeasurementInputs from '@/components/molecules/MeasurementInput';
 import AddressInput from '@/components/molecules/AddressInput';
 import ExerciseInputs from '@/components/molecules/ExerciseInputs';
@@ -24,6 +25,7 @@ const UserInfoForm = ({
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const result = Object.fromEntries(data.entries());
+
     result.gender = selectedGender;
 
     const finalFormData = { ...formData, ...result };
@@ -35,13 +37,13 @@ const UserInfoForm = ({
 
   return (
     <form
-      onSubmit={handleSubmit}
       className="flex flex-col items-center w-full mt-[25px]"
+      onSubmit={handleSubmit}
     >
       <GenderSelector
+        marginBottom="50px"
         selectedGender={selectedGender}
         setSelectedGender={setSelectedGender}
-        marginBottom="50px"
       />
       <MeasurementInputs />
       <AddressInput />
@@ -49,10 +51,10 @@ const UserInfoForm = ({
 
       <div>
         <CustomButton
+          className="mb-[20px]"
+          height="48px"
           type="submit"
           width="452px"
-          height="48px"
-          className="mb-[20px]"
         >
           완료하기
         </CustomButton>
