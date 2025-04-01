@@ -1,5 +1,10 @@
-import { useState } from 'react';
-import { Modal, ModalBody, ModalContent, ModalHeader, useDisclosure } from "@heroui/react";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from '@heroui/react';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
 import NextImage from 'next/image';
 
@@ -30,11 +35,32 @@ export default function GymDetailPanel({ gym, isOpen }: GymDetailPanelProps) {
     >
       {/* 이미지 영역 */}
       <div className="grid grid-cols-2 grid-rows-2 gap-1 p-3 h-[220px]">
-        <NextImage src="/gym_sample.jpg" alt="img1" width={220} height={192} className="rounded-lg object-cover col-span-2 row-span-2" />
-        <NextImage src="/gym_sample.jpg" alt="img2" width={220} height={96} className="rounded-lg object-cover" />
+        <NextImage
+          alt="img1"
+          className="rounded-lg object-cover col-span-2 row-span-2"
+          height={192}
+          src="/gym_sample.jpg"
+          width={220}
+        />
+        <NextImage
+          alt="img2"
+          className="rounded-lg object-cover"
+          height={96}
+          src="/gym_sample.jpg"
+          width={220}
+        />
         <div className="relative">
-          <NextImage src="/gym_sample.jpg" alt="img3" width={220} height={96} className="rounded-lg object-cover blur-sm brightness-75" />
-          <button onClick={onOpen} className="absolute inset-0 flex items-center justify-center">
+          <NextImage
+            alt="img3"
+            className="rounded-lg object-cover blur-sm brightness-75"
+            height={96}
+            src="/gym_sample.jpg"
+            width={220}
+          />
+          <button
+            className="absolute inset-0 flex items-center justify-center"
+            onClick={onOpen}
+          >
             <EllipsisHorizontalIcon className="w-6 h-6 text-white" />
           </button>
         </div>
@@ -53,8 +79,15 @@ export default function GymDetailPanel({ gym, isOpen }: GymDetailPanelProps) {
           <ModalHeader>사진 더보기</ModalHeader>
           <ModalBody>
             <div className="grid grid-cols-2 gap-2">
-              {[1,2,3,4,5].map(i => (
-                <NextImage key={i} src="/gym_sample.jpg" alt={`more${i}`} width={200} height={150} className="rounded-lg object-cover" />
+              {[1, 2, 3, 4, 5].map((i) => (
+                <NextImage
+                  key={i}
+                  alt={`more${i}`}
+                  className="rounded-lg object-cover"
+                  height={150}
+                  src="/gym_sample.jpg"
+                  width={200}
+                />
               ))}
             </div>
           </ModalBody>
