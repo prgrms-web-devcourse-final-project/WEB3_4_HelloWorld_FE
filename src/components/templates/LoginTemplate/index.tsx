@@ -1,12 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useAuthStore } from '@/stores/authStore';
+
 import StepZero from '@/components/molecules/LoginTemplatesForm/StepZero';
 import StepUser from '@/components/molecules/LoginTemplatesForm/StepUser';
 import StepTrainer from '@/components/molecules/LoginTemplatesForm/StepTrainer';
 import ProgressWrapper from '@/components/molecules/LoginTemplatesForm/ProgressWrapper';
 
 const LoginTemplate = () => {
+  const searchParams = useSearchParams();
+
+  const additionalInfoCompleted = searchParams.get('additionalInfoCompleted');
+  const role = searchParams.get('role') as 'MEMBER' | 'TRAINER' | null;
+  const oauthId = searchParams.get('oauthId');
+
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({});
   const [birth, setBirth] = useState('');
@@ -16,20 +25,37 @@ const LoginTemplate = () => {
   >(null);
   const [progress, setProgress] = useState(0);
 
-  const handleSocialLogin = () => setStep(1);
-
-  const handleSelectTrainerRole = (role: 'owner' | 'trainer') => {
-    setSelectedTrainerRole(role);
-    setStep(2);
-  };
+  const { isLoggedIn, setAuth } = useAuthStore();
 
   useEffect(() => {
-    if (selectedTab === 'trainer') {
-      setProgress(step === 2 ? 100 : step === 1 ? 50 : 0);
-    } else {
-      setProgress(step === 2 ? 100 : step === 1 ? 50 : 0);
+    if (isLoggedIn) {
+      window.location.href = '/';
     }
-  }, [selectedTab, step]);
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (additionalInfoCompleted === 'false') {
+      setStep(1);
+      if (role) {
+        setSelectedTab(role === 'MEMBER' ? 'user' : 'trainer');
+      }
+    }
+    // 임시 데이터라
+    if (additionalInfoCompleted === 'true' && role) {
+      setAuth({
+        isLoggedIn: true,
+        loginId: 1,
+        nickname: '닉네임',
+        profileImage: '프로필',
+        userType: role,
+      });
+      window.location.href = '/';
+    }
+  }, [additionalInfoCompleted, role, oauthId, setAuth]);
+
+  useEffect(() => {
+    setProgress(step === 2 ? 100 : step === 1 ? 50 : 0);
+  }, [step]);
 
   return (
     <div className="w-full flex justify-center">
@@ -46,7 +72,10 @@ const LoginTemplate = () => {
               setSelectedTrainerRole(null);
               setStep(0);
             }}
-            onSocialLogin={handleSocialLogin}
+            onSocialLogin={(role) => {
+              const loginUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/oauth2/authorization/kakao?state=${role}`;
+              window.location.href = loginUrl;
+            }}
           />
         ) : (
           <ProgressWrapper progress={progress}>
@@ -66,7 +95,7 @@ const LoginTemplate = () => {
                 setFormData={setFormData}
                 setStep={setStep}
                 selectedTrainerRole={selectedTrainerRole}
-                setSelectedTrainerRole={handleSelectTrainerRole}
+                setSelectedTrainerRole={setSelectedTrainerRole}
               />
             )}
           </ProgressWrapper>

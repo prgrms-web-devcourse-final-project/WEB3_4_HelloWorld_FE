@@ -7,7 +7,18 @@ import BankSelect from '@/app/login/components/BankSelect';
 import OpenDateInputGroup from '@/components/molecules/OpenDateInputGroup';
 import { useState } from 'react';
 import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
-const OwnerLoginForm = () => {
+
+interface OwnerLoginFormProps {
+  formData: Record<string, any>;
+  setFormData: (data: Record<string, any>) => void;
+  setStep: (step: number) => void;
+}
+
+const OwnerLoginForm = ({
+  formData,
+  setFormData,
+  setStep,
+}: OwnerLoginFormProps) => {
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
   const [openDate, setOpenDate] = useState('');
@@ -25,6 +36,7 @@ const OwnerLoginForm = () => {
     };
 
     console.log('사장님 전송 데이터:', finalData);
+    setFormData(finalData);
   };
 
   return (

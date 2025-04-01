@@ -20,28 +20,35 @@ const StepTrainer = ({
   setStep,
   selectedTrainerRole,
   setSelectedTrainerRole,
-}: StepTrainerProps) => (
-  <>
-    <TrainerTemplate
-      selectedTrainerRole={selectedTrainerRole}
-      setSelectedTrainerRole={setSelectedTrainerRole}
-    />
+}: StepTrainerProps) => {
+  const handleSelectRole = (role: 'owner' | 'trainer') => {
+    setSelectedTrainerRole(role);
+    setStep(2);
+  };
 
-    {selectedTrainerRole === 'owner' && step === 2 && (
-      <OwnerLoginForm
-        formData={formData}
-        setFormData={setFormData}
-        setStep={setStep}
+  return (
+    <>
+      <TrainerTemplate
+        selectedTrainerRole={selectedTrainerRole}
+        setSelectedTrainerRole={handleSelectRole} // 역할 선택 시 step 증가
       />
-    )}
-    {selectedTrainerRole === 'trainer' && step === 2 && (
-      <TrainerLoginForm
-        formData={formData}
-        setFormData={setFormData}
-        setStep={setStep}
-      />
-    )}
-  </>
-);
+
+      {selectedTrainerRole === 'owner' && step === 2 && (
+        <OwnerLoginForm
+          formData={formData}
+          setFormData={setFormData}
+          setStep={setStep}
+        />
+      )}
+      {selectedTrainerRole === 'trainer' && step === 2 && (
+        <TrainerLoginForm
+          formData={formData}
+          setFormData={setFormData}
+          setStep={setStep}
+        />
+      )}
+    </>
+  );
+};
 
 export default StepTrainer;
