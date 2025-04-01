@@ -16,7 +16,6 @@ export default function Home() {
         <MainPtSection />
         <MainShopSection />
         <MainGymMateSection />
-        <div className="py-[1000px]" />
       </div>
       {/* <div className="container mx-auto max-w-screen-2xl" /> */}
     </>
