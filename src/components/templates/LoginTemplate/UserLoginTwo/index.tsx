@@ -36,7 +36,7 @@ const UserInfoForm = ({
     recentDeadlift: 0,
   });
 
-  const router = useRouter(); // 페이지 전환을 위한 router
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,24 +44,21 @@ const UserInfoForm = ({
     const data = new FormData(e.currentTarget);
     const result = Object.fromEntries(data.entries());
 
-    result.gender = selectedGender;
-
-    // 최종 폼 데이터 구성
+    // 최종 전송 데이터 (기존 + 추가 정보 수동 병합)
     const finalFormData: UserData = {
-      ...formData,
-      ...result,
+      ...formData, // Step1Form에서 받은 값 그대로 사용
       gender: mapGenderToApi(selectedGender),
-      address: address || '서울시 강남구 테헤란로 14길 6', // 기본 주소 설정
+      height: result.height as string,
+      weight: result.weight as string,
+      address: address || '서울시 강남구 테헤란로 14길 6',
       recentBench: exerciseData.recentBench || 0,
       recentSquat: exerciseData.recentSquat || 0,
       recentDeadlift: exerciseData.recentDeadlift || 0,
     };
 
     console.log('제출 데이터:', finalFormData);
-
     setFormData(finalFormData);
 
-    // API 호출로 데이터 전송
     try {
       await registerUser(finalFormData);
       alert('회원가입이 완료되었습니다.');
@@ -84,7 +81,7 @@ const UserInfoForm = ({
       />
       <MeasurementInputs formData={formData} setFormData={setFormData} />
       <AddressInput setAddress={setAddress} />
-      <ExerciseInputs setExerciseData={setExerciseData} />{' '}
+      <ExerciseInputs setExerciseData={setExerciseData} />
       <div>
         <CustomButton
           className="mb-[20px]"

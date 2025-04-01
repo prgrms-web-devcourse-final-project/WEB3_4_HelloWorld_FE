@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const registerUser = async (userData: UserData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/user/register`, {
+    const response = await fetch(`${API_BASE_URL}/member/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

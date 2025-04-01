@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 
 import { formatDate } from '@/utils/formatUtils';
@@ -5,9 +7,10 @@ import InputField from '@/app/login/components/InputField';
 import BirthdayInputGroup from '@/components/molecules/BirthdayInputGroup';
 import CustomButton from '@/app/login/components/CustomButton';
 import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
+import { UserData } from '@/types/UserData';
 
 interface Step1FormProps {
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  setFormData: React.Dispatch<React.SetStateAction<UserData>>;
   setStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -20,15 +23,21 @@ export default function Step1Form({ setFormData, setStep }: Step1FormProps) {
     const result = Object.fromEntries(data.entries());
 
     if (!birth) {
-      alert('모든 필드 선택해주세요.');
+      alert('모든 필드를 입력해주세요.');
 
       return;
     }
 
-    // 생년월일 포매팅 ('YYYYMMDD' 형식으로 변환)
-    const formattedBirth = formatDate(birth);
+    const formattedBirth = formatDate(birth); // → 'YYYY.MM.DD'
 
-    setFormData({ ...result, birth: formattedBirth });
+    // UserData 형식에 맞춰 key 변경
+    setFormData({
+      phoneNumber: result.phone as string,
+      memberName: result.name as string,
+      email: result.email as string,
+      birthday: formattedBirth,
+    } as UserData);
+
     setStep(2);
   };
 
