@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useAuthStore } from '@/stores/authStore';
 
+import { useAuthStore } from '@/stores/authStore';
 import StepZero from '@/components/molecules/LoginTemplatesForm/StepZero';
 import StepUser from '@/components/molecules/LoginTemplatesForm/StepUser';
 import StepTrainer from '@/components/molecules/LoginTemplatesForm/StepTrainer';
@@ -13,7 +13,7 @@ const LoginTemplate = () => {
   const searchParams = useSearchParams();
 
   const additionalInfoCompleted = searchParams.get('additionalInfoCompleted');
-  const role = searchParams.get('role') as 'MEMBER' | 'TRAINER' | null;
+  const role = searchParams.get('role') as 'member' | 'trainer' | null;
   const oauthId = searchParams.get('oauthId');
 
   const [step, setStep] = useState(0);
@@ -37,7 +37,7 @@ const LoginTemplate = () => {
     if (additionalInfoCompleted === 'false') {
       setStep(1);
       if (role) {
-        setSelectedTab(role === 'MEMBER' ? 'user' : 'trainer');
+        setSelectedTab(role === 'member' ? 'user' : 'trainer');
       }
     }
     // 임시 데이터라
@@ -47,7 +47,7 @@ const LoginTemplate = () => {
         loginId: 1,
         nickname: '닉네임',
         profileImage: '프로필',
-        userType: role,
+        userType: role as 'member' | 'trainer',
       });
       window.location.href = '/';
     }
@@ -74,6 +74,7 @@ const LoginTemplate = () => {
             }}
             onSocialLogin={(role) => {
               const loginUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/oauth2/authorization/kakao?state=${role}`;
+
               window.location.href = loginUrl;
             }}
           />
@@ -81,21 +82,21 @@ const LoginTemplate = () => {
           <ProgressWrapper progress={progress}>
             {selectedTab === 'user' ? (
               <StepUser
-                step={step}
-                setStep={setStep}
-                formData={formData}
-                setFormData={setFormData}
                 birth={birth}
+                formData={formData}
                 setBirth={setBirth}
+                setFormData={setFormData}
+                setStep={setStep}
+                step={step}
               />
             ) : (
               <StepTrainer
-                step={step}
                 formData={formData}
-                setFormData={setFormData}
-                setStep={setStep}
                 selectedTrainerRole={selectedTrainerRole}
+                setFormData={setFormData}
                 setSelectedTrainerRole={setSelectedTrainerRole}
+                setStep={setStep}
+                step={step}
               />
             )}
           </ProgressWrapper>
