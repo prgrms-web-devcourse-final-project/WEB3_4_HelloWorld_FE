@@ -44,19 +44,19 @@ export default function MainPtCard({
             group-hover:transform group-hover:translate-y-0
             after:content-[''] after:absolute after:top-0 after:left-0 after:z-0
             after:w-full after:h-full after:rounded-lg
-            after:backdrop-blur-md after:from-transparent after:to-[rgba(0,0,0,0.8)]
+            after:backdrop-blur-md after:from-transparent after:bg-[rgba(0,0,0,0.4)]
             after:opacity-0 after:transform after:translate-y-full
             after:transition after:duration-300 after:ease-out
             group-hover:after:opacity-100 group-hover:after:transform group-hover:after:translate-y-0
           "
         >
           <div className="flex  py-1 items-center justify-between">
-            <h1 className="text-lg font-semibold text-shadow-[0_10px_10px_rgba(0,0,0,0.5)] relative z-[1]">
+            <h1 className="text-lg font-semibold translate-z-[45px] text-shadow-[0_10px_10px_rgba(0,0,0,0.5)] relative z-[1]">
               {title}
             </h1>
             <div className="z-10 flex items-center mb-1 gap-1">
-              <Star h="h-4" rate={4.5} readonly={true} w="w-4" />
-              <span className="text-sm text-gray200">4.5</span>
+              <Star h="h-4" rate={4.7} readonly={true} w="w-4" />
+              <span className="text-sm text-gray200">4.7</span>
             </div>
           </div>
           <div
@@ -80,7 +80,7 @@ export default function MainPtCard({
               </div>
               <div className="w-full py-2 ">
                 <p className="pb-2 font-semibold text-stone-300 ">소개</p>
-                <div className="px-2 line-clamp-3 py-2 w-full  rounded-lg bg-stone-900/30">
+                <div className="px-2 py-2 w-full text-wrap  rounded-lg bg-stone-900/30">
                   {content}
                 </div>
               </div>

@@ -5,14 +5,16 @@ import { useEffect, useRef } from 'react';
 import Animation from '@/utils/animations';
 
 export default function MainVisualSection() {
-  const AnimationRef = useRef(null);
+  const AnimationRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    Animation.visual.main(AnimationRef);
+    if (AnimationRef.current) {
+      Animation.visual.main(AnimationRef.current);
+    }
   }, []);
 
   return (
-    <div ref={AnimationRef} className="visual w-full h-full   top-0">
+    <div ref={AnimationRef} className="visual w-full h-full top-0">
       <div className="visual_back overflow-hidden w-full h-[calc(100vh-30vw)] md:h-screen relative">
         <video
           autoPlay

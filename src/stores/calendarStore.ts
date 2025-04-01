@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { Schedule } from '@/types/schedule';
 
 type CalendarStore = {
@@ -12,6 +13,7 @@ export const useCalendarStore = create<CalendarStore>((set) => ({
   setSchedulesByDate: (date) =>
     set((state) => {
       const newItems = state.scheduleList.filter((s) => s.date === date);
+
       return {
         selectedSchedules: [...state.selectedSchedules, ...newItems],
       };

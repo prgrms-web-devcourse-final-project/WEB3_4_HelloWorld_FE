@@ -6,7 +6,7 @@ import { Providers } from './providers';
 
 import { siteConfig } from '@/config/site';
 import { fontSans, paperlogy, pretendard } from '@/config/fonts';
-import MainLayout from '@/components/templates/LoginTemplate/MainLayout';
+import MainLayout from '@/components/templates/MainLayout';
 
 export const metadata: Metadata = {
   title: {
