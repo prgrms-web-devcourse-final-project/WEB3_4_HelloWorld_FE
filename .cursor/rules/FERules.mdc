@@ -1,6 +1,7 @@
 ---
 description: FE_Rules
 globs: 
+alwaysApply: false
 ---
 {
   "rules": {

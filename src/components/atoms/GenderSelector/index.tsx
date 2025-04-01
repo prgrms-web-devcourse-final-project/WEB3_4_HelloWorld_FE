@@ -21,11 +21,12 @@ const GenderSelector = ({
 }: GenderSelectorProps) => {
   return (
     <div className="flex flex-col gap-2" style={{ marginBottom }}>
-      <label className="text-sm font-medium">
+      <label htmlFor="gender-selector" className="text-sm font-medium">
         성별 <span className="text-main">*</span>
       </label>
 
       <RadioGroup
+        id="gender-selector"
         value={selectedGender}
         onChange={setSelectedGender}
         className="flex gap-6"

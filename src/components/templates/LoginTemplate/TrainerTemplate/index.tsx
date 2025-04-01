@@ -13,16 +13,16 @@ const TrainerTemplate = ({
 }: TrainerTemplateProps) => (
   <div className="flex gap-x-6 mb-[40px]">
     <Checkbox
+      color="primary"
       isSelected={selectedTrainerRole === 'owner'}
       onClick={() => setSelectedTrainerRole('owner')}
-      color="primary"
     >
       헬스장 사장님
     </Checkbox>
     <Checkbox
+      color="primary"
       isSelected={selectedTrainerRole === 'trainer'}
       onClick={() => setSelectedTrainerRole('trainer')}
-      color="primary"
     >
       헬스장 직원
     </Checkbox>
