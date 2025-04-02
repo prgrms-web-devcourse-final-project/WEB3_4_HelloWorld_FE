@@ -1,6 +1,7 @@
 'use client';
 
 import { FC, useEffect, useState } from 'react';
+
 import BirthSelect from '@/components/atoms/BirthSelect';
 
 interface OpenDateInputGroupProps {
@@ -25,42 +26,42 @@ const OpenDateInputGroup: FC<OpenDateInputGroupProps> = ({ onDateChange }) => {
   return (
     <div className="flex gap-4 mb-[60px]">
       <div style={{ width: '33%' }}>
-        <label className="text-sm font-medium">
+        <label className="text-sm font-medium" htmlFor="year">
           개업일자 <span className="text-main">*</span>
         </label>
         <BirthSelect
-          id="year"
-          ariaLabel="개업 연도"
-          options={years}
           required
-          onChange={setYear}
+          ariaLabel="개업 연도"
+          id="year"
+          options={years}
           placeholder="연도"
+          onChange={setYear}
         />
       </div>
       <div style={{ width: '33%' }}>
-        <label className="text-sm font-medium">
+        <label className="text-sm font-medium" htmlFor="month">
           월 <span className="text-main">*</span>
         </label>
         <BirthSelect
-          id="month"
-          ariaLabel="개업 월"
-          options={months}
           required
-          onChange={setMonth}
+          ariaLabel="개업 월"
+          id="month"
+          options={months}
           placeholder="월"
+          onChange={setMonth}
         />
       </div>
       <div style={{ width: '33%' }}>
-        <label className="text-sm font-medium">
+        <label className="text-sm font-medium" htmlFor="day">
           일 <span className="text-main">*</span>
         </label>
         <BirthSelect
-          id="day"
-          ariaLabel="개업 일"
-          options={days}
           required
-          onChange={setDay}
+          ariaLabel="개업 일"
+          id="day"
+          options={days}
           placeholder="일"
+          onChange={setDay}
         />
       </div>
     </div>
