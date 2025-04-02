@@ -1,9 +1,5 @@
-import { MyPageTemplate } from '@/components/templates/MemberMypageTemplate';
+import MemberMypageTemplate from '@/components/templates/MemberMypageTemplate';
 
-export default function MemberMypage() {
-  return (
-    <div>
-      <MyPageTemplate />
-    </div>
-  );
-}
+const MemberMypagePage = () => <MemberMypageTemplate />;
+
+export default MemberMypagePage;

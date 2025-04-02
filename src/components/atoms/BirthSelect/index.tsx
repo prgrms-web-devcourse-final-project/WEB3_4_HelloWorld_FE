@@ -25,22 +25,23 @@ const BirthSelect: FC<BirthSelectProps> = ({
   id,
 }) => (
   <div>
-    <label htmlFor={id} className="sr-only">
+    <label className="sr-only" htmlFor={id}>
       {ariaLabel}
     </label>
     <Select
-      id={id}
-      isRequired={required}
-      placeholder={placeholder}
       aria-label={ariaLabel}
-      style={{ width, height }}
       classNames={{
         base: '',
         trigger: 'h-[38px]',
         popoverContent: 'z-[100]',
       }}
+      id={id}
+      isRequired={required}
+      placeholder={placeholder}
+      style={{ width, height }}
       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
+
         console.log(`[BirthSelect:${id}] selected value:`, value);
         onChange(value);
       }}
