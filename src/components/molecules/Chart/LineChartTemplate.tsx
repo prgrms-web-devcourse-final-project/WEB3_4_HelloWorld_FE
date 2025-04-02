@@ -33,11 +33,11 @@ const LineChart = ({ categories, data }: LineChartProps) => {
 
   return (
     <ReactApexChart
+      height="100%"
       options={options}
       series={series}
       type="line"
       width="100%"
-      height="100%"
     />
   );
 };
