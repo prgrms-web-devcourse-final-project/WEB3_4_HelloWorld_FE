@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 
+
 import Footer from '@/components/organisms/Footer';
 import Header from '@/components/organisms/Header';
 
@@ -20,6 +21,7 @@ export default function MainLayout({
       <Header />
       <div>{children}</div>
       {!hideFooter && <Footer />}
+      <Footer />
     </>
   );
 }

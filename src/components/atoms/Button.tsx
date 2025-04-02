@@ -11,6 +11,7 @@ export const MyButton = extendVariants(Button, {
       main: 'text-main-foreground bg-main ',
       orange: 'bg-[#ff8c00] text-[#fff]',
       violet: 'bg-[#8b5cf6] text-[#fff]',
+      transparent: 'bg-background text-foreground',
       mono: 'bg-mono_050 text-mono_600 border border-mono_200',
       transparent: 'bg-background text-foreground',
     },
