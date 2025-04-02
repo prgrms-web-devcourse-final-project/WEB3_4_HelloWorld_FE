@@ -13,68 +13,61 @@ import {
   Avatar,
 } from '@heroui/react';
 import { usePathname } from 'next/navigation';
+import { clsx } from 'clsx';
 
 import { ThemeSwitch } from '@/components/atoms/ThemeSwitch';
 
 export default function Header() {
   const path = usePathname();
-  const isMainPage = path === '/';
+  const isMainPage = path === '/' || path.includes('pt');
 
-  console.log(path);
+  const navTextClass = clsx('text-mono_700', {
+    'text-gray-100': isMainPage,
+  });
+
+  const navBgClass = clsx({
+    'bg-black/30': isMainPage,
+    'bg-mono_100': !isMainPage,
+  });
 
   return (
     <div className="fixed w-full z-50">
       <NavbarComponent
         isBlurred
-        className={`${isMainPage ? 'text-gray-100' : 'text-mono_700'}`}
+        className={navTextClass}
+        classNames={{ base: navBgClass }}
         maxWidth="2xl"
         position="sticky"
-        classNames={{ base: isMainPage ? 'bg-black/30' : 'bg-mono_100' }}
-        // parentRef={document.body}
       >
         <NavbarContent justify="start">
-          <NavbarBrand className="">
-            <h1
-              className={`hidden sm:block text-2xl font-black font-point text-inherit `}
-            >
+          <NavbarBrand>
+            <h1 className="hidden sm:block text-2xl font-black font-point text-inherit">
               Gym<span className="text-main">M</span>ate
             </h1>
           </NavbarBrand>
         </NavbarContent>
         <NavbarContent className="gap-10" justify="end">
           <NavbarContent
-            className="hidden font-semibold  sm:flex gap-8"
+            className="hidden font-semibold sm:flex gap-8"
             justify="end"
           >
             <NavbarItem>
-              <Link
-                className={`${isMainPage ? 'text-gray-100' : 'text-mono_700'}`}
-                href="#"
-              >
+              <Link className={navTextClass} href="#">
                 PT정보
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link
-                className={`${isMainPage ? 'text-gray-100' : 'text-mono_700'}`}
-                href="#"
-              >
+              <Link className={navTextClass} href="#">
                 헬스장정보
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link
-                className={`${isMainPage ? 'text-gray-100' : 'text-mono_700'}`}
-                href="#"
-              >
+              <Link className={navTextClass} href="#">
                 나의운동
               </Link>
             </NavbarItem>
             <NavbarItem>
-              <Link
-                className={`${isMainPage ? 'text-gray-100' : 'text-mono_700'}`}
-                href="#"
-              >
+              <Link className={navTextClass} href="#">
                 헬스용품
               </Link>
             </NavbarItem>
