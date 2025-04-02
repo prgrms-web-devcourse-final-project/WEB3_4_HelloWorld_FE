@@ -13,6 +13,7 @@ export const MyButton = extendVariants(Button, {
       violet: 'bg-[#8b5cf6] text-[#fff]',
       transparent: 'bg-background text-foreground',
       mono: 'bg-mono_050 text-mono_600 border border-mono_200',
+      transparent: 'bg-background text-foreground',
     },
     isDisabled: {
       true: 'bg-[#eaeaea] text-[#000] opacity-50 cursor-not-allowed',
