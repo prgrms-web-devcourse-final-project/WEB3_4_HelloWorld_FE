@@ -19,16 +19,16 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   <div className="relative flex flex-col items-center w-full gap-2">
     <Progress
       aria-label="Progress"
-      value={percent}
       className={className}
-      style={{ backgroundColor: 'mono_700' }}
       color="primary"
+      style={{ backgroundColor: 'mono_700' }}
+      value={percent}
     />
     {showValueLabel && (
       <span
         className={`text-sm font-medium text-mono_700 ${
           percent === 100
-            ? 'absolute right-[520px] top-[12px]'
+            ? 'absolute right-[725px] top-[12px]'
             : 'self-center text-center'
         }`}
       >
