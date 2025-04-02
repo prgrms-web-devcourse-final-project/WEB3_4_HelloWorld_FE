@@ -19,6 +19,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
+
       <div>{children}</div>
       {!hideFooter && <Footer />}
       <Footer />
