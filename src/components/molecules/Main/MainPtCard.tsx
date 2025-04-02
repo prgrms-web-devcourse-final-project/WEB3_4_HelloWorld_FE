@@ -17,12 +17,12 @@ export default function MainPtCard({
 }: MainPtCardProps) {
   return (
     <div
-      className={`pt-card m-2 transform perspective-[800px] antialiased max-w-fit cursor-pointer group ${className}`}
+      className={`pt-card m-2 transform perspective-[800px] w-full h-full antialiased cursor-pointer group ${className}`}
       style={{ transformStyle: 'preserve-3d' }}
     >
       <div
         className="
-          relative flex-none w-[325px] h-[500px] bg-stone-800 overflow-hidden rounded-xl
+          relative flex-none max-w-96 w-full h-[500px] bg-stone-800 overflow-hidden rounded-xl
           transition duration-1000 ease-out
           group-hover:shadow-[rgba(255,255,255,0.2)_0_0_40px_5px,rgba(255,255,255,1)_0_0_0_1px,rgba(0,0,0,0.66)_0_30px_60px_0,inset_#333_0_0_0_5px,inset_white_0_0_0_6px]
           group-hover:transition-[box-shadow] group-hover:duration-1000 group-hover:ease-out

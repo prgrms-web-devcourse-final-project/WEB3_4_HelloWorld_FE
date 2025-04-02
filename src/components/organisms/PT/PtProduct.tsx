@@ -13,7 +13,7 @@ export default function PtProduct() {
   return (
     <>
       <div className="py-10">
-        <div className="flex justify-between items-center pb-10 px-6">
+        <div className="flex justify-between items-center pb-10 ">
           <h2 className="text-2xl font-bold">PT 트레이너 리스트</h2>
           <p className="text-mono_600 flex items-center gap-2">
             <MapPinIcon className="w-5 h-5 text-main" />
@@ -21,7 +21,7 @@ export default function PtProduct() {
             검색 결과
           </p>
         </div>
-        <div className="flex justify-between items-center py-8 px-6">
+        <div className="flex justify-between items-center py-8 ">
           <Tabs
             aria-label="Options"
             onSelectionChange={(key: React.Key) => setSelectedTab(key)}
