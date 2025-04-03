@@ -20,15 +20,16 @@ export default function SyncedGallerySwiper({ images }: Props) {
   return (
     <div className="w-full">
       <Swiper
+        autoHeight
         navigation
-        className="rounded-small overflow-hidden mb-4"
+        className="rounded-small w-full  overflow-hidden mb-4"
         modules={[FreeMode, Navigation, Thumbs]}
         spaceBetween={10}
         thumbs={{ swiper: thumbsSwiper }}
       >
         {images.map((src, idx) => (
-          <SwiperSlide key={idx}>
-            <Image className="w-full h-auto object-cover" src={src} />
+          <SwiperSlide key={idx} className="w-full">
+            <Image className="w-full !max-w-none  object-cover" src={src} />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -39,7 +40,7 @@ export default function SyncedGallerySwiper({ images }: Props) {
         breakpoints={{
           640: {
             slidesPerView: 2,
-            spaceBetween: 5,
+            spaceBetween: 20,
           },
           768: {
             slidesPerView: 4,
@@ -59,7 +60,7 @@ export default function SyncedGallerySwiper({ images }: Props) {
         {images.map((src, idx) => (
           <SwiperSlide key={idx}>
             <Image
-              className="w-full h-20 object-cover cursor-pointer opacity-80 hover:opacity-100 transition"
+              className="w-full h-20 object-cover  cursor-pointer opacity-80 hover:opacity-100 transition"
               fallbackSrc={'https://via.placeholder.com/300x200'}
               loading="lazy"
               src={src}

@@ -17,7 +17,7 @@ export default function MainPtCard({
 }: MainPtCardProps) {
   return (
     <div
-      className={`pt-card m-2 transform perspective-[800px] w-full h-full antialiased cursor-pointer group ${className}`}
+      className={`pt-card  transform perspective-[800px] w-full h-full antialiased cursor-pointer group ${className}`}
       style={{ transformStyle: 'preserve-3d' }}
     >
       <div

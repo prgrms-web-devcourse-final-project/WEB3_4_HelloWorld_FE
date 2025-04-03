@@ -17,12 +17,13 @@ export const FacilityButton = ({
   return (
     <MyButton
       className={clsx(
-        'w-[80px] h-[80px] flex flex-col items-center justify-center space-y-1 border transition-all duration-200',
+        ' border transition-all duration-200',
         selected
-          ? 'border-main' // ✅ 클릭 시 테두리까지 바꿔줌
-          : 'text-mono_500 hover:bg-main hover:text-main',
+          ? 'bg-main text-mono_100' // ✅ 클릭 시 테두리까지 바꿔줌
+          : 'text-mono_500 hover:bg-main hover:text-mono_050',
       )}
-      variant="ghost"
+      color="facility"
+      size="facility"
       onClick={onClick}
     >
       {children}
