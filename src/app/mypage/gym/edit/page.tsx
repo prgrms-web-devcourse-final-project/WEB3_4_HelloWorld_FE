@@ -329,16 +329,12 @@ export default function GymEditPage() {
               <div className="flex gap-2 flex-wrap">
                 {allFacilities.map((facility) => (
                   <FacilityButton
+                    key={facility}
+                    icon={facilityIcons[facility]}
+                    label={facility}
                     selected={selectedFacilities.includes(facility)}
                     onClick={() => toggleFacility(facility)}
-                  >
-                    <img
-                      alt={facility}
-                      className="w-10 h-10"
-                      src={facilityIcons[facility]}
-                    />
-                    <span className="text-xs">{facility}</span>
-                  </FacilityButton>
+                  />
                 ))}
               </div>
             </div>
