@@ -1,98 +1,142 @@
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
-} from '@heroui/react';
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react';
 import NextImage from 'next/image';
+import { Button } from '@heroui/react';
+import {
+  HeartIcon as HeartOutline,
+  MapIcon,
+  ShareIcon,
+} from '@heroicons/react/24/outline';
+import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
+
+import ModalImageGallery from './molecules/ModalImageGallery';
+import GymTabs from './molecules/GymTabs';
+import GymIntroSection from './molecules/GymIntroSection';
 
 interface GymDetailPanelProps {
   gym: any;
-  isOpen: boolean;
+  onClose: () => void;
 }
 
-export default function GymDetailPanel({ gym, isOpen }: GymDetailPanelProps) {
-  const { isOpen: isModalOpen, onOpen, onOpenChange } = useDisclosure();
-
-  if (!gym) return null;
+export default function GymDetailPanel({ gym, onClose }: GymDetailPanelProps) {
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [selectedTab, setSelectedTab] = useState('home');
+  const imageList = Array.from({ length: 10 }, (_, i) => `/gym_sample.jpg`);
 
   return (
-    <div
-      className="
-        absolute top-[64px]
-        left-[436px] // 검색바 너비만큼 이동
-        h-[calc(100%-64px)]
-        w-[440px]
-        bg-white
-        rounded-tl-2xl rounded-bl-2xl
-        shadow-2xl
-        z-10
-        flex flex-col
-        overflow-hidden
-      "
-    >
-      {/* 이미지 영역 */}
-      <div className="grid grid-cols-2 grid-rows-2 gap-1 p-3 h-[220px]">
-        <NextImage
-          alt="img1"
-          className="rounded-lg object-cover col-span-2 row-span-2"
-          height={192}
-          src="/gym_sample.jpg"
-          width={220}
-        />
-        <NextImage
-          alt="img2"
-          className="rounded-lg object-cover"
-          height={96}
-          src="/gym_sample.jpg"
-          width={220}
-        />
-        <div className="relative">
-          <NextImage
-            alt="img3"
-            className="rounded-lg object-cover blur-sm brightness-75"
-            height={96}
-            src="/gym_sample.jpg"
-            width={220}
-          />
+    <div className="absolute top-[64px] left-[436px] h-[calc(100%-64px)] w-[440px] bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden">
+      {/* 이미지 */}
+      <div className="flex gap-[2px] w-full h-[220px] rounded-tl-2xl rounded-tr-2xl overflow-hidden">
+        <div className="w-2/3 h-full">
           <button
-            className="absolute inset-0 flex items-center justify-center"
-            onClick={onOpen}
+            className="w-full h-full"
+            onClick={() => setIsGalleryOpen(true)}
           >
-            <EllipsisHorizontalIcon className="w-6 h-6 text-white" />
+            <NextImage
+              alt="big-img"
+              className="object-cover w-full h-full"
+              height={220}
+              src="/gym_sample.jpg"
+              width={300}
+            />
           </button>
+        </div>
+        <div className="flex flex-col w-1/3 h-full gap-[2px]">
+          {[1, 2].map((i) => (
+            <button
+              key={i}
+              className="w-full h-1/2"
+              onClick={() => setIsGalleryOpen(true)}
+            >
+              <NextImage
+                alt={`small-img-${i}`}
+                className="object-cover w-full h-full"
+                height={105}
+                src="/gym_sample.jpg"
+                width={100}
+              />
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* 상세 내용 (임시) */}
-      <div className="p-4 space-y-2 overflow-y-auto flex-1">
-        <h3 className="font-bold text-lg">{gym.name}</h3>
-        <p className="text-sm text-mono_500">{gym.address}</p>
-        <p className="text-xs text-mono_400">{gym.description}</p>
+      {/* 본문 */}
+      <div className="flex justify-between items-start p-4 border-b border-mono_200">
+        <div className="flex flex-col gap-[16px]">
+          <h3 className="text-[24px] font-bold font-pretendard text-mono_800">
+            비헬씨 서초점 {gym}
+          </h3>
+          <p className="text-[16px] font-pretendard text-mono_500">
+            서울시 강남구 역삼동 | 02-123-4567
+          </p>
+        </div>
+        <div className="flex flex-col items-end gap-4">
+          <div className="flex gap-2">
+            <Button
+              isIconOnly
+              className="w-8 h-8 min-w-0"
+              radius="sm"
+              variant="light"
+              onClick={() => setLiked(!liked)}
+            >
+              {liked ? (
+                <HeartSolid className="w-6 h-6 text-main transition-all" />
+              ) : (
+                <HeartOutline className="w-6 h-6 text-mono_600 hover:text-main transition-all" />
+              )}
+            </Button>
+            <Button
+              isIconOnly
+              className="w-8 h-8 min-w-0"
+              radius="sm"
+              variant="light"
+            >
+              <MapIcon className="w-6 h-6 text-mono_600 hover:text-main transition-all" />
+            </Button>
+            <Button
+              isIconOnly
+              className="w-8 h-8 min-w-0"
+              radius="sm"
+              variant="light"
+            >
+              <ShareIcon className="w-6 h-6 text-mono_600 hover:text-main transition-all" />
+            </Button>
+          </div>
+          <Button
+            className="w-[100px] h-[32px] text-[14px] bg-main text-mono_000 font-pretendard hover:opacity-90 active:opacity-80 transition"
+            radius="sm"
+            size="sm"
+          >
+            등록
+          </Button>
+        </div>
+      </div>
+
+      {/* 탭 */}
+      <div className="h-[48px] px-2 border-b border-mono_200">
+        <GymTabs selectedTab={selectedTab} onChange={setSelectedTab} />
+      </div>
+
+      {/* 상세 */}
+      <div className="flex-1 p-4 overflow-y-auto">
+        {selectedTab === 'home' && (
+          <GymIntroSection
+            content={
+              '센터에 대한 소개글입니다dsadsadsadsada.줄바꿈도 지원합니다.내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.'
+            }
+          />
+        )}
+        {selectedTab === 'instructors' && <div>강사 탭 준비중</div>}
+        {selectedTab === 'review' && <div>리뷰 탭 준비중</div>}
+        {selectedTab === 'facility' && <div>시설 탭 준비중</div>}
       </div>
 
       {/* 모달 */}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          <ModalHeader>사진 더보기</ModalHeader>
-          <ModalBody>
-            <div className="grid grid-cols-2 gap-2">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <NextImage
-                  key={i}
-                  alt={`more${i}`}
-                  className="rounded-lg object-cover"
-                  height={150}
-                  src="/gym_sample.jpg"
-                  width={200}
-                />
-              ))}
-            </div>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <ModalImageGallery
+        imageList={imageList}
+        isOpen={isGalleryOpen}
+        onOpenChange={() => setIsGalleryOpen(false)}
+      />
     </div>
   );
 }

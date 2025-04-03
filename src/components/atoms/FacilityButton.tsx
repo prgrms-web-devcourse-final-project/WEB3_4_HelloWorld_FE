@@ -21,7 +21,7 @@ export const FacilityButton = ({
       className={clsx(
         ' border transition-all duration-200',
         selected
-          ? 'bg-main text-mono_100' // ✅ 클릭 시 테두리까지 바꿔줌
+          ? 'bg-main text-mono_100'
           : 'text-mono_500 hover:bg-main hover:text-mono_050',
       )}
       color="facility"

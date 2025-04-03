@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "cross-env NEXT_TURBO=1 next dev",
+    "dev": "cross-env next dev --turbo",
     "dev:webpack": "next dev",
     "build": "next build",
     "start": "next start",
@@ -35,7 +35,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "2.1.1",
     "dayjs": "^1.11.13",
-    "framer-motion": "11.13.1",
+    "framer-motion": "^11.13.1",
     "gsap": "^3.12.7",
     "intl-messageformat": "^10.5.0",
     "next": "14.2.25",
