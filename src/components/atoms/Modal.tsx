@@ -1,15 +1,8 @@
-import {
-  Modal as HerouiModal,
-  ModalContent,
-  Button,
-  useDisclosure,
-} from '@heroui/react';
-
-export default function Modal({
-  children,
-  size = 'md',
-}: {
+import { Modal as HerouiModal, ModalContent } from '@heroui/react';
+interface ModalProps {
   children: React.ReactNode;
+  isOpen: boolean;
+  onOpenChange: () => void;
   size?:
     | 'sm'
     | 'md'
@@ -20,14 +13,16 @@ export default function Modal({
     | 'xs'
     | '3xl'
     | '4xl'
-    | '5xl'
-    | undefined;
-}) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+    | '5xl';
+}
+export default function Modal({
+  children,
+  isOpen = false,
+  onOpenChange,
+  size = 'md',
+}: ModalProps) {
   return (
     <>
-      <Button onPress={onOpen}>Open Modal</Button>
       <HerouiModal isOpen={isOpen} size={size} onOpenChange={onOpenChange}>
         <ModalContent>{children}</ModalContent>
       </HerouiModal>

@@ -16,6 +16,7 @@ import {
   PhoneIcon,
   PlusIcon,
 } from '@heroicons/react/24/solid';
+import Image from 'next/image';
 
 import { NumberInputBase } from '@/components/atoms/NumberInputBase';
 import { CustomTextarea } from '@/components/atoms/TextareaBase';
@@ -329,13 +330,15 @@ export default function GymEditPage() {
               <div className="flex gap-2 flex-wrap">
                 {allFacilities.map((facility) => (
                   <FacilityButton
+                    key={facility}
                     selected={selectedFacilities.includes(facility)}
                     onClick={() => toggleFacility(facility)}
                   >
-                    <img
+                    <Image
                       alt={facility}
-                      className="w-10 h-10"
+                      height={40}
                       src={facilityIcons[facility]}
+                      width={40}
                     />
                     <span className="text-xs">{facility}</span>
                   </FacilityButton>

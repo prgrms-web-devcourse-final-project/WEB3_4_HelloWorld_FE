@@ -5,10 +5,10 @@ export const MyCheckbox = extendVariants(Checkbox, {
   variants: {
     color: {
       test: {
-        base: ' border-1 block border-mono_200 m-0 max-w-full transition-all',
-        wrapper: ' hidden w-full',
+        base: ' data-[selected]:bg-main  data-[hover]:bg-main border-1 block border-mono_200 m-0 max-w-full transition-all',
+        wrapper: '  w-full',
         label:
-          'text-mono_700 data-[selected]:text-mono_200 flex justify-center items-center ',
+          ' data-[selected]:text-mono_200 hover:text-gray-100 flex justify-center items-center ',
       },
     },
     size: {
@@ -35,8 +35,8 @@ export const MyCheckbox = extendVariants(Checkbox, {
     },
     isSelected: {
       true: {
-        base: 'bg-main',
-        label: 'text-main-foreground',
+        base: 'bg-main text-mono_200',
+        label: 'text-mono_200',
       },
     },
     isFocusVisible: {
@@ -49,10 +49,7 @@ export const MyCheckbox = extendVariants(Checkbox, {
     {
       color: 'test',
       isSelected: true,
-      className: ' font-semibold bg-main  ',
+      className: ' font-semibold bg-main text-mono_200 ',
     },
   ],
-  defaultVariants: {
-    color: 'test',
-  },
 });
