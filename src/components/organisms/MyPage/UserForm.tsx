@@ -240,7 +240,7 @@ const UserForm = () => {
         />
       </div>
 
-      <CustomButton className="bg-main text-mono_100 mb-[100px]" type="submit">
+      <CustomButton className="bg-main text-mono_100 " type="submit">
         수정하기
       </CustomButton>
     </form>

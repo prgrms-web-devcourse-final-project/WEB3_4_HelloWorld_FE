@@ -4,12 +4,15 @@ import { Tabs, Tab } from '@nextui-org/react';
 import { memo, useState } from 'react';
 
 import UserForm from '@/components/organisms/MyPage/UserForm';
+import HistoryList from '@/components/templates/MemberMypageTemplate/HistoryList';
+import CouponListHistory from '@/components/templates/MemberMypageTemplate/CouponListHistory';
+import Logout from '@/components/templates/MemberMypageTemplate/Logout';
 
 const TABS = [
   { key: 'user', title: '개인정보' },
   { key: 'history', title: '나의 수강 내역' },
-  { key: 'coupon', title: '나의 쿠폰 내역' },
-  { key: 'logout', title: '로그아웃' },
+  { key: 'coupon', title: '나의 결제 내역' },
+  { key: 'logout', title: '회원탈퇴' },
 ];
 
 const MyPageTemplate = () => {
@@ -25,7 +28,7 @@ const MyPageTemplate = () => {
             📌 마이페이지
           </h2>
 
-          <div className="ml-[760px] flex-1">
+          <div className="ml-[740px] flex-1">
             <Tabs
               aria-label="MyPage Tabs"
               classNames={{ tabList: 'gap-6', cursor: 'bg-main' }}
@@ -49,17 +52,33 @@ const MyPageTemplate = () => {
           </div>
         </div>
 
-        <div className="mt-[100px] w-full flex justify-center">
-          <div className="w-full max-w-[640px] ml-[470px] mx-auto">
+        <div className="mt-[100px] w-full">
+          {
             {
-              {
-                user: <UserForm />,
-                history: <div>📚 수강 내역 컴포넌트 예정</div>,
-                coupon: <div>🎟️ 쿠폰 내역 컴포넌트 예정</div>,
-                logout: <div>🚪 로그아웃 컴포넌트 예정</div>,
-              }[selectedTab]
-            }
-          </div>
+              user: (
+                <div className="flex justify-center">
+                  <div className="w-full max-w-[640px] ml-[150px]">
+                    <UserForm />
+                  </div>
+                </div>
+              ),
+              history: (
+                <div className="flex justify-start pl-[50px]">
+                  <div className="w-[1305px] h-[550px]">
+                    <HistoryList />
+                  </div>
+                </div>
+              ),
+              coupon: (
+                <div className="flex justify-start pl-[50px]">
+                  <div className="w-[1305px] h-[550px]">
+                    <CouponListHistory />
+                  </div>
+                </div>
+              ),
+              logout: <Logout />, // ✅ 컴포넌트로 분리
+            }[selectedTab]
+          }
         </div>
       </div>
     </div>

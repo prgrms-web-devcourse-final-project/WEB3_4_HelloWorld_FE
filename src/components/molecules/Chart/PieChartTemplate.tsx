@@ -37,11 +37,11 @@ const PieChart = ({ labels, series }: PieChartProps) => {
 
   return (
     <ReactApexChart
+      height="100%"
       options={options}
       series={series}
       type="donut"
       width="100%"
-      height="100%"
     />
   );
 };

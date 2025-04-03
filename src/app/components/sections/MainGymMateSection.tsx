@@ -1,3 +1,4 @@
+'use client';
 import Section from '@/components/atoms/Section';
 import Wave from '@/components/molecules/Wave';
 import NumberCountCard from '@/components/molecules/NumberCountCard';
@@ -15,8 +16,7 @@ export default function MainGymMateSection() {
               isFixedColor
               description="짐 메이트와 함께하는 사용자와 전문가들이 늘고 있다~~ 정도"
               subTitle="WHIT GYM MATE"
-              title={`GYM MATE 
-함께 하는 사람들`}
+              title={`GYM MATE 함께 하는 사람들`}
             >
               <div className="flex flex-col gap-4">
                 <NumberCountCard countNumber={120000} title={'누적 회원수'} />
