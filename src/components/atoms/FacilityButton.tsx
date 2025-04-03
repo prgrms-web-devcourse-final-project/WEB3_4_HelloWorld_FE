@@ -6,27 +6,30 @@ import { MyButton } from './Button';
 interface FacilityButtonProps {
   selected: boolean;
   onClick: () => void;
-  children: React.ReactNode;
+  icon: string;
+  label: string;
 }
 
 export const FacilityButton = ({
   selected,
   onClick,
-  children,
+  icon,
+  label,
 }: FacilityButtonProps) => {
   return (
     <MyButton
       className={clsx(
         ' border transition-all duration-200',
         selected
-          ? 'bg-main text-mono_100' // ✅ 클릭 시 테두리까지 바꿔줌
+          ? 'bg-main text-mono_100'
           : 'text-mono_500 hover:bg-main hover:text-mono_050',
       )}
       color="facility"
       size="facility"
       onClick={onClick}
     >
-      {children}
+      <img alt={label} className="w-10 h-10" src={icon} />
+      <span className="text-[12px] leading-tight">{label}</span>
     </MyButton>
   );
 };
