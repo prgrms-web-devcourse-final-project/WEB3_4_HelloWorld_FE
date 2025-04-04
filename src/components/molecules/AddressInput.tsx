@@ -7,7 +7,8 @@ import InputField from '@/app/login/components/InputField';
 import AddressSearchModal from '@/components/molecules/AddressSearchModal';
 
 interface AddressInputProps {
-  setAddress: React.Dispatch<React.SetStateAction<string>>; // setAddress의 타입 정의
+  setAddress: (value: string) => void;
+  value?: string;
 }
 
 const AddressInput = ({ setAddress }: AddressInputProps) => {

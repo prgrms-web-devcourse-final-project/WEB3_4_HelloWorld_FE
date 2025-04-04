@@ -6,62 +6,34 @@ import Image from 'next/image';
 import InputField from '@/app/login/components/InputField';
 import CustomButton from '@/app/login/components/CustomButton';
 import LevelBadge from '@/components/atoms/LevelBadge';
-import { UserData } from '@/types/UserData';
 import AddressInput from '@/components/molecules/AddressInput';
+import { getUserInfo, updateUserInfo } from '@/apis/userApi';
+import { UserData } from '@/types/UserData';
 
 const UserForm = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [setAddress] = useState('');
-  const [form, setForm] = useState<Omit<UserData, 'gender'>>({
-    memberName: '',
-    phoneNumber: '',
-    email: '',
-    birthday: '',
-    height: '',
-    weight: '',
-    address: '',
-    recentBench: 0,
-    recentSquat: 0,
-    recentDeadlift: 0,
-    profileImageUrl: '',
-  });
+  const [userInfo, setUserInfo] = useState<UserData | null>(null);
 
-  // 사용자 정보 불러오기 요청 추후 수정 필요 <- 임시 코드 백앤드 구현 안됨
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch('/member', {
-          credentials: 'include',
-        });
-        const data = await res.json();
+        const data = await getUserInfo();
 
-        setForm({
-          memberName: data.memberName ?? '',
-          phoneNumber: data.phoneNumber ?? '',
-          email: data.email ?? '',
-          birthday: data.birthday ?? '',
-          height: data.height ?? '',
-          weight: data.weight ?? '',
-          address: data.address ?? '',
-          recentBench: data.recentBench ?? 0,
-          recentSquat: data.recentSquat ?? 0,
-          recentDeadlift: data.recentDeadlift ?? 0,
-          profileImageUrl: data.profileImageUrl ?? '',
-        });
+        setUserInfo(data);
       } catch {
-        throw new Error('사용자 정보 불러오기 실패');
+        alert('사용자 정보 불러오기 실패');
       }
     };
 
     fetchUser();
   }, []);
-  // 임시 코드 입니다.
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const numberFields = ['recentSquat', 'recentDeadlift', 'recentBench'];
     const parsedValue = numberFields.includes(name) ? Number(value) : value;
 
-    setForm((prev) => ({ ...prev, [name]: parsedValue }));
+    setUserInfo((prev) => (prev ? { ...prev, [name]: parsedValue } : prev));
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,25 +42,24 @@ const UserForm = () => {
     if (!file) return;
     const imageUrl = URL.createObjectURL(file);
 
-    setForm((prev) => ({ ...prev, profileImageUrl: imageUrl }));
+    setUserInfo((prev) =>
+      prev ? { ...prev, profileImageUrl: imageUrl } : prev,
+    );
   };
-  // 임시 코드 입니다.
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const { ...requestPayload } = form;
-      const res = await fetch('/member/info', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestPayload),
-      });
+    if (!userInfo) return;
 
-      if (!res.ok) throw new Error('수정 실패');
-      alert('수정 완료!');
+    try {
+      await updateUserInfo(userInfo);
+      alert('수정 완료 완료되었습니다');
     } catch {
       alert('수정 중 오류가 발생했습니다.');
     }
   };
+
+  if (!userInfo) return <p>로딩 중...</p>;
 
   return (
     <form className="flex flex-col w-full" onSubmit={handleSubmit}>
@@ -98,12 +69,12 @@ const UserForm = () => {
           type="button"
           onClick={() => fileInputRef.current?.click()}
         >
-          {form.profileImageUrl && (
+          {userInfo.profileImageUrl && (
             <Image
               fill
               alt="프로필 이미지"
               className="rounded-full object-cover"
-              src={form.profileImageUrl}
+              src={userInfo.profileImageUrl}
             />
           )}
         </button>
@@ -119,7 +90,7 @@ const UserForm = () => {
         <LevelBadge level={4} />
 
         <div className="text-[18px] font-semibold text-mono_900">
-          {form.memberName || '이름 없음'} ✏️
+          {userInfo.memberName || '이름 없음'} ✏️
         </div>
       </div>
 
@@ -131,7 +102,7 @@ const UserForm = () => {
         labelInputGap="5px"
         name="memberName"
         placeholder="홍길동"
-        value={form.memberName}
+        value={userInfo.memberName}
         width="452px"
         onChange={handleChange}
       />
@@ -144,7 +115,7 @@ const UserForm = () => {
         labelInputGap="5px"
         name="phoneNumber"
         placeholder="010-1234-5678"
-        value={form.phoneNumber}
+        value={userInfo.phoneNumber}
         width="452px"
         onChange={handleChange}
       />
@@ -158,7 +129,20 @@ const UserForm = () => {
         name="email"
         placeholder="hong@example.com"
         type="email"
-        value={form.email}
+        value={userInfo.email}
+        width="452px"
+        onChange={handleChange}
+      />
+
+      <InputField
+        required
+        containerMarginBottom="60px"
+        height="62px"
+        label="생년월일"
+        labelInputGap="5px"
+        name="birthday"
+        placeholder="2000.01.01"
+        value={userInfo.birthday}
         width="452px"
         onChange={handleChange}
       />
@@ -172,7 +156,7 @@ const UserForm = () => {
           labelInputGap="5px"
           name="height"
           placeholder="160cm"
-          value={form.height}
+          value={userInfo.height}
           width="195px"
           onChange={handleChange}
         />
@@ -184,7 +168,7 @@ const UserForm = () => {
           labelInputGap="5px"
           name="weight"
           placeholder="60kg"
-          value={form.weight}
+          value={userInfo.weight}
           width="195px"
           onChange={handleChange}
         />
@@ -192,8 +176,14 @@ const UserForm = () => {
 
       <div className="mb-[30px] flex justify-start">
         <div className="relative">
-          <AddressInput setAddress={setAddress} />
-          <div className="absolute right-3 top-[23px]" />
+          <AddressInput
+            setAddress={(newAddress) =>
+              setUserInfo((prev) =>
+                prev ? { ...prev, address: newAddress } : prev,
+              )
+            }
+            value={userInfo.address}
+          />
         </div>
       </div>
 
@@ -207,7 +197,7 @@ const UserForm = () => {
           name="recentSquat"
           placeholder="100"
           type="number"
-          value={form.recentSquat.toString()}
+          value={userInfo.recentSquat.toString()}
           width="140px"
           onChange={handleChange}
         />
@@ -220,7 +210,7 @@ const UserForm = () => {
           name="recentDeadlift"
           placeholder="100"
           type="number"
-          value={form.recentDeadlift.toString()}
+          value={userInfo.recentDeadlift.toString()}
           width="140px"
           onChange={handleChange}
         />
@@ -233,7 +223,7 @@ const UserForm = () => {
           name="recentBench"
           placeholder="100"
           type="number"
-          value={form.recentBench.toString()}
+          value={userInfo.recentBench.toString()}
           width="140px"
           onChange={handleChange}
         />
