@@ -19,15 +19,17 @@ export default function GymIntroSection({ content }: GymIntroSectionProps) {
       {/* 내용 박스 */}
       <div
         className={`
-          w-[400px]
-          ${expanded ? 'max-h-fit' : 'max-h-[168px]'}
-          overflow-hidden
-          text-[16px] font-pretendard text-mono_600
-          whitespace-pre-wrap
-          transition-all duration-300
-          rounded-md
-          bg-mono_100 p-3
-        `}
+    w-[400px]
+    ${expanded ? 'max-h-fit' : 'max-h-[168px]'}
+    overflow-hidden
+    text-[16px] font-pretendard text-mono_600
+    whitespace-pre-wrap
+    transition-all duration-300
+    rounded-xl
+    border border-mono_100 shadow-sm
+    p-3
+    bg-white
+  `}
       >
         {content}
       </div>

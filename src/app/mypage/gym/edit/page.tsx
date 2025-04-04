@@ -1,6 +1,7 @@
 'use client';
-
+import Image from 'next/image';
 import { useState } from 'react';
+import { Time } from '@internationalized/date';
 import {
   Autocomplete,
   AutocompleteItem,
@@ -97,18 +98,23 @@ export default function GymEditPage() {
   const [selectedGym, setSelectedGym] = useState<any>(null);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
   const [intro, setIntro] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [startTime, setStartTime] = useState<Time | null>(null);
+  const [endTime, setEndTime] = useState<Time | null>(null);
+
   // const [productMonth, setProductMonth] = useState<number | null>(1);
   const [productFee, setProductFee] = useState<number | null>(0);
   const [equipmentName, setEquipmentName] = useState('');
   const [equipmentCount, setEquipmentCount] = useState<number | null>(null);
   const [equipments, setEquipments] = useState<
-    { name: string; count: number }[]
+    { name: string; count: number; image?: File }[]
   >([]);
+
   const [images, setImages] = useState<File[]>([]);
 
-  const [equipmentImage, setEquipmentImage] = useState<File | null>(null);
+  const [equipmentImage, setEquipmentImage] = useState<File | undefined>(
+    undefined,
+  );
+
   const [equipmentImageName, setEquipmentImageName] = useState<string>('');
 
   // 파일 핸들러 수정
@@ -133,7 +139,7 @@ export default function GymEditPage() {
     // 입력값 초기화
     setEquipmentName('');
     setEquipmentCount(null);
-    setEquipmentImage(null);
+    setEquipmentImage(undefined);
     setEquipmentImageName('');
   };
 
@@ -288,7 +294,7 @@ export default function GymEditPage() {
                 </h3>
                 <TimeInput
                   className="h-10 w-full"
-                  placeholder="시작 시간"
+                  label="시작 시간"
                   value={startTime}
                   onChange={(val) => setStartTime(val)}
                 />
@@ -300,7 +306,7 @@ export default function GymEditPage() {
                 </h3>
                 <TimeInput
                   className="h-10 w-full"
-                  placeholder="종료 시간"
+                  label="종료 시간"
                   value={endTime}
                   onChange={(val) => setEndTime(val)}
                 />
@@ -316,7 +322,7 @@ export default function GymEditPage() {
                 label="1시간 요금 (원)"
                 min={0}
                 placeholder="ex) 10000"
-                value={productFee}
+                value={productFee ?? undefined} // ✅ null → undefined로 변경
                 onChange={(val) => setProductFee(Number(val))}
               />
             </div>
@@ -354,9 +360,10 @@ export default function GymEditPage() {
                   min={1}
                   placeholder="개수"
                   size="xs"
-                  value={equipmentCount}
+                  value={equipmentCount ?? undefined}
                   onChange={(val) => setEquipmentCount(Number(val))}
                 />
+
                 <label
                   className="w-[120px] h-10 border border-dashed rounded cursor-pointer flex items-center justify-center bg-white hover:bg-mono_50"
                   htmlFor="equipment-image"
@@ -397,10 +404,11 @@ export default function GymEditPage() {
                     </Button>
 
                     {/* 이미지 */}
-                    <div className="w-full h-[80px] rounded bg-mono_200 overflow-hidden">
-                      <img
+                    <div className="w-full h-[80px] rounded bg-mono_200 overflow-hidden relative">
+                      <Image
+                        fill
                         alt="equipment"
-                        className="w-full h-full object-cover"
+                        className="object-cover"
                         src={
                           eq.image
                             ? URL.createObjectURL(eq.image)
@@ -436,9 +444,10 @@ export default function GymEditPage() {
                     key={index}
                     className="relative aspect-[7/6] rounded overflow-hidden bg-white shadow border"
                   >
-                    <img
+                    <Image
+                      fill
                       alt="업로드된 이미지"
-                      className="w-full h-full object-cover"
+                      className="object-cover"
                       src={
                         typeof image === 'string'
                           ? image
@@ -459,9 +468,10 @@ export default function GymEditPage() {
                   className="relative aspect-[7/6] border border-dashed rounded cursor-pointer overflow-hidden flex items-center justify-center bg-white hover:bg-mono_50"
                   htmlFor="image-upload"
                 >
-                  <img
+                  <Image
+                    fill
                     alt="배경"
-                    className="absolute inset-0 w-full h-full object-cover opacity-50"
+                    className="object-cover opacity-50"
                     src="/gym/icons/healthboy.jpg"
                   />
                   <PlusIcon className="w-8 h-8 text-mono_400 group-hover:text-main transition" />
