@@ -29,16 +29,17 @@ const BirthdayInputGroup: FC<BirthdayInputGroupProps> = ({ onBirthChange }) => {
   return (
     <div className="mb-[50px]">
       <div className="w-[452px] flex gap-[28px]">
+        {/* 연도 */}
         <div className="flex flex-col w-[214px]">
-          <label
+          <span
+            aria-hidden="true"
             className="text-sm text-mono_700 font-medium mb-[5px] flex items-center gap-1"
-            htmlFor="birth-year"
           >
             생년월일<span className="text-main">*</span>
-          </label>
+          </span>
           <BirthSelect
             required
-            ariaLabel="출생 연도"
+            ariaLabel="출생 연도 선택"
             height="38px"
             id="birth-year"
             options={years}
@@ -48,16 +49,17 @@ const BirthdayInputGroup: FC<BirthdayInputGroupProps> = ({ onBirthChange }) => {
           />
         </div>
 
+        {/* 월 */}
         <div className="flex flex-col w-[91px]">
-          <label
+          <span
+            aria-hidden="true"
             className="text-sm text-mono_700 font-medium mb-[5px] flex items-center gap-1"
-            htmlFor="birth-month"
           >
             월<span className="text-main">*</span>
-          </label>
+          </span>
           <BirthSelect
             required
-            ariaLabel="출생 월"
+            ariaLabel="출생 월 선택"
             height="38px"
             id="birth-month"
             options={months}
@@ -67,16 +69,17 @@ const BirthdayInputGroup: FC<BirthdayInputGroupProps> = ({ onBirthChange }) => {
           />
         </div>
 
+        {/* 일 */}
         <div className="flex flex-col w-[91px]">
-          <label
+          <span
+            aria-hidden="true"
             className="text-sm text-mono_700 font-medium mb-[5px] flex items-center gap-1"
-            htmlFor="birth-day"
           >
             일<span className="text-main">*</span>
-          </label>
+          </span>
           <BirthSelect
             required
-            ariaLabel="출생 일"
+            ariaLabel="출생 일 선택"
             height="38px"
             id="birth-day"
             options={days}

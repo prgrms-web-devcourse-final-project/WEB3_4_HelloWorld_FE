@@ -22,6 +22,7 @@ const TrainerLoginForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (alertTriggered) return;
+
     const formDataObj = new FormData(e.currentTarget);
     const result = Object.fromEntries(formDataObj.entries());
 

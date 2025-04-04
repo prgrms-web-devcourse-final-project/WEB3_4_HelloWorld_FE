@@ -8,6 +8,7 @@ import StepZero from '@/components/molecules/LoginTemplatesForm/StepZero';
 import StepUser from '@/components/molecules/LoginTemplatesForm/StepUser';
 import StepTrainer from '@/components/molecules/LoginTemplatesForm/StepTrainer';
 import ProgressWrapper from '@/components/molecules/LoginTemplatesForm/ProgressWrapper';
+import { UserData } from '@/types/UserData';
 
 const LoginTemplate = () => {
   const searchParams = useSearchParams();
@@ -17,7 +18,20 @@ const LoginTemplate = () => {
   const oauthId = searchParams.get('oauthId');
 
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<UserData>({
+    phoneNumber: '',
+    memberName: '',
+    email: '',
+    birthday: '',
+    gender: '',
+    height: '',
+    weight: '',
+    address: '',
+    recentBench: 0,
+    recentSquat: 0,
+    recentDeadlift: 0,
+  });
+
   const [birth, setBirth] = useState('');
   const [selectedTab, setSelectedTab] = useState<'user' | 'trainer'>('user');
   const [selectedTrainerRole, setSelectedTrainerRole] = useState<

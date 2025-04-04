@@ -1,7 +1,7 @@
 'use client';
 
-import { FC } from 'react';
-import { Select, SelectItem } from '@nextui-org/react';
+import { Select, SelectItem } from '@heroui/react';
+import { FC, ChangeEvent } from 'react';
 
 interface BirthSelectProps {
   options: number[];
@@ -23,33 +23,33 @@ const BirthSelect: FC<BirthSelectProps> = ({
   height = '38px',
   ariaLabel,
   id,
-}) => {
-  return (
-    <div style={{ width }}>
-      <label className="sr-only" htmlFor={id}>
-        {ariaLabel}
-      </label>
+}) => (
+  <div>
+    <label className="sr-only" htmlFor={id}>
+      {ariaLabel}
+    </label>
+    <Select
+      aria-label={ariaLabel}
+      classNames={{
+        base: '',
+        trigger: 'h-[38px]',
+        popoverContent: 'z-[100]',
+      }}
+      id={id}
+      isRequired={required}
+      placeholder={placeholder}
+      style={{ width, height }}
+      onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value;
 
-      <Select
-        aria-label={ariaLabel}
-        classNames={{
-          base: 'w-full',
-          trigger: `h-[${height}]`,
-          popoverContent: 'z-[100]',
-        }}
-        id={id}
-        isRequired={required}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        {options.map((opt) => (
-          <SelectItem key={String(opt)} value={String(opt)}>
-            {String(opt).padStart(2, '0')}
-          </SelectItem>
-        ))}
-      </Select>
-    </div>
-  );
-};
+        onChange(value);
+      }}
+    >
+      {options.map((opt) => (
+        <SelectItem key={opt}>{String(opt).padStart(2, '0')}</SelectItem>
+      ))}
+    </Select>
+  </div>
+);
 
 export default BirthSelect;
