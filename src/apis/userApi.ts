@@ -22,7 +22,6 @@ export const registerUser = async (userData: UserData) => {
       throw new Error(error.message || '회원가입에 실패하였습니다.');
     }
   } catch (error) {
-    console.error('회원가입 실패:', error);
     throw error;
   }
 };

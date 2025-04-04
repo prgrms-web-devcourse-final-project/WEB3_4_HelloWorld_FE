@@ -1,6 +1,7 @@
 'use client';
 
 import { Fragment, cloneElement, isValidElement } from 'react';
+
 import LevelBadge from '@/components/atoms/LevelBadge';
 
 interface SummaryCardProps {
@@ -22,13 +23,13 @@ const SummaryCard = ({ title, value, icon }: SummaryCardProps) => {
 
   return (
     <div
+      className={`relative rounded-2xl shadow-md flex ${isMain ? 'flex-col justify-center px-6 pt-3 pb-4' : 'items-center gap-[72px] px-6'}`}
       style={{
         width: 333,
         height: 100,
         paddingLeft: 40,
         paddingRight: 50,
       }}
-      className={`relative rounded-2xl shadow-md flex ${isMain ? 'flex-col justify-center px-6 pt-3 pb-4' : 'items-center gap-[72px] px-6'}`}
     >
       {isMain ? (
         <>
@@ -69,7 +70,7 @@ const CalendarSummaryCards = ({ data }: CalendarSummaryCardsProps) => (
   <div className="mt-[100px] flex gap-[24px]">
     {data.map(({ title, value, icon }, idx) => (
       <Fragment key={idx}>
-        <SummaryCard title={title} value={value} icon={icon} />
+        <SummaryCard icon={icon} title={title} value={value} />
       </Fragment>
     ))}
   </div>

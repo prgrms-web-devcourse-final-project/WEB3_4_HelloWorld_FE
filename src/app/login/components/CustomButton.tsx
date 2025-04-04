@@ -22,6 +22,7 @@ const CustomButton: FC<ButtonProps> = ({
 }) => {
   // size prop에 따라 텍스트 크기만 지정 (버튼 높이는 inline style로 제어)
   let textSizeClass = '';
+
   if (size === 'small') {
     textSizeClass = 'text-sm';
   } else if (size === 'large') {
@@ -32,9 +33,9 @@ const CustomButton: FC<ButtonProps> = ({
 
   return (
     <HeroButton
-      type={type}
-      style={{ width, height }} // 여기서 사용자 지정 width와 height 적용
       className={`${textSizeClass} bg-main text-main-foreground hover:opacity-90 rounded-xl dark:bg-primary dark:text-primary-foreground ${className}`}
+      style={{ width, height }} // 여기서 사용자 지정 width와 height 적용
+      type={type}
     >
       {children}
     </HeroButton>

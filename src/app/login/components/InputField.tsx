@@ -42,25 +42,25 @@ const InputField: FC<InputFieldProps> = ({
     className="flex flex-col"
     style={{ width, marginBottom: containerMarginBottom }}
   >
-    <label htmlFor={name} className="text-sm font-medium text-mono_700">
+    <label className="text-sm font-medium text-mono_700" htmlFor={name}>
       {label}
       {required && <span className="text-main ml-1">*</span>}
     </label>
 
     <div style={{ marginTop: labelInputGap }}>
       <Input
+        className={className}
         isRequired={required}
+        labelPlacement="outside"
         name={name}
         placeholder={placeholder}
-        type={type}
-        labelPlacement="outside"
-        style={{ width: '100%', height }}
-        className={className}
         radius="sm"
+        readOnly={readOnly}
+        style={{ width: '100%', height }}
+        type={type}
         value={value}
         onChange={onChange}
         onFocus={onFocus}
-        readOnly={readOnly}
       />
     </div>
 

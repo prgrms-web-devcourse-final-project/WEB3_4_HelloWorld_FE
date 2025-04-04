@@ -42,7 +42,6 @@ const BirthSelect: FC<BirthSelectProps> = ({
       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
         const value = e.target.value;
 
-        console.log(`[BirthSelect:${id}] selected value:`, value);
         onChange(value);
       }}
     >

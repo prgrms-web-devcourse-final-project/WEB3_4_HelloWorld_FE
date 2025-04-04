@@ -48,7 +48,6 @@ const ProductList = ({ selectedBrands, selectedCategories }: Props) => {
 
   const getData = async (currentPage: number) => {
     if (didFetchMap.current[currentPage]) return;
-
     didFetchMap.current[currentPage] = true;
 
     try {
@@ -71,8 +70,8 @@ const ProductList = ({ selectedBrands, selectedCategories }: Props) => {
       }));
 
       setProducts(normalizedItems);
-    } catch (error) {
-      console.error('Naver API 호출 실패:', error);
+    } catch {
+      throw new Error('Naver API 호출 실패');
     } finally {
       setLoading(false);
     }

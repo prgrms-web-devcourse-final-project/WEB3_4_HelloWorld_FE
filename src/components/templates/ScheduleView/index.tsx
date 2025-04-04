@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 import Calendar from '@/components/molecules/Calendar';
 import CalenderView from '@/components/templates/ScheduleView/CalenderView';
 import SummaryCard from '@/app/myfitness/components/CalenderCards';
@@ -13,7 +15,7 @@ const ScheduleView = () => {
       title: '벤치 프레스 평균',
       value: '2500KG',
       icon: (
-        <img
+        <Image
           alt="벤치 프레스"
           height={32}
           src="/assets/icons/benchPress.svg"
@@ -25,7 +27,7 @@ const ScheduleView = () => {
       title: '데드리프트 평균',
       value: '2500KG',
       icon: (
-        <img
+        <Image
           alt="데드리프트"
           height={32}
           src="/assets/icons/deadlift.svg"
@@ -37,7 +39,7 @@ const ScheduleView = () => {
       title: '스쿼트 평균',
       value: '2500KG',
       icon: (
-        <img
+        <Image
           alt="스쿼트"
           height={32}
           src="/assets/icons/squat.svg"

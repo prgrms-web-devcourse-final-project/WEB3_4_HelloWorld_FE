@@ -12,24 +12,13 @@ import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
 import { registerTrainer } from '@/apis/trainerApi';
 import { mapGenderToApi } from '@/utils/formatUtils';
 
-interface TrainerLoginFormProps {
-  formData: Record<string, any>;
-  setFormData: (data: Record<string, any>) => void;
-  setStep: (step: number) => void;
-}
-
-const TrainerLoginForm = ({
-  formData,
-  setFormData,
-  setStep,
-}: TrainerLoginFormProps) => {
-  const [selectedGender, setSelectedGender] = useState<string>('');
-  const [selectedBank, setSelectedBank] = useState<string>('');
-  const [gymName, setGymName] = useState<string>('');
+const TrainerLoginForm = () => {
+  const [selectedGender, setSelectedGender] = useState('');
+  const [selectedBank, setSelectedBank] = useState('');
+  const [gymName, setGymName] = useState('');
   const [alertTriggered, setAlertTriggered] = useState(false);
   const router = useRouter();
 
-  // 폼 제출 시 처리하는 함수
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (alertTriggered) return;
@@ -51,8 +40,7 @@ const TrainerLoginForm = ({
       alert('트레이너 회원가입이 완료되었습니다.');
       setAlertTriggered(true);
       router.push('/');
-    } catch (error) {
-      console.error('트레이너 등록 실패:', error);
+    } catch {
       alert('등록된 헬스장이 없습니다. 다시 시도해주세요.');
       setAlertTriggered(true);
     }

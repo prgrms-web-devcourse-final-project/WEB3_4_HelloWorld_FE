@@ -16,21 +16,13 @@ import { mapGenderToApi } from '@/utils/formatUtils';
 interface UserInfoFormProps {
   setFormData: React.Dispatch<React.SetStateAction<UserData>>;
   formData: UserData;
-  setStep: React.Dispatch<React.SetStateAction<number>>;
+  _setStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const UserInfoForm = ({
-  setFormData,
-  formData,
-  setStep,
-}: UserInfoFormProps) => {
+const UserInfoForm = ({ setFormData, formData }: UserInfoFormProps) => {
   const [selectedGender, setSelectedGender] = useState<string>('남성');
   const [address, setAddress] = useState<string>('');
-  const [exerciseData, setExerciseData] = useState<{
-    recentBench: number;
-    recentSquat: number;
-    recentDeadlift: number;
-  }>({
+  const [exerciseData, setExerciseData] = useState({
     recentBench: 0,
     recentSquat: 0,
     recentDeadlift: 0,
@@ -44,9 +36,8 @@ const UserInfoForm = ({
     const data = new FormData(e.currentTarget);
     const result = Object.fromEntries(data.entries());
 
-    // 최종 전송 데이터 (기존 + 추가 정보 수동 병합)
     const finalFormData: UserData = {
-      ...formData, // Step1Form에서 받은 값 그대로 사용
+      ...formData,
       gender: mapGenderToApi(selectedGender),
       height: result.height as string,
       weight: result.weight as string,
@@ -62,8 +53,7 @@ const UserInfoForm = ({
       await registerUser(finalFormData);
       alert('회원가입이 완료되었습니다.');
       router.push('/');
-    } catch (error) {
-      console.error('회원가입 실패:', error);
+    } catch {
       alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
     }
   };
