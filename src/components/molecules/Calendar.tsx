@@ -1,10 +1,11 @@
 'use client';
 
-import { useCalendarStore } from '@/stores/calendarStore';
 import { memo, useState } from 'react';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
+
+import { useCalendarStore } from '@/stores/calendarStore';
 import dayjs from '@/utils/dayjsSetup';
 import { getToday } from '@/utils/dateUtils';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 const Calendar = () => {
   const today = dayjs();
@@ -16,12 +17,14 @@ const Calendar = () => {
   const endDate = currentMonth.daysInMonth();
 
   const days = [];
+
   for (let i = 0; i < startOfMonth; i++) days.push(null);
   for (let i = 1; i <= endDate; i++) days.push(i);
 
   const handleClick = (day: number | null) => {
     if (!day) return;
     const date = currentMonth.date(day).format('YYYY-MM-DD');
+
     setSchedulesByDate(date);
   };
 
@@ -30,6 +33,7 @@ const Calendar = () => {
     const date = currentMonth.date(day).format('YYYY-MM-DD');
     const hasSchedule = scheduleList.some((s) => s.date === date);
     const isPastOrToday = dayjs(date).isSameOrBefore(todayStr);
+
     return hasSchedule ? 'bg-[#17c964]' : isPastOrToday ? 'bg-[#f31260]' : '';
   };
 

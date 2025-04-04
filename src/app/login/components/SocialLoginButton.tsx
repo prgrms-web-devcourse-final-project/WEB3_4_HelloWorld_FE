@@ -24,16 +24,16 @@ const SocialLoginButton = ({ type, onClick }: Props) => {
 
   return (
     <button
-      onClick={onClick}
-      type="button"
       aria-label={labelMap[type]}
       className={`relative w-[443px] h-[55px] rounded-[8px] font-semibold text-xl ${styles[type]}`}
+      type="button"
+      onClick={onClick}
     >
       <img
-        src={`/assets/icons/${type}.svg`}
         alt={`${labelMap[type]} 아이콘`}
-        role="presentation"
         className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6"
+        role="presentation"
+        src={`/assets/icons/${type}.svg`}
       />
       <span className="w-full flex justify-center items-center">
         {labelMap[type]}

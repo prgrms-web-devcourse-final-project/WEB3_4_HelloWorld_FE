@@ -10,9 +10,9 @@ interface ProgressWrapperProps {
 const ProgressWrapper = ({ progress, children }: ProgressWrapperProps) => (
   <>
     <ProgressBar
-      percent={progress}
       showValueLabel
       className="w-[452px] h-2 rounded-full"
+      percent={progress}
     />
     {children}
   </>
