@@ -11,17 +11,51 @@ import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 import ModalImageGallery from './molecules/ModalImageGallery';
 import GymTabs from './molecules/GymTabs';
 import GymIntroSection from './molecules/GymIntroSection';
+import GymTimeFeeSection from './molecules/GymTimeFeeSection';
+import SelectedFacilitySection from './molecules/SelectedFacilitySection';
+import EquipmentSection from './molecules/EquipmentSection';
+import GymTrainerSection from './molecules/GymTrainerSection';
 
 interface GymDetailPanelProps {
   gym: any;
   onClose: () => void;
 }
 
-export default function GymDetailPanel({ gym, onClose }: GymDetailPanelProps) {
+const allFacilities = [
+  '수건',
+  '샤워실',
+  '주차장',
+  '사우나',
+  '개인락커',
+  '운동복',
+  '와이파이',
+  '인바디',
+];
+
+const facilityIcons: Record<string, string> = {
+  수건: '/gym/icons/towel.svg',
+  샤워실: '/gym/icons/shower.svg',
+  주차장: '/gym/icons/parking.svg',
+  사우나: '/gym/icons/sauna.svg',
+  개인락커: '/gym/icons/locker.svg',
+  운동복: '/gym/icons/cloth.svg',
+  와이파이: '/gym/icons/wifi.svg',
+  인바디: '/gym/icons/inbody.svg',
+};
+
+const dummyEquipments = [
+  { name: '벤치프레스', count: 2, image: '/gym/equipment/benchpress.jpg' },
+  { name: '런닝머신', count: 5, image: '/gym/equipment/treadmill.jpg' },
+  { name: '스쿼트랙', count: 3, image: '/gym/equipment/squat.jpg' },
+  { name: '케이블머신', count: 1, image: '/gym/equipment/cable.jpg' },
+  { name: '덤벨세트', count: 20, image: '/gym/equipment/dumbbell.jpg' },
+];
+
+export default function GymDetailPanel({ gym }: GymDetailPanelProps) {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [liked, setLiked] = useState(false);
   const [selectedTab, setSelectedTab] = useState('home');
-  const imageList = Array.from({ length: 10 }, (_, i) => `/gym_sample.jpg`);
+  const imageList = Array.from({ length: 10 }, (_) => `/gym_sample.jpg`);
 
   return (
     <div className="absolute top-[64px] left-[436px] h-[calc(100%-64px)] w-[440px] bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden">
@@ -120,11 +154,36 @@ export default function GymDetailPanel({ gym, onClose }: GymDetailPanelProps) {
       {/* 상세 */}
       <div className="flex-1 p-4 overflow-y-auto">
         {selectedTab === 'home' && (
-          <GymIntroSection
-            content={
-              '센터에 대한 소개글입니다dsadsadsadsada.줄바꿈도 지원합니다.내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.센터에 대한 소개글입니다.\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.'
-            }
-          />
+          <>
+            <GymIntroSection
+              content={
+                '센터에 대한 소개글입니다...\n줄바꿈도 지원합니다.\n내용이 많으면 더보기 버튼이 생깁니다.'
+              }
+            />
+            <div className="mt-6">
+              <GymTimeFeeSection
+                feeInfo={['1시간: 0000원']}
+                timeInfo={[
+                  '평일 00:00 ~ 24:00',
+                  '토요일 00:00 ~ 22:00',
+                  '일요일 10:00 ~ 22:00',
+                ]}
+              />
+            </div>
+            <div className="mt-6">
+              <SelectedFacilitySection
+                facilities={allFacilities}
+                iconMap={facilityIcons}
+                selected={false}
+              />
+            </div>
+            <div className="mt-6">
+              <EquipmentSection equipments={dummyEquipments} />
+            </div>
+            <div className="mt-6">
+              <GymTrainerSection />
+            </div>
+          </>
         )}
         {selectedTab === 'instructors' && <div>강사 탭 준비중</div>}
         {selectedTab === 'review' && <div>리뷰 탭 준비중</div>}
