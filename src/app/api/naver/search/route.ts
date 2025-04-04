@@ -27,14 +27,11 @@ export const GET = async (req: NextRequest) => {
 
     const rawText = await res.text();
 
-    // 여기서 파싱 시도
     let data;
 
     try {
       data = JSON.parse(rawText);
-    } catch (parseError) {
-      console.error(' JSON 파싱 실패:', parseError);
-
+    } catch {
       return NextResponse.json({ error: 'JSON 파싱 실패' }, { status: 500 });
     }
 
@@ -46,9 +43,7 @@ export const GET = async (req: NextRequest) => {
     }
 
     return NextResponse.json(data.items);
-  } catch (err) {
-    console.error(' 서버 내부 에러:', err);
-
+  } catch {
     return NextResponse.json({ error: '서버 에러' }, { status: 500 });
   }
 };

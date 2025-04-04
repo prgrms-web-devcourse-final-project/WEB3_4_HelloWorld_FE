@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 interface LevelBadgeProps {
   level: 0 | 1 | 2 | 3 | 4;
 }
@@ -25,12 +26,12 @@ const LevelBadge = ({ level }: LevelBadgeProps) => (
     className={`relative w-[44px] h-[22px] rounded-[8px] text-[#fff] text-[11px] font-bold flex items-center justify-center ${LEVEL_COLORS[level]}`}
   >
     {LEVEL_ICON_PATHS[level] && (
-      <img
-        src={LEVEL_ICON_PATHS[level] as string}
+      <Image
         alt={`level-${level}-icon`}
-        width={12}
-        height={11}
         className="absolute left-[-2px] top-[-8px]"
+        height={11}
+        src={LEVEL_ICON_PATHS[level] as string}
+        width={12}
       />
     )}
     <span>Lv.{level}</span>
