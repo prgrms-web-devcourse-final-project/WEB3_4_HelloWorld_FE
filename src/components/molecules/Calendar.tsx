@@ -29,10 +29,6 @@ const Calendar = () => {
     setSchedulesByDate(date);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent, day: number | null) => {
-    if (e.key === 'Enter' || e.key === ' ') handleClick(day);
-  };
-
   const getDotColor = (day: number | null) => {
     if (!day) return '';
     const date = currentMonth.date(day).format('YYYY-MM-DD');
@@ -69,17 +65,17 @@ const Calendar = () => {
             key={idx}
             className="h-16 flex flex-col items-center justify-center"
           >
-            <div
-              className={`cursor-pointer text-sm focus:outline-none ${
-                day ? 'text-mono-500' : 'text-transparent'
-              }`}
-              role="button"
-              tabIndex={0}
-              onClick={() => handleClick(day)}
-              onKeyDown={(e) => handleKeyDown(e, day)}
-            >
-              {day}
-            </div>
+            {day ? (
+              <button
+                className="w-6 h-6 rounded-full flex items-center justify-center text-sm text-mono-500 hover:bg-gray-200 focus:outline-none"
+                type="button"
+                onClick={() => handleClick(day)}
+              >
+                {day}
+              </button>
+            ) : (
+              <div className="w-6 h-6 text-transparent" />
+            )}
             <div
               className={`w-1.5 h-1.5 rounded-full mt-1 ${getDotColor(day)}`}
             />
