@@ -22,10 +22,10 @@ const StepUser = ({
 }: StepUserProps) =>
   step === 1 ? (
     <Step1Form
-      setFormData={setFormData}
-      setStep={setStep}
       birth={birth}
       setBirth={setBirth}
+      setFormData={setFormData}
+      setStep={setStep}
     />
   ) : (
     <Step2Form

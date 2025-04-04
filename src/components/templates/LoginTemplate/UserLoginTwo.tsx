@@ -56,7 +56,6 @@ const UserInfoForm = ({
       recentDeadlift: exerciseData.recentDeadlift || 0,
     };
 
-    console.log('제출 데이터:', finalFormData);
     setFormData(finalFormData);
 
     try {

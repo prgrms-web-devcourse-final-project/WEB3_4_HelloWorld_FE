@@ -1,11 +1,12 @@
 'use client';
 
+import { memo } from 'react';
+
 import { useCalendarStore } from '@/stores/calendarStore';
 import dayjs from '@/utils/dayjsSetup';
-import { memo } from 'react';
 import ScrollContainerBox from '@/components/atoms/ScrollShadowBox';
 
-const ScheduleView = () => {
+const CalenderView = () => {
   const { selectedSchedules } = useCalendarStore();
 
   return (
@@ -36,4 +37,4 @@ const ScheduleView = () => {
   );
 };
 
-export default memo(ScheduleView);
+export default memo(CalenderView);
