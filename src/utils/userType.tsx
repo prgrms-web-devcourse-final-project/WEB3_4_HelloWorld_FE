@@ -11,7 +11,6 @@ const FetchAuthOnMain = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // 1. 멤버 확인 요청
         const memberRes = await checkMember();
 
         if (memberRes?.ok) {
@@ -24,7 +23,6 @@ const FetchAuthOnMain = () => {
           return;
         }
 
-        // 2. 트레이너 확인 요청
         const trainerRes = await checkTrainer();
 
         if (trainerRes?.ok) {
@@ -40,8 +38,7 @@ const FetchAuthOnMain = () => {
         }
 
         resetAuth();
-      } catch (err) {
-        console.error('유저 인증 확인 실패:', err);
+      } catch {
         resetAuth();
       }
     };

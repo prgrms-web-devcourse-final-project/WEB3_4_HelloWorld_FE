@@ -35,12 +35,12 @@ const BankSelect = ({
     </label>
     <Select
       aria-label={label}
-      selectedKeys={[selectedBank]}
-      onChange={(e) => setSelectedBank(e.target.value)}
-      placeholder={placeholder}
       className="text-sm"
       classNames={{ trigger: `h-[${height}]` }}
       isRequired={required}
+      placeholder={placeholder}
+      selectedKeys={[selectedBank]}
+      onChange={(e) => setSelectedBank(e.target.value)}
     >
       {bankOptions.map((bank) => (
         <SelectItem key={bank.key} value={bank.key}>

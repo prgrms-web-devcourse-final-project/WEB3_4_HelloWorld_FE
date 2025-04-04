@@ -1,11 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
 import API_BASE_URL from '@/utils/apiConfig';
 
 const socialLoginForKaKaoUrl = `${API_BASE_URL}/oauth2/authorization/kakao`;
-const redirectUrlAfterSocialLogin = 'http://localhost:3000';
-const socialLogoutUrl = `${API_BASE_URL}/logout`;
 
 export const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -32,6 +31,7 @@ export const useAuth = () => {
         setProfileImage(data.profileImage);
 
         const fetchedUserType = data.properties?.userType;
+
         if (fetchedUserType === 'TRAINER' || fetchedUserType === 'MEMBER') {
           setUserType(fetchedUserType);
         } else {
@@ -50,8 +50,10 @@ export const useAuth = () => {
   // role에 따라 URL에 쿼리 파라미터 추가
   const handleLogin = (role: 'MEMBER' | 'TRAINER'): void => {
     const currentUrl = window.location.href;
+
     localStorage.setItem('lastVisitedPage', currentUrl);
     const loginUrl = `${socialLoginForKaKaoUrl}?role=${role}`;
+
     window.location.href = loginUrl;
   };
 

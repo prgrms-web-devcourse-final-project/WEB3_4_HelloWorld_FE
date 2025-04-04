@@ -7,8 +7,6 @@ const Logout = () => {
   const router = useRouter();
 
   const handleWithdraw = () => {
-    console.log('회원탈퇴 처리');
-    // 탈퇴 API 연동
     alert('회원탈퇴가 처리되었습니다.');
     router.push('/');
   };

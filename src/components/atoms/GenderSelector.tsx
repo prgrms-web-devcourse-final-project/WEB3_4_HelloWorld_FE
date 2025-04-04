@@ -21,20 +21,19 @@ const GenderSelector = ({
 }: GenderSelectorProps) => {
   return (
     <div className="flex flex-col gap-2" style={{ marginBottom }}>
-      <label htmlFor="gender-selector" className="text-sm font-medium">
+      <label className="text-sm font-medium" htmlFor="gender-selector">
         성별 <span className="text-main">*</span>
       </label>
 
       <RadioGroup
+        className="flex gap-6"
         id="gender-selector"
         value={selectedGender}
         onChange={setSelectedGender}
-        className="flex gap-6"
       >
         {genderOptions.map((gender) => (
           <RadioGroup.Option
             key={gender}
-            value={gender}
             className={({ checked }) =>
               `flex items-center justify-center text-sm font-medium border cursor-pointer transition 
               ${
@@ -45,6 +44,7 @@ const GenderSelector = ({
               rounded-lg`
             }
             style={{ width, height }}
+            value={gender}
           >
             {gender}
           </RadioGroup.Option>

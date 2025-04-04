@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 type SocialType = 'kakao' | 'naver' | 'google' | 'apple';
 
 interface Props {
@@ -29,11 +30,13 @@ const SocialLoginButton = ({ type, onClick }: Props) => {
       type="button"
       onClick={onClick}
     >
-      <img
+      <Image
         alt={`${labelMap[type]} 아이콘`}
         className="absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6"
+        height={24}
         role="presentation"
         src={`/assets/icons/${type}.svg`}
+        width={24}
       />
       <span className="w-full flex justify-center items-center">
         {labelMap[type]}

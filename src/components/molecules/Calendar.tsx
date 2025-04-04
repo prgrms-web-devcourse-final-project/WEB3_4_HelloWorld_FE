@@ -10,9 +10,10 @@ import { getToday } from '@/utils/dateUtils';
 const Calendar = () => {
   const today = dayjs();
   const todayStr = getToday();
-  const { setSelectedDate, scheduleList } = useCalendarStore();
+  const { scheduleList, setSchedulesByDate } = useCalendarStore();
+
   const [currentMonth, setCurrentMonth] = useState(today);
-  const { setSchedulesByDate } = useCalendarStore();
+
   const startOfMonth = currentMonth.startOf('month').day();
   const endDate = currentMonth.daysInMonth();
 
@@ -28,6 +29,10 @@ const Calendar = () => {
     setSchedulesByDate(date);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent, day: number | null) => {
+    if (e.key === 'Enter' || e.key === ' ') handleClick(day);
+  };
+
   const getDotColor = (day: number | null) => {
     if (!day) return '';
     const date = currentMonth.date(day).format('YYYY-MM-DD');
@@ -38,12 +43,7 @@ const Calendar = () => {
   };
 
   return (
-    <div
-      style={{
-        width: 554,
-        height: 408,
-      }}
-    >
+    <div style={{ width: 554, height: 408 }}>
       <div className="flex justify-center items-center gap-6 mb-4">
         <button
           onClick={() => setCurrentMonth((prev) => prev.subtract(1, 'month'))}
@@ -70,8 +70,13 @@ const Calendar = () => {
             className="h-16 flex flex-col items-center justify-center"
           >
             <div
-              className={`cursor-pointer text-sm ${day ? 'text-mono-500' : 'text-transparent'}`}
+              className={`cursor-pointer text-sm focus:outline-none ${
+                day ? 'text-mono-500' : 'text-transparent'
+              }`}
+              role="button"
+              tabIndex={0}
               onClick={() => handleClick(day)}
+              onKeyDown={(e) => handleKeyDown(e, day)}
             >
               {day}
             </div>

@@ -11,7 +11,7 @@ import AddressInput from '@/components/molecules/AddressInput';
 
 const UserForm = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [address, setAddress] = useState('');
+  const [setAddress] = useState('');
   const [form, setForm] = useState<Omit<UserData, 'gender'>>({
     memberName: '',
     phoneNumber: '',
@@ -48,8 +48,8 @@ const UserForm = () => {
           recentDeadlift: data.recentDeadlift ?? 0,
           profileImageUrl: data.profileImageUrl ?? '',
         });
-      } catch (err) {
-        console.error('사용자 정보 불러오기 실패', err);
+      } catch {
+        throw new Error('사용자 정보 불러오기 실패');
       }
     };
 
@@ -76,7 +76,7 @@ const UserForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const { profileImageUrl, ...requestPayload } = form;
+      const { ...requestPayload } = form;
       const res = await fetch('/member/info', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -85,9 +85,8 @@ const UserForm = () => {
 
       if (!res.ok) throw new Error('수정 실패');
       alert('수정 완료!');
-    } catch (err) {
+    } catch {
       alert('수정 중 오류가 발생했습니다.');
-      console.error(err);
     }
   };
 

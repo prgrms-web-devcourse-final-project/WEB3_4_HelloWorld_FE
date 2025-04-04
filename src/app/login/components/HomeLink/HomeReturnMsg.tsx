@@ -9,7 +9,7 @@ const ReturnHomeMessage: React.FC = () => {
       <span className="text-sm text-mono_400">
         Wherever you want, <span className="text-main">M</span>ate{' '}
       </span>
-      <Link href="/" className="text-sm text-blue-500 underline">
+      <Link className="text-sm text-blue-500 underline" href="/">
         홈으로 돌아가기
       </Link>
     </div>

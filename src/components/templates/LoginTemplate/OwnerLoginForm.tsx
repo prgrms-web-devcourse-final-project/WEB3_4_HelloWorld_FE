@@ -11,17 +11,14 @@ import OpenDateInputGroup from '@/components/molecules/OpenDateInputGroup';
 import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
 import { formatDate, mapGenderToApi } from '@/utils/formatUtils';
 import { registerOwner } from '@/apis/trainerApi';
+
 interface OwnerLoginFormProps {
-  formData: Record<string, any>;
-  setFormData: (data: Record<string, any>) => void;
-  setStep: (step: number) => void;
+  _formData: Record<string, any>;
+  _setFormData: (data: Record<string, any>) => void;
+  _setStep: (step: number) => void;
 }
 
-const OwnerLoginForm = ({
-  formData,
-  setFormData,
-  setStep,
-}: OwnerLoginFormProps) => {
+const OwnerLoginForm = ({}: OwnerLoginFormProps) => {
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
   const [openDate, setOpenDate] = useState('');
@@ -43,14 +40,11 @@ const OwnerLoginForm = ({
       date: formatDate(openDate) as string,
     };
 
-    console.log('사장님 전송 데이터:', finalData);
-
     try {
       await registerOwner(finalData);
       alert('회원가입이 완료되었습니다.');
       router.push('/');
-    } catch (error) {
-      console.error('등록 실패:', error);
+    } catch {
       alert('회원가입에 실패했습니다. 다시 시도해주세요.');
     }
   };

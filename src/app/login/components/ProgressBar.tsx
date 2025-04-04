@@ -13,7 +13,6 @@ interface ProgressBarProps {
 const ProgressBar: React.FC<ProgressBarProps> = ({
   percent,
   showValueLabel = false,
-  color = 'primary',
   className = '',
 }) => (
   <div className="relative flex flex-col items-center w-full gap-2">
