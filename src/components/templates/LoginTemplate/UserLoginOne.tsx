@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import { formatDate } from '@/utils/formatUtils';
 import InputField from '@/app/login/components/InputField';
 import BirthdayInputGroup from '@/components/molecules/BirthdayInputGroup';
@@ -10,13 +8,18 @@ import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
 import { UserData } from '@/types/UserData';
 
 interface Step1FormProps {
+  birth: string;
+  setBirth: (val: string) => void;
   setFormData: React.Dispatch<React.SetStateAction<UserData>>;
   setStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export default function Step1Form({ setFormData, setStep }: Step1FormProps) {
-  const [birth, setBirth] = useState('');
-
+export default function Step1Form({
+  birth,
+  setBirth,
+  setFormData,
+  setStep,
+}: Step1FormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -30,13 +33,19 @@ export default function Step1Form({ setFormData, setStep }: Step1FormProps) {
 
     const formattedBirth = formatDate(birth); // → 'YYYY.MM.DD'
 
-    // UserData 형식에 맞춰 key 변경
     setFormData({
       phoneNumber: result.phone as string,
       memberName: result.name as string,
       email: result.email as string,
       birthday: formattedBirth,
-    } as UserData);
+      gender: '',
+      height: '',
+      weight: '',
+      address: '',
+      recentBench: 0,
+      recentSquat: 0,
+      recentDeadlift: 0,
+    });
 
     setStep(2);
   };

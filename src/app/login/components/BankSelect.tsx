@@ -43,9 +43,7 @@ const BankSelect = ({
       onChange={(e) => setSelectedBank(e.target.value)}
     >
       {bankOptions.map((bank) => (
-        <SelectItem key={bank.key} value={bank.key}>
-          {bank.label}
-        </SelectItem>
+        <SelectItem key={bank.key}>{bank.label}</SelectItem>
       ))}
     </Select>
   </div>

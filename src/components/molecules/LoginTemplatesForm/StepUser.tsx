@@ -1,13 +1,16 @@
 'use client';
 
+import { Dispatch, SetStateAction } from 'react';
+
 import Step1Form from '@/components/templates/LoginTemplate/UserLoginOne';
 import Step2Form from '@/components/templates/LoginTemplate/UserLoginTwo';
+import { UserData } from '@/types/UserData';
 
 interface StepUserProps {
   step: number;
-  formData: Record<string, any>;
-  setFormData: (data: Record<string, any>) => void;
-  setStep: (step: number) => void;
+  formData: UserData;
+  setFormData: Dispatch<SetStateAction<UserData>>;
+  setStep: Dispatch<SetStateAction<number>>;
   birth: string;
   setBirth: (val: string) => void;
 }
@@ -28,11 +31,7 @@ const StepUser = ({
       setStep={setStep}
     />
   ) : (
-    <Step2Form
-      formData={formData}
-      setFormData={setFormData}
-      setStep={setStep}
-    />
+    <Step2Form formData={formData} setFormData={setFormData} />
   );
 
 export default StepUser;

@@ -12,13 +12,7 @@ import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
 import { formatDate, mapGenderToApi } from '@/utils/formatUtils';
 import { registerOwner } from '@/apis/trainerApi';
 
-interface OwnerLoginFormProps {
-  _formData: Record<string, any>;
-  _setFormData: (data: Record<string, any>) => void;
-  _setStep: (step: number) => void;
-}
-
-const OwnerLoginForm = ({}: OwnerLoginFormProps) => {
+const OwnerLoginForm = () => {
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
   const [openDate, setOpenDate] = useState('');

@@ -1,27 +1,33 @@
 'use client';
 
+import { FC } from 'react';
+
 import TrainerTemplate from '@/components/templates/LoginTemplate/TrainerTemplate';
 import TrainerLoginForm from '@/components/templates/LoginTemplate/TrainerLoginForm';
 import OwnerLoginForm from '@/components/templates/LoginTemplate/OwnerLoginForm';
+import { UserData } from '@/types/UserData';
 
+// 역할 타입 정의
+type TrainerRole = 'owner' | 'trainer';
+
+// StepTrainerProps 타입 정의
 interface StepTrainerProps {
   step: number;
-  formData: Record<string, any>;
-  setFormData: (data: Record<string, any>) => void;
+  formData: UserData;
+  setFormData: React.Dispatch<React.SetStateAction<UserData>>;
   setStep: (step: number) => void;
-  selectedTrainerRole: 'owner' | 'trainer' | null;
-  setSelectedTrainerRole: (role: 'owner' | 'trainer') => void;
+  selectedTrainerRole: TrainerRole | null;
+  setSelectedTrainerRole: (role: TrainerRole) => void;
 }
 
-const StepTrainer = ({
+// 컴포넌트 정의
+const StepTrainer: FC<StepTrainerProps> = ({
   step,
-  formData,
-  setFormData,
-  setStep,
   selectedTrainerRole,
   setSelectedTrainerRole,
-}: StepTrainerProps) => {
-  const handleSelectRole = (role: 'owner' | 'trainer') => {
+  setStep,
+}) => {
+  const handleSelectRole = (role: TrainerRole): void => {
     setSelectedTrainerRole(role);
     setStep(2);
   };
@@ -30,23 +36,12 @@ const StepTrainer = ({
     <>
       <TrainerTemplate
         selectedTrainerRole={selectedTrainerRole}
-        setSelectedTrainerRole={handleSelectRole} // 역할 선택 시 step 증가
+        setSelectedTrainerRole={handleSelectRole}
       />
 
-      {selectedTrainerRole === 'owner' && step === 2 && (
-        <OwnerLoginForm
-          formData={formData}
-          setFormData={setFormData}
-          setStep={setStep}
-        />
-      )}
-      {selectedTrainerRole === 'trainer' && step === 2 && (
-        <TrainerLoginForm
-          formData={formData}
-          setFormData={setFormData}
-          setStep={setStep}
-        />
-      )}
+      {selectedTrainerRole === 'owner' && step === 2 && <OwnerLoginForm />}
+
+      {selectedTrainerRole === 'trainer' && step === 2 && <TrainerLoginForm />}
     </>
   );
 };
