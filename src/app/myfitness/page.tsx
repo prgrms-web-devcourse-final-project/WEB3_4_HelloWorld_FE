@@ -5,7 +5,7 @@ import ScheduleView from '@/components/templates/ScheduleView';
 
 const MyFitnessPage = () => (
   <Section>
-    <ScheduleView />;
+    <ScheduleView />
   </Section>
 );
 

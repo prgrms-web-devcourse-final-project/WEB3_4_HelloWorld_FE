@@ -121,7 +121,14 @@ export default function GymPage() {
                 <div
                   key={idx}
                   className="flex items-center justify-between w-[368px] h-[140px] p-3 bg-white rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setSelectedGym(idx)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      setSelectedGym(idx);
+                    }
+                  }}
                 >
                   <div className="flex flex-col justify-center gap-1 w-[65%] h-full">
                     <h3 className="text-[20px] font-medium font-pretendard text-mono_700">

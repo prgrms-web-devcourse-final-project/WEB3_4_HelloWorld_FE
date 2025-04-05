@@ -1,14 +1,15 @@
-// MyButton.tsx
+// components/atoms/MyButton.tsx
+
 import { extendVariants, Button } from '@heroui/react';
 
 export const MyButton = extendVariants(Button, {
   variants: {
     variant: {
-      light: ' text-mono_800 text-md font-semibold  rounded-[0px]',
+      light: 'text-mono_800 text-md font-semibold rounded-[0px]',
+      facility: '',
     },
-    // <- modify/add variants
     color: {
-      main: 'text-main-foreground bg-main ',
+      main: 'text-main-foreground bg-main',
       orange: 'bg-[#ff8c00] text-[#fff]',
       violet: 'bg-[#8b5cf6] text-[#fff]',
       transparent: 'bg-background text-foreground',
@@ -33,7 +34,6 @@ export const MyButton = extendVariants(Button, {
     size: 'xl',
   },
   compoundVariants: [
-    // <- modify/add compound variants
     {
       color: 'primary',
     },
