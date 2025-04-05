@@ -1,16 +1,18 @@
 'use client';
 
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
 import { useCalendarStore } from '@/stores/calendarStore';
 import dayjs from '@/utils/dayjsSetup';
 import { getToday } from '@/utils/dateUtils';
+import { fetchDiaryListApi } from '@/apis/diaryApi';
 
 const Calendar = () => {
   const today = dayjs();
   const todayStr = getToday();
-  const { scheduleList, setSchedulesByDate } = useCalendarStore();
+  const { scheduleList, setSchedulesByDate, setScheduleList } =
+    useCalendarStore();
 
   const [currentMonth, setCurrentMonth] = useState(today);
 
@@ -37,6 +39,21 @@ const Calendar = () => {
 
     return hasSchedule ? 'bg-[#17c964]' : isPastOrToday ? 'bg-[#f31260]' : '';
   };
+
+  useEffect(() => {
+    const fetchMonthSchedules = async () => {
+      try {
+        const res: any = await fetchDiaryListApi({ page: 0, size: 31 });
+        const list = Array.isArray(res) ? res : (res.data ?? []);
+
+        setScheduleList(list);
+      } catch {
+        setScheduleList([]);
+      }
+    };
+
+    fetchMonthSchedules();
+  }, [currentMonth, setScheduleList]);
 
   return (
     <div style={{ width: 554, height: 408 }}>
