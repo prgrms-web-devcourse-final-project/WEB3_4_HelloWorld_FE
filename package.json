@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "cross-env NEXT_TURBO=1 next dev",
+    "dev": "cross-env next dev --turbo",
     "dev:webpack": "next dev",
     "build": "next build",
     "start": "next start",
