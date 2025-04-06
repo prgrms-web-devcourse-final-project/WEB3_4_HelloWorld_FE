@@ -26,11 +26,16 @@ export const useCalendarStore = create<CalendarStore>((set) => ({
     set((state) => {
       const newSchedules = state.scheduleList.filter((s) => s.date === date);
 
-      const existingIds = new Set(state.selectedSchedules.map((s) => s.id));
-      const filtered = newSchedules.filter((s) => !existingIds.has(s.id));
+      const validOld = state.selectedSchedules.filter((s) =>
+        state.scheduleList.some((item) => item.id === s.id),
+      );
+
+      const notDuplicated = newSchedules.filter(
+        (s) => !validOld.some((existing) => existing.id === s.id),
+      );
 
       return {
-        selectedSchedules: [...state.selectedSchedules, ...filtered],
+        selectedSchedules: [...validOld, ...notDuplicated],
       };
     }),
 

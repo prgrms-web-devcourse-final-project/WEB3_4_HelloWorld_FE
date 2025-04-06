@@ -86,3 +86,24 @@ export const postDiaryApi = async (body: DiaryRequestBody) => {
 
   return res.json();
 };
+
+//  운동 기록 삭제
+export const deleteDiaryApi = async (diaryId: number) => {
+  const token = localStorage.getItem('accessToken');
+
+  const res = await fetch(`${API_BASE_URL}/diary/${diaryId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token ?? ''}`,
+    },
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+
+    throw new Error(error.message || '운동 기록 삭제 실패');
+  }
+
+  return res;
+};
