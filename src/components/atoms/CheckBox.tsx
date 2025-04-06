@@ -6,7 +6,7 @@ export const MyCheckbox = extendVariants(Checkbox, {
     color: {
       test: {
         base: ' data-[selected]:bg-main  data-[hover]:bg-main border-1 block border-mono_200 m-0 max-w-full transition-all',
-        wrapper: '  w-full',
+        wrapper: ' hidden w-full',
         label:
           ' data-[selected]:text-mono_200 hover:text-gray-100 flex justify-center items-center ',
       },
