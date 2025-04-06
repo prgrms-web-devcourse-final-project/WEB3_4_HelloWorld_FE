@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 
-import Calendar from '@/components/molecules/Calendar';
 import CalenderView from '@/components/templates/ScheduleView/CalenderView';
 import SummaryCard from '@/app/myfitness/components/CalenderCards';
 import ThreeLiftChartsTemplate from '@/components/molecules/Chart';
+import CalendarWithModal from '@/components/templates/ScheduleView/CalendarWithModal';
 
 const ScheduleView = () => {
   //임시 데이터
@@ -55,7 +55,7 @@ const ScheduleView = () => {
         오운했 일정보기
       </h2>
       <div className="flex gap-8">
-        <Calendar />
+        <CalendarWithModal />
         <CalenderView />
       </div>
 
