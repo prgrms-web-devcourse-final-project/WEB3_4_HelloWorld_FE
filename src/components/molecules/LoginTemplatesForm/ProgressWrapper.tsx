@@ -1,6 +1,6 @@
 'use client';
 
-import ProgressBar from '@/app/login/components/ProgressBar';
+import ProgressBar from '@/app/(main)/login/components/ProgressBar';
 
 interface ProgressWrapperProps {
   progress: number;

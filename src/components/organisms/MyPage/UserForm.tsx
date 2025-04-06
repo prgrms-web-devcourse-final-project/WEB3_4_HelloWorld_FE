@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
-import InputField from '@/app/login/components/InputField';
-import CustomButton from '@/app/login/components/CustomButton';
+import InputField from '@/app/(main)/login/components/InputField';
+import CustomButton from '@/app/(main)/login/components/CustomButton';
 import LevelBadge from '@/components/atoms/LevelBadge';
 import AddressInput from '@/components/molecules/AddressInput';
 import { getUserInfo, updateUserInfo } from '@/apis/userApi';

@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
-import CustomButton from '@/app/login/components/CustomButton';
-import InputField from '@/app/login/components/InputField';
+import CustomButton from '@/app/(main)/login/components/CustomButton';
+import InputField from '@/app/(main)/login/components/InputField';
 import GenderSelector from '@/components/atoms/GenderSelector';
-import BankSelect from '@/app/login/components/BankSelect';
-import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
+import BankSelect from '@/app/(main)/login/components/BankSelect';
+import ReturnHomeMessage from '@/app/(main)/login/components/HomeLink/HomeReturnMsg';
 import { registerTrainer } from '@/apis/trainerApi';
 import { mapGenderToApi } from '@/utils/formatUtils';
 

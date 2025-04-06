@@ -30,7 +30,7 @@ interface Gym {
 }
 
 // PT 상품 정보 타입
-interface PtProduct {
+export interface PtProduct {
   ptProductId: number;
   trainer: Trainer;
   ptInfo: string;

@@ -218,11 +218,10 @@ export default function GymEditPage() {
   };
 
   return (
-    <div className="fixed inset-0 top-[64px] h-[calc(100vh-64px)] w-full flex justify-center overflow-hidden">
-      <div className="w-full max-w-[1920px] flex overflow-hidden">
-        <div className="w-[200px] bg-mono_200 flex-shrink-0" />
-        <div className="flex-1 flex overflow-hidden">
-          <div className="flex-[3] p-[60px] space-y-10 overflow-auto">
+    <div className=" inset-0 top-[64px] h-[calc(100vh-64px)] w-full flex justify-center ">
+      <div className="w-full flex ">
+        <div className="flex-1 flex gap-8 ">
+          <div className=" w-full space-y-10 ">
             {/* 헬스장 정보 */}
             <div className="space-y-2">
               {selectedGym ? (
@@ -431,18 +430,18 @@ export default function GymEditPage() {
           </div>
 
           {/* 오른쪽 이미지 영역 */}
-          <div className="flex-[2] p-[60px] space-y-5 border-l border-mono_200 overflow-auto">
-            <h2 className="text-[36px] font-semibold font-pretendard">
+          <div className="  w-full border-mono_100 ">
+            <h2 className="text-lg pb-4 font-semibold font-pretendard">
               사진 수정 / 추가
             </h2>
 
-            <div className="border rounded bg-mono_100 p-5 min-h-[300px]">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="border rounded bg-mono_100 flex flex-col p-5">
+              <div className="grid grid-cols-3  gap-4">
                 {/* 업로드된 이미지 */}
                 {images.map((image, index) => (
                   <div
                     key={index}
-                    className="relative aspect-[7/6] rounded overflow-hidden bg-white shadow border"
+                    className="relative  rounded  bg-white shadow border"
                   >
                     <Image
                       fill
@@ -491,7 +490,7 @@ export default function GymEditPage() {
                 }).map((_, idx) => (
                   <div
                     key={`empty-${idx}`}
-                    className="aspect-[7/6] border border-dashed rounded bg-white"
+                    className=" w-full aspect-[7/6] h-full border border-dashed rounded bg-mono_000"
                   />
                 ))}
               </div>
