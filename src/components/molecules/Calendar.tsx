@@ -3,12 +3,16 @@
 import { memo, useEffect, useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 
-import { useCalendarStore } from '@/stores/calendarStore';
 import dayjs from '@/utils/dayjsSetup';
 import { getToday } from '@/utils/dateUtils';
 import { fetchDiaryListApi } from '@/apis/diaryApi';
+import { useCalendarStore } from '@/stores/calendarStore';
 
-const Calendar = () => {
+interface CalendarProps {
+  onRedDotClick?: (date: string) => void;
+}
+
+const Calendar = ({ onRedDotClick }: CalendarProps) => {
   const today = dayjs();
   const todayStr = getToday();
   const { scheduleList, setSchedulesByDate, setScheduleList } =
@@ -18,7 +22,6 @@ const Calendar = () => {
 
   const startOfMonth = currentMonth.startOf('month').day();
   const endDate = currentMonth.daysInMonth();
-
   const days = [];
 
   for (let i = 0; i < startOfMonth; i++) days.push(null);
@@ -29,6 +32,13 @@ const Calendar = () => {
     const date = currentMonth.date(day).format('YYYY-MM-DD');
 
     setSchedulesByDate(date);
+
+    const hasSchedule = scheduleList.some((s) => s.date === date);
+    const isPastOrToday = dayjs(date).isSameOrBefore(todayStr);
+
+    if (!hasSchedule && isPastOrToday && onRedDotClick) {
+      onRedDotClick(date);
+    }
   };
 
   const getDotColor = (day: number | null) => {
