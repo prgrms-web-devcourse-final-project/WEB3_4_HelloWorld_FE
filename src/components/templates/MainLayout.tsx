@@ -13,7 +13,8 @@ export default function MainLayout({
   const pathname = usePathname();
 
   // Footer 안보일 경로
-  const hideFooter = pathname.startsWith('/mypage/gym/edit');
+  const hideFooter =
+    pathname.startsWith('/mypage/gym/edit') || pathname.startsWith('/gym');
 
   return (
     <>

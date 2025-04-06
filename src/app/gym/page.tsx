@@ -1,7 +1,6 @@
 'use client';
 
-import NextImage from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   MagnifyingGlassIcon,
   ChevronLeftIcon,
@@ -13,6 +12,12 @@ import { Image } from '@heroui/react';
 
 import { MyButton } from '@/components/atoms/Button';
 import GymDetailPanel from '@/components/GymDetailPanel';
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
 
 export default function GymPage() {
   const [selected, setSelected] = useState('최신순');
@@ -28,25 +33,87 @@ export default function GymPage() {
   const handleToggle = () => setIsOpen(!isOpen);
   const [selectedGym, setSelectedGym] = useState<number | null>(null);
 
+  const [userAddress, setUserAddress] = useState<string | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  const [isPanelVisible, setIsPanelVisible] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&autoload=false&libraries=services`;
+    script.async = true;
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            const container = mapRef.current;
+            const options = {
+              center: new window.kakao.maps.LatLng(lat, lng),
+              level: 3,
+            };
+            const map = new window.kakao.maps.Map(container, options);
+
+            const marker = new window.kakao.maps.Marker({
+              position: new window.kakao.maps.LatLng(lat, lng),
+              map,
+            });
+
+            const geocoder = new window.kakao.maps.services.Geocoder();
+            const coord = new window.kakao.maps.LatLng(lat, lng);
+
+            geocoder.coord2Address(
+              coord.getLng(),
+              coord.getLat(),
+              (result: any, status: any) => {
+                if (status === window.kakao.maps.services.Status.OK) {
+                  const address = result[0].address.address_name;
+
+                  setUserAddress(address);
+                }
+              },
+            );
+          });
+        }
+      });
+    };
+    document.head.appendChild(script);
+  }, []);
+  useEffect(() => {
+    if (selectedGym) {
+      // 패널 애니메이션 0.5초 뒤에 버튼도 따라가도록
+      const timer = setTimeout(() => setIsPanelVisible(true), 100);
+
+      return () => clearTimeout(timer);
+    } else {
+      // 닫힐 때는 바로 false 처리
+      setIsPanelVisible(false);
+    }
+  }, [selectedGym]);
+
   return (
     <div className="w-screen h-[calc(100vh-64px)]">
       {/* 지도 */}
-      <NextImage
-        fill
-        alt="map"
-        className="object-cover"
-        sizes="100vw"
-        src="/map.png"
-      />
+      <div ref={mapRef} className="absolute top-0 left-0 w-full h-full z-0" />
       <button
         className={`
-          absolute top-[50%] translate-y-[-50%]
-          ${isOpen ? 'left-[436px]' : 'left-[16px]'}
-          w-8 h-8 shadow-md bg-white border border-mono_200
-          flex items-center justify-center z-20 transition-all duration-300
-          hover:bg-mono_100
-        `}
-        onClick={handleToggle}
+  absolute top-[50%] translate-y-[-50%] z-20
+  transition-transform duration-500 ease-in-out
+  ${isOpen && isPanelVisible ? 'translate-x-[876px]' : isOpen ? 'translate-x-[436px]' : 'translate-x-[16px]'}
+  w-8 h-8 shadow-md bg-white border border-mono_200
+  flex items-center justify-center hover:bg-mono_100
+`}
+        onClick={() => {
+          if (isOpen && selectedGym) {
+            setIsOpen(false);
+            setSelectedGym(null);
+          } else {
+            setIsOpen(!isOpen);
+          }
+        }}
       >
         {isOpen ? (
           <ChevronLeftIcon className="w-4 h-4 text-mono_600" />
@@ -54,6 +121,7 @@ export default function GymPage() {
           <ChevronRightIcon className="w-4 h-4 text-mono_600" />
         )}
       </button>
+
       {/* 좌측 검색바 */}
       <div
         className={`
@@ -96,7 +164,7 @@ export default function GymPage() {
             <div className="flex items-center gap-1 pt-2 pb-3 border-b border-mono_200">
               <MapPinIcon className="w-4 h-4 text-main" />
               <p className="text-sm text-mono_700 font-semibold">
-                서울특별시 강남구 청담동
+                {userAddress || '위치 정보를 불러오는 중...'}
                 <span className="text-mono_400 font-normal">
                   {' '}
                   주변 검색 결과
@@ -181,6 +249,7 @@ export default function GymPage() {
       {selectedGym && (
         <GymDetailPanel
           gym={selectedGym}
+          visible={!!selectedGym}
           onClose={() => setSelectedGym(null)}
         />
       )}

@@ -5,6 +5,7 @@ import {
   HeartIcon as HeartOutline,
   MapIcon,
   ShareIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 
@@ -20,6 +21,7 @@ import GymReviewSection from './molecules/GymReviewSection';
 interface GymDetailPanelProps {
   gym: any;
   onClose: () => void;
+  visible: boolean;
 }
 
 const allFacilities = [
@@ -141,14 +143,33 @@ const dummyTrainers: Trainer[] = [
   },
 ];
 
-export default function GymDetailPanel({ gym }: GymDetailPanelProps) {
+export default function GymDetailPanel({
+  gym,
+  onClose,
+  visible,
+}: GymDetailPanelProps) {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [liked, setLiked] = useState(false);
   const [selectedTab, setSelectedTab] = useState('home');
   const imageList = Array.from({ length: 10 }, (_) => `/gym_sample.jpg`);
 
   return (
-    <div className="absolute top-[64px] left-[436px] h-[calc(100%-64px)] w-[440px] bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden">
+    <div
+      className={`
+    absolute top-[64px] left-[436px] h-[calc(100%-64px)] w-[440px]
+    bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden
+    transition-transform duration-500 ease-in-out
+    ${visible ? 'translate-x-0' : 'translate-x-full'}
+  `}
+    >
+      {/* 닫기 버튼 */}
+      <button
+        className="absolute top-2 right-2 z-20 hover:opacity-70 transition"
+        onClick={onClose}
+      >
+        <XMarkIcon className="w-8 h-8 text-white" />
+      </button>
+
       {/* 이미지 */}
       <div className="flex gap-[2px] w-full h-[220px] rounded-tl-2xl rounded-tr-2xl overflow-hidden">
         <div className="w-2/3 h-full">
