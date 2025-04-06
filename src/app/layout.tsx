@@ -6,7 +6,6 @@ import { Providers } from './providers';
 
 import { siteConfig } from '@/config/site';
 import { fontSans, paperlogy, pretendard } from '@/config/fonts';
-import MainLayout from '@/components/templates/MainLayout';
 
 export const metadata: Metadata = {
   title: {
@@ -43,9 +42,7 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: 'class', defaultTheme: 'dark' }}>
-          <MainLayout>
-            <div className="w-full h-full">{children}</div>
-          </MainLayout>
+          <div className="w-full h-full">{children}</div>
         </Providers>
       </body>
     </html>

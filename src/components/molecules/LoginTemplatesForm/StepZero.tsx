@@ -1,8 +1,8 @@
 'use client';
 
-import LoginTab from '@/app/login/components/LoginTab';
-import SocialLoginButton from '@/app/login/components/SocialLoginButton';
-import HomeLink from '@/app/login/components/HomeLink';
+import LoginTab from '@/app/(main)/login/components/LoginTab';
+import SocialLoginButton from '@/app/(main)/login/components/SocialLoginButton';
+import HomeLink from '@/app/(main)/login/components/HomeLink';
 
 interface StepZeroProps {
   selectedTab: 'user' | 'trainer';

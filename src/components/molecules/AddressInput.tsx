@@ -3,7 +3,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
-import InputField from '@/app/login/components/InputField';
+import InputField from '@/app/(main)/login/components/InputField';
 import AddressSearchModal from '@/components/molecules/AddressSearchModal';
 
 interface AddressInputProps {

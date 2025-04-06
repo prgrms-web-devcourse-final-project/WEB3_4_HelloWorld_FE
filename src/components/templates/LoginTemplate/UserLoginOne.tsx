@@ -1,10 +1,10 @@
 'use client';
 
 import { formatDate } from '@/utils/formatUtils';
-import InputField from '@/app/login/components/InputField';
+import InputField from '@/app/(main)/login/components/InputField';
 import BirthdayInputGroup from '@/components/molecules/BirthdayInputGroup';
-import CustomButton from '@/app/login/components/CustomButton';
-import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
+import CustomButton from '@/app/(main)/login/components/CustomButton';
+import ReturnHomeMessage from '@/app/(main)/login/components/HomeLink/HomeReturnMsg';
 import { UserData } from '@/types/UserData';
 
 interface Step1FormProps {

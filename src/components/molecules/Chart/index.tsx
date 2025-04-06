@@ -1,8 +1,8 @@
 'use client';
 import dynamic from 'next/dynamic';
 
-import InputField from '@/app/login/components/InputField';
-import CustomButton from '@/app/login/components/CustomButton';
+import InputField from '@/app/(main)/login/components/InputField';
+import CustomButton from '@/app/(main)/login/components/CustomButton';
 // 서버 사이드 렌더링 방지 안 하면 에러가 뜸..
 const PieChart = dynamic(() => import('./PieChartTemplate'), { ssr: false });
 const BarChart = dynamic(() => import('./BarChartTemplate'), { ssr: false });
