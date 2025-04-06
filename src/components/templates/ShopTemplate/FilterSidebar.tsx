@@ -26,9 +26,9 @@ const categoryList = [
 
 interface Props {
   selectedBrands: string[];
-  setSelectedBrands: (list: string[]) => void;
+  setSelectedBrands: React.Dispatch<React.SetStateAction<string[]>>;
   selectedCategories: string[];
-  setSelectedCategories: (list: string[]) => void;
+  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const FilterSidebar = ({

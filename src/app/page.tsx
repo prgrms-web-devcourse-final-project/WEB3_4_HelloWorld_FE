@@ -6,6 +6,7 @@ import MainGymSection from '@/app/components/sections/MainGymSection';
 import MainVisualSection from '@/app/components/sections/MainVisualSection';
 import MainPtSection from '@/app/components/sections/MainPtSection';
 import FetchAuthOnMain from '@/utils/userType';
+import ChatTemplate from '@/components/templates/ChatTemplate';
 // import Loading from '@/app/Loading';
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
         <MainGymMateSection />
       </div>
       {/* <div className="container mx-auto max-w-screen-2xl" /> */}
+      <ChatTemplate />
     </>
   );
 }

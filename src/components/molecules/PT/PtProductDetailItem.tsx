@@ -6,7 +6,7 @@ export default function PtProductDetailItem({ item }: { item: any }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col gap-10">
       <div className="grid grid-cols-4 gap-4">
         {item.images.slice(0, 8).map((image: string, index: number) => (
           <div key={index} className=" w-full h-full relative">
@@ -29,6 +29,9 @@ export default function PtProductDetailItem({ item }: { item: any }) {
           </div>
         ))}
       </div>
+      <p className="text-mono_700 text-base  font-medium whitespace-pre">
+        {item.infomation}
+      </p>
       <ModalImageGallery
         imageList={item.images}
         isOpen={isOpen}

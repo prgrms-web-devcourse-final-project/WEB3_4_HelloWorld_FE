@@ -1,35 +1,43 @@
 import { create } from 'zustand';
 
-import { Schedule } from '@/types/schedule';
+interface Schedule {
+  id: number;
+  date: string;
+  title: string;
+  description: string;
+  tag: string;
+}
 
-type CalendarStore = {
-  selectedSchedules: Schedule[];
-  setSchedulesByDate: (date: string) => void;
+interface CalendarStore {
   scheduleList: Schedule[];
-};
+  selectedSchedules: Schedule[];
+  setScheduleList: (list: Schedule[]) => void;
+  setSchedulesByDate: (date: string) => void;
+  resetSelectedSchedules: () => void;
+}
 
 export const useCalendarStore = create<CalendarStore>((set) => ({
+  scheduleList: [],
   selectedSchedules: [],
+
+  setScheduleList: (list) => set({ scheduleList: list }),
+
   setSchedulesByDate: (date) =>
     set((state) => {
-      const newItems = state.scheduleList.filter((s) => s.date === date);
+      const newSchedules = state.scheduleList.filter((s) => s.date === date);
+
+      const validOld = state.selectedSchedules.filter((s) =>
+        state.scheduleList.some((item) => item.id === s.id),
+      );
+
+      const notDuplicated = newSchedules.filter(
+        (s) => !validOld.some((existing) => existing.id === s.id),
+      );
 
       return {
-        selectedSchedules: [...state.selectedSchedules, ...newItems],
+        selectedSchedules: [...validOld, ...notDuplicated],
       };
     }),
-  scheduleList: [
-    {
-      date: '2025-03-25',
-      title: '오늘 운동은 성공적 !',
-      description: '별 하나에 추억과 별 하나에 사랑과...',
-      tag: '오운했',
-    },
-    {
-      date: '2025-03-26',
-      title: '오늘 의 Dream!',
-      description: '예쁘네 오늘도 어제만큼...',
-      tag: '오운했',
-    },
-  ],
+
+  resetSelectedSchedules: () => set({ selectedSchedules: [] }),
 }));

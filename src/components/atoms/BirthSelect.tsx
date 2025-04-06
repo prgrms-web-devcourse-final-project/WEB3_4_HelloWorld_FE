@@ -46,9 +46,7 @@ const BirthSelect: FC<BirthSelectProps> = ({
       }}
     >
       {options.map((opt) => (
-        <SelectItem key={opt} value={String(opt)}>
-          {String(opt).padStart(2, '0')}
-        </SelectItem>
+        <SelectItem key={opt}>{String(opt).padStart(2, '0')}</SelectItem>
       ))}
     </Select>
   </div>

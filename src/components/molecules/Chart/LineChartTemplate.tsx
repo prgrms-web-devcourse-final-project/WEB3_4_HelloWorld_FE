@@ -1,14 +1,17 @@
 'use client';
 
 import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
 
 interface LineChartProps {
   categories: string[];
   data: number[];
+  height?: string;
+  width?: string;
 }
 
 const LineChart = ({ categories, data }: LineChartProps) => {
-  const options = {
+  const options: ApexOptions = {
     chart: {
       type: 'line',
     },
@@ -16,7 +19,7 @@ const LineChart = ({ categories, data }: LineChartProps) => {
       categories,
     },
     stroke: {
-      curve: 'smooth' as const,
+      curve: 'smooth',
     },
     colors: ['#F25267'],
     dataLabels: {

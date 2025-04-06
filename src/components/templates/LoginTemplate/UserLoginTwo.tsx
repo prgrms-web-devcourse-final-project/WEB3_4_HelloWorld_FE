@@ -16,7 +16,6 @@ import { mapGenderToApi } from '@/utils/formatUtils';
 interface UserInfoFormProps {
   setFormData: React.Dispatch<React.SetStateAction<UserData>>;
   formData: UserData;
-  _setStep: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const UserInfoForm = ({ setFormData, formData }: UserInfoFormProps) => {
@@ -39,8 +38,8 @@ const UserInfoForm = ({ setFormData, formData }: UserInfoFormProps) => {
     const finalFormData: UserData = {
       ...formData,
       gender: mapGenderToApi(selectedGender),
-      height: result.height as string,
-      weight: result.weight as string,
+      height: result.height?.toString() || '',
+      weight: result.weight?.toString() || '',
       address: address || '서울시 강남구 테헤란로 14길 6',
       recentBench: exerciseData.recentBench || 0,
       recentSquat: exerciseData.recentSquat || 0,
