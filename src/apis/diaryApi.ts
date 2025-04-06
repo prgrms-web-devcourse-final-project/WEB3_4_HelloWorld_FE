@@ -1,5 +1,7 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+import { DiaryRequestBody } from '@/types/diary';
+
 interface DiaryParams {
   page: number;
   size: number;
@@ -30,6 +32,7 @@ export interface Schedule {
   tag: string;
 }
 
+//  운동 기록 목록 조회
 export const fetchDiaryListApi = async ({
   page,
   size,
@@ -59,4 +62,27 @@ export const fetchDiaryListApi = async ({
     description: item.content,
     tag: '오운했',
   }));
+};
+
+//  운동 기록 등록
+export const postDiaryApi = async (body: DiaryRequestBody) => {
+  const token = localStorage.getItem('accessToken');
+
+  const res = await fetch(`${API_BASE_URL}/diary`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token ?? ''}`,
+    },
+    credentials: 'include',
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+
+    throw new Error(error.message || '운동 기록 등록 실패');
+  }
+
+  return res.json();
 };
