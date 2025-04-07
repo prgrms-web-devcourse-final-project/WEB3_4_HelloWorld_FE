@@ -32,7 +32,7 @@ const StepZero = ({
       <SocialLoginButton type="google" />
       <SocialLoginButton type="apple" />
     </div>
-    <p className="text-sm text-mono_400">
+    <p className="text-sm text-mono_400 mb-[150px]">
       Thank you for using it. <HomeLink />
     </p>
   </>
