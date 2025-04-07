@@ -1,9 +1,11 @@
 'use client';
 
-import Calendar from '@/components/molecules/Calendar';
+import Image from 'next/image';
+
 import CalenderView from '@/components/templates/ScheduleView/CalenderView';
-import CalendarSummaryCards from '@/app/myfitness/components/CalendarCards/CalenderCards';
+import SummaryCard from '@/app/(main)/myfitness/components/CalenderCards';
 import ThreeLiftChartsTemplate from '@/components/molecules/Chart';
+import CalendarWithModal from '@/components/templates/ScheduleView/CalendarWithModal';
 
 const ScheduleView = () => {
   //임시 데이터
@@ -13,11 +15,11 @@ const ScheduleView = () => {
       title: '벤치 프레스 평균',
       value: '2500KG',
       icon: (
-        <img
-          src="/assets/icons/benchPress.svg"
+        <Image
           alt="벤치 프레스"
-          width={32}
           height={32}
+          src="/assets/icons/benchPress.svg"
+          width={32}
         />
       ),
     },
@@ -25,11 +27,11 @@ const ScheduleView = () => {
       title: '데드리프트 평균',
       value: '2500KG',
       icon: (
-        <img
-          src="/assets/icons/deadlift.svg"
+        <Image
           alt="데드리프트"
-          width={32}
           height={32}
+          src="/assets/icons/deadlift.svg"
+          width={32}
         />
       ),
     },
@@ -37,11 +39,11 @@ const ScheduleView = () => {
       title: '스쿼트 평균',
       value: '2500KG',
       icon: (
-        <img
-          src="/assets/icons/squat.svg"
+        <Image
           alt="스쿼트"
-          width={32}
           height={32}
+          src="/assets/icons/squat.svg"
+          width={32}
         />
       ),
     },
@@ -53,11 +55,11 @@ const ScheduleView = () => {
         오운했 일정보기
       </h2>
       <div className="flex gap-8">
-        <Calendar />
+        <CalendarWithModal />
         <CalenderView />
       </div>
 
-      <CalendarSummaryCards data={summaryData} />
+      <SummaryCard data={summaryData} />
 
       <ThreeLiftChartsTemplate />
     </div>

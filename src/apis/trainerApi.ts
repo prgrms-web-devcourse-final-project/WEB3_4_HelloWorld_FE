@@ -1,4 +1,3 @@
-// 수정 예정
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // 트레이너 등록 (직원)
@@ -22,16 +21,16 @@ export const registerTrainer = async (trainerData: {
       credentials: 'include',
     });
 
-    if (response.ok) {
-      return await response.json();
-    } else {
+    if (!response.ok) {
       const error = await response.json();
 
       throw new Error(error.message || '트레이너 등록에 실패하였습니다.');
     }
+
+    return await response.json();
   } catch (error) {
-    console.error('트레이너 등록 실패:', error);
-    throw error;
+    // 에러 로깅은 필요 시 Sentry나 customLogger로 대체
+    throw new Error('트레이너 등록 실패: ' + (error as Error).message);
   }
 };
 
@@ -57,15 +56,14 @@ export const registerOwner = async (ownerData: {
       credentials: 'include',
     });
 
-    if (response.ok) {
-      return await response.json();
-    } else {
+    if (!response.ok) {
       const error = await response.json();
 
       throw new Error(error.message || '사장님 등록에 실패하였습니다.');
     }
+
+    return await response.json();
   } catch (error) {
-    console.error('사장님 등록 실패:', error);
-    throw error;
+    throw new Error('사장님 등록 실패: ' + (error as Error).message);
   }
 };

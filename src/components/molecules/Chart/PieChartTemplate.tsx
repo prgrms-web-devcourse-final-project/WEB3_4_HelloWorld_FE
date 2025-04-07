@@ -1,6 +1,7 @@
 'use client';
 
 import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
 
 interface PieChartProps {
   labels: string[];
@@ -8,7 +9,7 @@ interface PieChartProps {
 }
 
 const PieChart = ({ labels, series }: PieChartProps) => {
-  const options = {
+  const options: ApexOptions = {
     chart: {
       type: 'donut',
     },
@@ -19,7 +20,7 @@ const PieChart = ({ labels, series }: PieChartProps) => {
     },
     labels,
     legend: {
-      position: 'bottom' as const,
+      position: 'bottom',
     },
     colors: ['#F25267', '#F68B8F', '#F9C4C6'],
     dataLabels: {
@@ -37,11 +38,11 @@ const PieChart = ({ labels, series }: PieChartProps) => {
 
   return (
     <ReactApexChart
+      height="100%"
       options={options}
       series={series}
       type="donut"
       width="100%"
-      height="100%"
     />
   );
 };

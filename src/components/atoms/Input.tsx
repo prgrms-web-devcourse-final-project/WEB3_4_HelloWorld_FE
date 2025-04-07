@@ -1,10 +1,4 @@
-import { extendVariants, Input, InputProps } from '@heroui/react';
-
-type MyInputVariants = {
-  size?: 'base' | 'md' | 'xl' | 'full';
-};
-
-type MyInputProps = InputProps & MyInputVariants;
+import { extendVariants, Input } from '@heroui/react';
 
 export const MyInput = extendVariants(Input, {
   variants: {
@@ -18,12 +12,14 @@ export const MyInput = extendVariants(Input, {
       xl: {
         mainWrapper: 'text-large gap-4 rounded-medium',
       },
-      full: {
-        mainWrapper: 'w-full text-large gap-4 rounded-medium',
+      search: {
+        mainWrapper: 'w-full h-full ',
+        inputWrapper: 'w-full h-full rounded-small',
+        input: 'text-small',
       },
     },
   },
   defaultVariants: {
     size: 'xl',
   },
-}) as React.ForwardRefExoticComponent<MyInputProps>;
+});

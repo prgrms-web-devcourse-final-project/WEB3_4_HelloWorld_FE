@@ -11,6 +11,11 @@ interface IStarProps {
 }
 export default function Star({ w, h, readonly, rate }: IStarProps) {
   const [rating, setRating] = useState(rate || 0);
+  const handleClickStar = (index: number) => {
+    if (!readonly) {
+      setRating(index + 1);
+    }
+  };
 
   return (
     <div className={`flex`}>
@@ -23,6 +28,7 @@ export default function Star({ w, h, readonly, rate }: IStarProps) {
           {' '}
           <StarIconSolid
             className={`${w} ${h} ${!readonly && rating >= index + 1 ? 'text-main' : 'text-gray200'}`}
+            onClick={() => handleClickStar(index)}
           />{' '}
           {readonly && (
             <span

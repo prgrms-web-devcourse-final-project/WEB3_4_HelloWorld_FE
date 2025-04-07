@@ -6,8 +6,7 @@ export const MainMapIcon: React.FC<IconSvgProps> = ({
   size = 36,
   width,
   height,
-  borderColor = 'white',
-  fillColor = 'currentColor',
+
   ...props
 }) => (
   <svg
