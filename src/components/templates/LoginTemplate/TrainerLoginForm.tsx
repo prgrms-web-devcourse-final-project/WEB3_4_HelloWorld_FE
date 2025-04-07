@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
@@ -11,6 +11,9 @@ import BankSelect from '@/app/(main)/login/components/BankSelect';
 import ReturnHomeMessage from '@/app/(main)/login/components/HomeLink/HomeReturnMsg';
 import { registerTrainer } from '@/apis/trainerApi';
 import { mapGenderToApi } from '@/utils/formatUtils';
+import GymDetailModal from '@/components/templates/LoginTemplate/Modal';
+import { fetchGymList } from '@/apis/gymApi';
+import { GymType } from '@/types/gym';
 
 const TrainerLoginForm = () => {
   const [selectedGender, setSelectedGender] = useState('');
@@ -18,6 +21,8 @@ const TrainerLoginForm = () => {
   const [gymName, setGymName] = useState('');
   const [alertTriggered, setAlertTriggered] = useState(false);
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [gyms, setGyms] = useState<GymType[]>([]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,6 +51,18 @@ const TrainerLoginForm = () => {
       setAlertTriggered(true);
     }
   };
+
+  useEffect(() => {
+    const fetchGyms = async () => {
+      try {
+        const data = await fetchGymList();
+
+        setGyms(data);
+      } catch {}
+    };
+
+    fetchGyms();
+  }, []);
 
   return (
     <form className="-mt-[40px]" onSubmit={handleSubmit}>
@@ -126,8 +143,17 @@ const TrainerLoginForm = () => {
             width="452px"
             onChange={(e) => setGymName(e.target.value)}
           />
-          <MagnifyingGlassIcon className="w-[25px] h-[25px] absolute right-3 top-[35px] text-mono_400 cursor-pointer" />
+          <MagnifyingGlassIcon
+            className="w-[25px] h-[25px] absolute right-3 top-[35px] text-mono_400 cursor-pointer"
+            onClick={() => setIsModalOpen(true)}
+          />
         </div>
+        <GymDetailModal
+          gyms={gyms}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSelect={(name) => setGymName(name)}
+        />
 
         <CustomButton className="bg-main text-mono_100 mb-[20px]" type="submit">
           가입 완료

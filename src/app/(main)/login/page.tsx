@@ -20,7 +20,11 @@ const LoginPage = () => {
     }
   }, [router]);
 
-  return <LoginTemplate />;
+  return (
+    <div className="flex flex-col py-[120px]">
+      <LoginTemplate />
+    </div>
+  );
 };
 
 export default LoginPage;

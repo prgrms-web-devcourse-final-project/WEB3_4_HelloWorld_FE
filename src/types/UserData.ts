@@ -10,5 +10,5 @@ export interface UserData {
   recentBench: number; // 선택
   recentSquat: number; // 선택
   recentDeadlift: number; // 선택
-  profileImageUrl?: string; // 선택
+  profileUrl?: string; // 선택
 }
