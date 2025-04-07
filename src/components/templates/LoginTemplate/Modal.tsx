@@ -21,13 +21,13 @@ export default function GymDetailModal({
 }: GymDetailModalProps) {
   const [keyword, setKeyword] = useState('');
 
-  const filteredGyms = useMemo(
-    () =>
-      gyms.filter((gym) =>
-        gym.gymName.toLowerCase().includes(keyword.toLowerCase()),
-      ),
-    [keyword, gyms],
-  );
+  const filteredGyms = useMemo(() => {
+    if (!Array.isArray(gyms)) return [];
+
+    return gyms.filter((gym) =>
+      gym.gymName.toLowerCase().includes(keyword.toLowerCase()),
+    );
+  }, [keyword, gyms]);
 
   return (
     <Modal isOpen={isOpen} size="xl" onOpenChange={onClose}>
@@ -51,7 +51,7 @@ export default function GymDetailModal({
           filteredGyms.map((gym) => (
             <button
               key={gym.gymName}
-              className="flex justify-between items-center border rounded-lg p-4 bg-white shadow-sm w-full text-left"
+              className="flex justify-between items-center border rounded-lg p-4 bg-mono_100 shadow-sm w-full text-left "
               type="button"
               onClick={() => {
                 onSelect(gym.gymName);
