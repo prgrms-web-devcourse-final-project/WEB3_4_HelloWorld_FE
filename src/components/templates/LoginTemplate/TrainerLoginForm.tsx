@@ -57,7 +57,7 @@ const TrainerLoginForm = () => {
       try {
         const data = await fetchGymList();
 
-        setGyms(data);
+        setGyms(data.content);
       } catch {}
     };
 
