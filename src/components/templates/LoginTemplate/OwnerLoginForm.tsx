@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import CustomButton from '@/app/login/components/CustomButton';
-import InputField from '@/app/login/components/InputField';
+import CustomButton from '@/app/(main)/login/components/CustomButton';
+import InputField from '@/app/(main)/login/components/InputField';
 import GenderSelector from '@/components/atoms/GenderSelector';
-import BankSelect from '@/app/login/components/BankSelect';
+import BankSelect from '@/app/(main)/login/components/BankSelect';
 import OpenDateInputGroup from '@/components/molecules/OpenDateInputGroup';
-import ReturnHomeMessage from '@/app/login/components/HomeLink/HomeReturnMsg';
+import ReturnHomeMessage from '@/app/(main)/login/components/HomeLink/HomeReturnMsg';
 import { formatDate, mapGenderToApi } from '@/utils/formatUtils';
 import { registerOwner } from '@/apis/trainerApi';
 

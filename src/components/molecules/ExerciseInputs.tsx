@@ -1,4 +1,4 @@
-import InputField from '@/app/login/components/InputField';
+import InputField from '@/app/(main)/login/components/InputField';
 
 const exercises = [
   { label: '스쿼트', name: 'recentSquat' },
