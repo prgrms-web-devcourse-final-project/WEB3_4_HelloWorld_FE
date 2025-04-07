@@ -42,8 +42,8 @@ const MyPageTemplate = () => {
                   key={key}
                   className={
                     key === 'logout'
-                      ? 'text-main data-[selected=true]:text-main font-semibold'
-                      : 'text-base text-mono_500 data-[selected=true]:text-main font-semibold'
+                      ? 'text-main data-[selected=true]:text-main font-semibold text-base'
+                      : ' text-mono_500 data-[selected=true]:text-main font-semibold text-base'
                   }
                   title={title}
                 />
@@ -76,7 +76,7 @@ const MyPageTemplate = () => {
                   </div>
                 </div>
               ),
-              logout: <Logout />, // ✅ 컴포넌트로 분리
+              logout: <Logout />,
             }[selectedTab]
           }
         </div>
