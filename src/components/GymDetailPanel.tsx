@@ -143,11 +143,13 @@ const dummyTrainers: Trainer[] = [
   },
 ];
 
+
 export default function GymDetailPanel({
   gym,
   onClose,
   visible,
 }: GymDetailPanelProps) {
+
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [liked, setLiked] = useState(false);
   const [selectedTab, setSelectedTab] = useState('home');
