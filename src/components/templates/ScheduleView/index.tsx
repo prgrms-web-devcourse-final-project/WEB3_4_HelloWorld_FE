@@ -3,7 +3,7 @@
 import Image from 'next/image';
 
 import CalenderView from '@/components/templates/ScheduleView/CalenderView';
-import SummaryCard from '@/app/myfitness/components/CalenderCards';
+import SummaryCard from '@/app/(main)/myfitness/components/CalenderCards';
 import ThreeLiftChartsTemplate from '@/components/molecules/Chart';
 import CalendarWithModal from '@/components/templates/ScheduleView/CalendarWithModal';
 

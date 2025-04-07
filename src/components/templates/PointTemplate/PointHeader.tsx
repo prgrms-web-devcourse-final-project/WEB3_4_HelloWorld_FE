@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { UserGroupIcon } from '@heroicons/react/24/solid';
 
-import CustomButton from '@/app/login/components/CustomButton';
+import CustomButton from '@/app/(main)/login/components/CustomButton';
 import LevelBadge from '@/components/atoms/LevelBadge';
 
 const PointHeader = () => (

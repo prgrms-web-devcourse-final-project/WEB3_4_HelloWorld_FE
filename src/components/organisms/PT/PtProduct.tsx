@@ -8,7 +8,7 @@ import SearchBar from '@/components/molecules/SearchBar';
 
 export default function PtProduct() {
   const items = Array.from({ length: 12 }, (_, index) => index);
-  const [selectedTab, setSelectedTab] = useState<React.Key>('all');
+  const [, setSelectedTab] = useState<React.Key>('all');
 
   return (
     <>

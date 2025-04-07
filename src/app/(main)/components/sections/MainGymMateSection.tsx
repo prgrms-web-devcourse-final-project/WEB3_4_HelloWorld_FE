@@ -1,9 +1,17 @@
 'use client';
+import dynamic from 'next/dynamic';
+
 import Section from '@/components/atoms/Section';
 import Wave from '@/components/molecules/Wave';
 import NumberCountCard from '@/components/molecules/NumberCountCard';
 import MainSection from '@/components/organisms/Main/MainSection';
-import BarChart from '@/components/molecules/Chart/BarChartTemplate';
+
+const BarChart = dynamic(
+  () => import('@/components/molecules/Chart/BarChartTemplate'),
+  {
+    ssr: false,
+  },
+);
 
 export default function MainGymMateSection() {
   return (

@@ -1,4 +1,4 @@
-import InputField from '@/app/login/components/InputField';
+import InputField from '@/app/(main)/login/components/InputField';
 import { UserData } from '@/types/UserData'; // UserData 타입 임포트
 
 interface MeasurementInputsProps {

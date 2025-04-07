@@ -1,10 +1,10 @@
 'use client';
 
-import MainShopSection from '@/app/components/sections/MainShopSection';
-import MainGymMateSection from '@/app/components/sections/MainGymMateSection';
-import MainGymSection from '@/app/components/sections/MainGymSection';
-import MainVisualSection from '@/app/components/sections/MainVisualSection';
-import MainPtSection from '@/app/components/sections/MainPtSection';
+import MainShopSection from '@/app/(main)/components/sections/MainShopSection';
+import MainGymMateSection from '@/app/(main)/components/sections/MainGymMateSection';
+import MainGymSection from '@/app/(main)/components/sections/MainGymSection';
+import MainVisualSection from '@/app/(main)/components/sections/MainVisualSection';
+import MainPtSection from '@/app/(main)/components/sections/MainPtSection';
 import FetchAuthOnMain from '@/utils/userType';
 import ChatTemplate from '@/components/templates/ChatTemplate';
 // import Loading from '@/app/Loading';
