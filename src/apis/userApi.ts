@@ -1,10 +1,8 @@
-// src/apis/userApi.ts
-
 import { UserData } from '@/types/UserData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-// ✅ 회원가입
+//  회원가입
 export const registerUser = async (userData: UserData): Promise<any> => {
   try {
     const response = await fetch(`${API_BASE_URL}/member/register`, {
@@ -30,7 +28,7 @@ export const registerUser = async (userData: UserData): Promise<any> => {
   }
 };
 
-// ✅ 유저 정보 조회
+//  유저 정보 조회
 export const getUserInfo = async (): Promise<UserData> => {
   const res = await fetch(`${API_BASE_URL}/member/me`, {
     credentials: 'include',
@@ -43,7 +41,7 @@ export const getUserInfo = async (): Promise<UserData> => {
   return res.json();
 };
 
-// ✅ 유저 정보 수정
+//  유저 정보 수정
 export const updateUserInfo = async (userData: UserData): Promise<void> => {
   const res = await fetch(`${API_BASE_URL}/member`, {
     method: 'PUT',
@@ -56,5 +54,24 @@ export const updateUserInfo = async (userData: UserData): Promise<void> => {
 
   if (!res.ok) {
     throw new Error(`유저 정보 수정 실패: ${res.status}`);
+  }
+};
+
+// 계정 탈퇴
+export const deleteUserAccount = async (): Promise<void> => {
+  const token = localStorage.getItem('accessToken');
+
+  const res = await fetch(`${API_BASE_URL}/member`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token ?? ''}`,
+    },
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+
+    throw new Error(error.message || '회원 탈퇴에 실패했습니다.');
   }
 };

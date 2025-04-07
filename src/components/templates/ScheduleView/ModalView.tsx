@@ -8,8 +8,8 @@ import { useCalendarStore } from '@/stores/calendarStore';
 import { fetchDiaryListApi } from '@/apis/diaryApi';
 import { CustomTextarea } from '@/components/atoms/TextareaBase';
 import Modal from '@/components/atoms/Modal';
-import CustomButton from '@/app/login/components/CustomButton';
-import InputField from '@/app/login/components/InputField';
+import CustomButton from '@/app/(main)/login/components/CustomButton';
+import InputField from '@/app/(main)/login/components/InputField';
 
 interface ModalViewProps {
   isOpen: boolean;
