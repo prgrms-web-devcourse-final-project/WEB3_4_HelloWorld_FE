@@ -14,7 +14,8 @@ import GymIntroSection from './molecules/GymIntroSection';
 import GymTimeFeeSection from './molecules/GymTimeFeeSection';
 import SelectedFacilitySection from './molecules/SelectedFacilitySection';
 import EquipmentSection from './molecules/EquipmentSection';
-import GymTrainerSection from './molecules/GymTrainerSection';
+import GymTrainerSection, { Trainer } from './molecules/GymTrainerSection';
+import GymReviewSection from './molecules/GymReviewSection';
 
 interface GymDetailPanelProps {
   gym: any;
@@ -49,6 +50,95 @@ const dummyEquipments = [
   { name: '스쿼트랙', count: 3, image: '/gym/equipment/squat.jpg' },
   { name: '케이블머신', count: 1, image: '/gym/equipment/cable.jpg' },
   { name: '덤벨세트', count: 20, image: '/gym/equipment/dumbbell.jpg' },
+];
+
+const dummyReviews = [
+  {
+    id: '1',
+    nickname: '헬창훈',
+    profileImage: '/gym/review/profile1.jpg',
+    date: '2025.04.01',
+    rating: 4.5,
+    images: [
+      '/gym/review/review1.jpg',
+      '/gym/review/review2.jpg',
+      '/gym/review/review3.jpg',
+      '/gym/review/review4.jpg',
+      '/gym/review/review5.jpg',
+    ],
+    content: '트레이너 선생님이 너무 친절하고 운동 루틴이 체계적이에요!',
+  },
+  {
+    id: '2',
+    nickname: '운동마스터',
+    profileImage: '/gym/review/profile2.jpg',
+    date: '2025.03.30',
+    rating: 5.0,
+    images: [
+      '/gym/review/review1.jpg',
+      '/gym/review/review2.jpg',
+      '/gym/review/review3.jpg',
+      '/gym/review/review4.jpg',
+      '/gym/review/review5.jpg',
+    ],
+    content: '시설이 넓고 깨끗해서 아주 만족스러웠습니다. 추천!',
+  },
+  {
+    id: '3',
+    nickname: '운동마스터',
+    profileImage: '/gym/review/profile2.jpg',
+    date: '2025.03.30',
+    rating: 5.0,
+    images: [
+      '/gym/review/review1.jpg',
+      '/gym/review/review2.jpg',
+      '/gym/review/review3.jpg',
+      '/gym/review/review4.jpg',
+      '/gym/review/review5.jpg',
+    ],
+    content: '시설이 넓고 깨끗해서 아주 만족스러웠습니다. 추천!',
+  },
+  // 더미 데이터 더 추가 가능
+];
+
+const dummyTrainers: Trainer[] = [
+  {
+    name: '남궁혁',
+    description:
+      '재밌게 운동하는 법을 가르칩니다! 최고보다는 최선을, 포기보다는 실패를',
+    price: '30,000',
+    specialty: '바디프로필, 다이어트',
+    career: '6년 이상',
+    awards: '전국 피트니스 대회 1위',
+    image: '/gym/trainers/trainer1.jpg',
+  },
+  {
+    name: '이지은',
+    description: '회원님 맞춤 운동 루틴으로 건강하게!',
+    price: '35,000',
+    specialty: '체형 교정, 재활',
+    career: '8년 이상',
+    awards: '대한트레이너협회 인증',
+    image: '/gym/trainers/trainer2.jpg',
+  },
+  {
+    name: '박철민',
+    description: '꾸준함은 배신하지 않습니다.',
+    price: '25,000',
+    specialty: '헬스 입문, 근육증가',
+    career: '4년',
+    awards: '-',
+    image: '/gym/trainers/trainer3.jpg',
+  },
+  {
+    name: '프로그래머스',
+    description: '꾸준함은 배신하지 않습니다.',
+    price: '25,000',
+    specialty: '헬스 입문, 근육증가',
+    career: '4년',
+    awards: '-',
+    image: '/gym/trainers/trainer3.jpg',
+  },
 ];
 
 export default function GymDetailPanel({ gym }: GymDetailPanelProps) {
@@ -181,13 +271,37 @@ export default function GymDetailPanel({ gym }: GymDetailPanelProps) {
               <EquipmentSection equipments={dummyEquipments} />
             </div>
             <div className="mt-6">
-              <GymTrainerSection />
+              <GymTrainerSection trainers={dummyTrainers} />
+            </div>
+            <div className="mt-6">
+              <GymReviewSection reviews={dummyReviews} />
             </div>
           </>
         )}
-        {selectedTab === 'instructors' && <div>강사 탭 준비중</div>}
-        {selectedTab === 'review' && <div>리뷰 탭 준비중</div>}
-        {selectedTab === 'facility' && <div>시설 탭 준비중</div>}
+        {selectedTab === 'instructors' && (
+          <div className="mt-4">
+            <GymTrainerSection fullView trainers={dummyTrainers} />
+          </div>
+        )}
+        {selectedTab === 'review' && (
+          <div className="mt-4">
+            <GymReviewSection fullView reviews={dummyReviews} />
+          </div>
+        )}
+        {selectedTab === 'facility' && (
+          <>
+            <div className="mt-6">
+              <SelectedFacilitySection
+                facilities={allFacilities}
+                iconMap={facilityIcons}
+                selected={false}
+              />
+            </div>
+            <div className="mt-6">
+              <EquipmentSection fullView equipments={dummyEquipments} />
+            </div>
+          </>
+        )}
       </div>
 
       {/* 모달 */}
