@@ -26,9 +26,7 @@ const UserForm = () => {
         };
 
         setUserInfo(mappedData);
-      } catch {
-        alert('사용자 정보 불러오기 실패');
-      }
+      } catch {}
     };
 
     fetchUser();
@@ -68,7 +66,8 @@ const UserForm = () => {
     }
   };
 
-  if (!userInfo) return <p>로딩 중...</p>;
+  if (!userInfo)
+    return <p className="text-center text-mono_500 text-sm">로딩 중...</p>;
 
   return (
     <form className="flex flex-col w-full" onSubmit={handleSubmit}>

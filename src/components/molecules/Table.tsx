@@ -61,10 +61,10 @@ const LessonHistoryTable = <T extends CommonHistory>({ data }: Props<T>) => {
         <TableColumn key="status" className="w-[100px]">
           구분
         </TableColumn>
-        <TableColumn key="time" className="w-[150px]">
+        <TableColumn key="time" className="w-[170px]">
           시간
         </TableColumn>
-        <TableColumn key="content" className="w-[500px]">
+        <TableColumn key="content" className="w-[440px]">
           내용
         </TableColumn>
         <TableColumn key="seller" className="w-[120px]">
@@ -74,7 +74,14 @@ const LessonHistoryTable = <T extends CommonHistory>({ data }: Props<T>) => {
           금액
         </TableColumn>
       </TableHeader>
-      <TableBody className="py-6" items={items}>
+
+      <TableBody
+        className="py-6"
+        emptyContent={
+          <div className="text-center text-gray-500">결제 내역이 없습니다.</div>
+        }
+        items={items}
+      >
         {(item) => (
           <TableRow key={item.id} className="py-6 min-h-[20px]">
             <TableCell>{item.status}</TableCell>
@@ -83,12 +90,10 @@ const LessonHistoryTable = <T extends CommonHistory>({ data }: Props<T>) => {
             <TableCell>{item.seller}</TableCell>
             <TableCell
               className={
-                item.status.includes('취소') ? 'text-primary' : 'text-success'
+                item.status === '만료' ? 'text-primary' : 'text-success'
               }
             >
-              {item.status.includes('취소')
-                ? `- ${item.price.toLocaleString()}`
-                : item.price.toLocaleString()}
+              {item.price.toLocaleString()}
             </TableCell>
           </TableRow>
         )}
