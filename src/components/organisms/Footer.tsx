@@ -25,9 +25,13 @@ export default function Footer() {
                   </div>
                   <ul className="grid text-gray-400 text-sm  grid-cols-2 gap-4">
                     <li>FE 박수관</li>
-                    <li>PO 이상은</li>
-                    <li>PO 이상은</li>
-                    <li>PO 이상은</li>
+                    <li>BE 이세연</li>
+                    <li>FE 이희수</li>
+                    <li>BE 하유진</li>
+                    <li>FE 성도형</li>
+                    <li>BE 장세계</li>
+                    <li>{''}</li>
+                    <li>BE 박재현</li>
                   </ul>
                 </li>
                 <li className="flex flex-col justify-center gap-y-2 items-start">
@@ -38,7 +42,8 @@ export default function Footer() {
                     <li>헬스장 찾기</li>
                     <li>1:1 PT 선생님 찾기</li>
                     <li>나의 운동기록</li>
-                    <li>1:1 채팅</li>
+                    <li>헬스 용품 판매</li>
+                    <li>챗봇</li>
                   </ul>
                 </li>
                 <li className="flex flex-col justify-center gap-y-2 items-start">
@@ -48,6 +53,9 @@ export default function Footer() {
                   <ul className="flex text-gray-400 flex-col gap-4 text-sm ">
                     <li>KAKAO API</li>
                     <li>KAKAO ADDRESS API</li>
+                    <li>다음 주소 API</li>
+                    <li>Gemini AI API</li>
+                    <li>사업자등록번호 진위확인 API (국세청)</li>
                   </ul>
                 </li>
               </ul>
