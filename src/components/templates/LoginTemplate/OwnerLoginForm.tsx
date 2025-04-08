@@ -31,7 +31,7 @@ const OwnerLoginForm = () => {
       bank: selectedBank as string,
       account: result.account as string,
       businessNumber: result.businessNumber as string,
-      date: formatDate(openDate) as string,
+      businessDate: formatDate(openDate) as string,
     };
 
     try {
