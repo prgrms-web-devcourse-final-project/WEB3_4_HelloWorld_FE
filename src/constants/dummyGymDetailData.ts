@@ -101,6 +101,24 @@ export const dummyGymDetailData: Record<number, GymDetail> = {
         type: '유산소 운동',
         machineImages: ['/gym/equipment/treadmill.jpg'],
       },
+      {
+        machineId: 302,
+        name: '런닝머신',
+        type: '유산소 운동',
+        machineImages: ['/gym/equipment/treadmill.jpg'],
+      },
+      {
+        machineId: 302,
+        name: '런닝머신',
+        type: '유산소 운동',
+        machineImages: ['/gym/equipment/treadmill.jpg'],
+      },
+      {
+        machineId: 302,
+        name: '런닝머신',
+        type: '유산소 운동',
+        machineImages: ['/gym/equipment/treadmill.jpg'],
+      },
     ],
     gymProducts: [
       {
@@ -123,6 +141,36 @@ export const dummyGymDetailData: Record<number, GymDetail> = {
       '/gym/equipment/treadmill.jpg',
     ],
     trainers: [
+      {
+        name: '남궁혁',
+        description:
+          '재밌게 운동하는 법을 가르칩니다! 최고보다는 최선을, 포기보다는 실패를',
+        price: '30,000',
+        specialty: '바디프로필, 다이어트',
+        career: '6년 이상',
+        awards: '전국 피트니스 대회 1위',
+        image: '/gym/trainers/trainer1.jpg',
+      },
+      {
+        name: '남궁혁',
+        description:
+          '재밌게 운동하는 법을 가르칩니다! 최고보다는 최선을, 포기보다는 실패를',
+        price: '30,000',
+        specialty: '바디프로필, 다이어트',
+        career: '6년 이상',
+        awards: '전국 피트니스 대회 1위',
+        image: '/gym/trainers/trainer1.jpg',
+      },
+      {
+        name: '남궁혁',
+        description:
+          '재밌게 운동하는 법을 가르칩니다! 최고보다는 최선을, 포기보다는 실패를',
+        price: '30,000',
+        specialty: '바디프로필, 다이어트',
+        career: '6년 이상',
+        awards: '전국 피트니스 대회 1위',
+        image: '/gym/trainers/trainer1.jpg',
+      },
       {
         name: '남궁혁',
         description:
