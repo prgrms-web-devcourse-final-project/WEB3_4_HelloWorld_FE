@@ -13,7 +13,7 @@ import { useAuthStore } from '@/stores/memberTypeStore';
 
 const TABS = [
   { key: 'user', title: '개인정보' },
-  { key: 'history', title: '나의 수강 내역' },
+  { key: 'history', title: '나의 PT 수강 내역' },
   { key: 'coupon', title: '나의 헬스장 등록 내역' },
   { key: 'logout', title: '회원탈퇴' },
 ];
