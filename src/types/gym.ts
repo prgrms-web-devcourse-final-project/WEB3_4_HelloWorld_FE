@@ -3,3 +3,13 @@ export interface GymType {
   address: string;
   imageUrl: string;
 }
+
+export type GymListResponse = {
+  content: GymType[];
+  currentPage: number;
+  totalPages: number;
+  totalElements: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+  isLast: boolean;
+};

@@ -10,17 +10,21 @@ const ShopTemplate = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   return (
-    <div className="flex px-10 gap-10 w-full max-w-[1440px] mx-auto pt-[100px] min-h-[80vh]">
+    <div className="flex gap-10 w-full max-w-[1440px] mx-auto px-4 pt-[100px] min-h-[80vh]">
+      {/* 고정 너비 + sticky 사이드바 */}
       <div className="w-[280px] shrink-0">
-        <FilterSidebar
-          selectedBrands={selectedBrands}
-          selectedCategories={selectedCategories}
-          setSelectedBrands={setSelectedBrands}
-          setSelectedCategories={setSelectedCategories}
-        />
+        <div className="sticky top-[100px] h-fit">
+          <FilterSidebar
+            selectedBrands={selectedBrands}
+            selectedCategories={selectedCategories}
+            setSelectedBrands={setSelectedBrands}
+            setSelectedCategories={setSelectedCategories}
+          />
+        </div>
       </div>
 
-      <div className="flex-1 bg-mono_000 rounded-xl shadow-inner min-h-[500px]">
+      {/* 유동적인 오른쪽 콘텐츠 */}
+      <div className="flex-1 min-w-0">
         <ProductList
           selectedBrands={selectedBrands}
           selectedCategories={selectedCategories}

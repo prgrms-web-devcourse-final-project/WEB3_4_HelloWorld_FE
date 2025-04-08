@@ -43,7 +43,7 @@ export const registerOwner = async (ownerData: {
   bank: string;
   account: string;
   businessNumber: string;
-  date: string;
+  businessDate: string;
 }) => {
   try {
     const response = await fetch(`${API_BASE_URL}/trainer/owner`, {
