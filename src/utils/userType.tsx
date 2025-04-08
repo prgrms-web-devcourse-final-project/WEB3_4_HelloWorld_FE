@@ -14,6 +14,7 @@ const FetchAuthOnMain = () => {
         const memberRes = await checkMember();
 
         if (memberRes?.ok) {
+          console.log('memberRes', memberRes);
           setAuth({
             isLoggedIn: true,
             userType: 'member',
@@ -26,6 +27,7 @@ const FetchAuthOnMain = () => {
         const trainerRes = await checkTrainer();
 
         if (trainerRes?.ok) {
+          console.log('trainerRes', trainerRes);
           const { userType, isOwner } = await trainerRes.json();
 
           setAuth({
