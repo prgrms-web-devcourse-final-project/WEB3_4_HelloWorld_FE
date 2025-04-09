@@ -10,6 +10,7 @@ import { CustomTextarea } from '@/components/atoms/TextareaBase';
 import Modal from '@/components/atoms/Modal';
 import CustomButton from '@/app/(main)/login/components/CustomButton';
 import InputField from '@/app/(main)/login/components/InputField';
+import useToast from '@/hooks/useToast';
 
 interface ModalViewProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ const ModalView = ({ isOpen, onClose, scheduleDate }: ModalViewProps) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const { setScheduleList } = useCalendarStore();
 
@@ -42,9 +44,20 @@ const ModalView = ({ isOpen, onClose, scheduleDate }: ModalViewProps) => {
 
       setScheduleList(list);
 
+      showToast({
+        title: '등록 완료',
+        description: '등록이 완료되었습니다.',
+        lazy: true,
+      });
+
       onClose();
-    } catch (err: any) {
-      alert(err.message || '등록 실패');
+    } catch {
+      showToast({
+        title: '등록 실패',
+        description: '다시 시도해주세요.',
+        type: 'danger',
+        lazy: true,
+      });
     } finally {
       setLoading(false);
     }

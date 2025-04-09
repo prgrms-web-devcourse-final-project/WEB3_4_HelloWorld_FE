@@ -11,12 +11,14 @@ import OpenDateInputGroup from '@/components/molecules/OpenDateInputGroup';
 import ReturnHomeMessage from '@/app/(main)/login/components/HomeLink/HomeReturnMsg';
 import { formatDate, mapGenderToApi } from '@/utils/formatUtils';
 import { registerOwner } from '@/apis/trainerApi';
+import useToast from '@/hooks/useToast';
 
 const OwnerLoginForm = () => {
   const [selectedGender, setSelectedGender] = useState<string>('');
   const [selectedBank, setSelectedBank] = useState<string>('');
   const [openDate, setOpenDate] = useState('');
   const router = useRouter();
+  const { showToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,10 +38,21 @@ const OwnerLoginForm = () => {
 
     try {
       await registerOwner(finalData);
-      alert('회원가입이 완료되었습니다.');
+
+      showToast({
+        title: '회원가입 완료',
+        description: '정상적으로 가입되었습니다.',
+        lazy: true,
+      });
+
       router.push('/');
     } catch {
-      alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+      showToast({
+        title: '회원가입 실패',
+        description: '잘못된 정보를 입력하셨습니다.',
+        type: 'danger',
+        lazy: true,
+      });
     }
   };
 

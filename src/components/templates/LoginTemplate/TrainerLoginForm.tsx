@@ -14,6 +14,7 @@ import { mapGenderToApi } from '@/utils/formatUtils';
 import GymDetailModal from '@/components/templates/LoginTemplate/Modal';
 import { fetchGymList } from '@/apis/gymApi';
 import { GymType } from '@/types/gym';
+import useToast from '@/hooks/useToast';
 
 const TrainerLoginForm = () => {
   const [selectedGender, setSelectedGender] = useState('');
@@ -23,7 +24,7 @@ const TrainerLoginForm = () => {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [gyms, setGyms] = useState<GymType[]>([]);
-
+  const { showToast } = useToast();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (alertTriggered) return;
@@ -43,11 +44,20 @@ const TrainerLoginForm = () => {
 
     try {
       await registerTrainer(finalData);
-      alert('트레이너 회원가입이 완료되었습니다.');
+      showToast({
+        title: '트레이너 회원가입 완료',
+        description: '정상적으로 가입되었습니다.',
+        lazy: true,
+      });
       setAlertTriggered(true);
       router.push('/');
     } catch {
-      alert('등록된 헬스장이 없습니다. 다시 시도해주세요.');
+      showToast({
+        title: '등록된 헬스장이 없습니다.',
+        description: '다시 시도해주세요.',
+        type: 'danger',
+        lazy: true,
+      });
       setAlertTriggered(true);
     }
   };

@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import { deleteUserAccount } from '@/apis/userApi';
 import { useAuthStore } from '@/stores/memberTypeStore';
+import useToast from '@/hooks/useToast';
 
 const Logout = () => {
   const router = useRouter();
+  const { showToast } = useToast();
   const { resetAuth } = useAuthStore();
 
   const handleWithdraw = async () => {
@@ -17,10 +19,19 @@ const Logout = () => {
       await deleteUserAccount();
 
       resetAuth();
-      alert('회원탈퇴가 처리되었습니다.');
+      showToast({
+        title: '회원탈퇴가 처리되었습니다.',
+        description: '탈퇴가 완료되었습니다.',
+        lazy: true,
+      });
       router.push('/');
-    } catch (error: any) {
-      alert(error.message || '탈퇴 중 오류가 발생했습니다.');
+    } catch {
+      showToast({
+        title: '탈퇴 실패',
+        description: '탈퇴 중 오류가 발생했습니다.',
+        type: 'danger',
+        lazy: true,
+      });
     }
   };
 
