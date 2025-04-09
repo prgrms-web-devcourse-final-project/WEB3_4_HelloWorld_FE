@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 
 import { ThemeSwitch } from '@/components/atoms/ThemeSwitch';
 import { deleteTrainerAccount, logoutUser } from '@/apis/userApi';
+import { useAuthStore } from '@/stores/memberTypeStore';
 export default function TrainerHeader() {
   const path = usePathname();
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function TrainerHeader() {
   const handleLogout = async () => {
     try {
       await logoutUser();
+      useAuthStore.getState().resetAuth();
       router.push('/');
     } catch {}
   };
@@ -42,6 +44,7 @@ export default function TrainerHeader() {
   const handleWithdraw = async () => {
     try {
       await deleteTrainerAccount();
+      useAuthStore.getState().resetAuth();
       router.push('/');
     } catch {}
   };
@@ -56,9 +59,11 @@ export default function TrainerHeader() {
     >
       <NavbarContent justify="start">
         <NavbarBrand>
-          <h1 className="hidden sm:block text-2xl font-black font-point text-inherit">
-            Gym<span className="text-main">M</span>ate
-          </h1>
+          <Link href="/">
+            <h1 className="hidden sm:block text-2xl font-black font-point text-inherit">
+              Gym<span className="text-main">M</span>ate
+            </h1>
+          </Link>
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent className="gap-10" justify="end">
