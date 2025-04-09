@@ -13,6 +13,7 @@ import { Image } from '@heroui/react';
 
 import { MyButton } from '@/components/atoms/Button';
 import GymDetailPanel from '@/components/GymDetailPanel';
+import RoutePanel from '@/components/RoutePanel';
 
 declare global {
   interface Window {
@@ -183,12 +184,33 @@ export default function GymPage() {
 
   const [userAddress, setUserAddress] = useState<string | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const [isRouteVisible, setIsRouteVisible] = useState(false);
+  const [routeInfo, setRouteInfo] = useState<{
+    startAddress: string;
+    endAddress: string;
+    totalTime: number;
+    totalDistance: number;
+    totalWalkDistance: number;
+    transferCount: number;
+    steps: {
+      mode: string;
+      sectionTime: number;
+      startName: string;
+      endName: string;
+      route: string;
+    }[];
+  } | null>(null);
 
   const toggleTranslateX = isOpen
     ? isPanelVisible
       ? 'translate-x-[896px]'
       : 'translate-x-[436px]'
     : 'translate-x-[16px]';
+  const [myLocation, setMyLocation] = useState<{
+    lat: number;
+    lon: number;
+  } | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -203,6 +225,7 @@ export default function GymPage() {
           httpsMode: true,
         });
 
+        mapInstanceRef.current = map;
         map.setMapType(window.Tmapv2.Map.MapType.ROAD);
 
         if (navigator.geolocation) {
@@ -211,7 +234,8 @@ export default function GymPage() {
               const lat = position.coords.latitude;
               const lon = position.coords.longitude;
 
-              // ✅ 마커 생성 (더 안정적인 URL)
+              setMyLocation({ lat, lon });
+              // 마커 생성 (더 안정적인 URL)
               const marker = new window.Tmapv2.Marker({
                 position: new window.Tmapv2.LatLng(lat, lon),
                 icon: '/gym/icons/mapmarker.svg',
@@ -223,9 +247,9 @@ export default function GymPage() {
               map.setCenter(new window.Tmapv2.LatLng(lat, lon));
               map.setZoom(15);
 
-              // ✅ 주소 가져오기 + 팝업 생성
+              // 주소 가져오기 + 팝업 생성
               fetch(
-                `https://apis.openapi.sk.com/tmap/geo/reversegeocoding?version=1&lat=${lat}&lon=${lon}&coordType=WGS84GEO&addressType=A10`,
+                `https://apis.openapi.sk.com/tmap/geo/reversegeocoding?version=1&lat=${lat}&lon=${lon}&coordType=WGS84GEO&addressType=A04`,
                 {
                   method: 'GET',
                   headers: {
@@ -235,28 +259,27 @@ export default function GymPage() {
               )
                 .then((res) => res.json())
                 .then((data) => {
-                  const fullAddress = data?.addressInfo?.fullAddress;
-                  const roadAddress = data?.addressInfo?.roadAddress;
-                  const jibunAddress = data?.addressInfo?.jibunAddress;
+                  console.log('[리버스 지오코딩 응답]', data);
+                  const { fullAddress, buildingName } = data?.addressInfo || {};
 
                   setUserAddress(fullAddress || null);
-
                   const popupContent = `
-                      <div style="
-                        width: 230px;
-                        background-color: white;
-                        padding: 12px 14px;
-                        border-radius: 10px;
-                        box-shadow: 2px 2px 10px rgba(0,0,0,0.15);
-                        font-family: Pretendard, sans-serif;
-                        font-size: 13px;
-                        color: #333;
-                      ">
-                        <div style="font-weight: 600; margin-bottom: 6px;">📍 현재 위치</div>
-                        <div style="margin-bottom: 4px;"><strong>도로명</strong>: ${roadAddress || '-'}</div>
-                        <div><strong>지번</strong>: ${jibunAddress || '-'}</div>
-                      </div>
-                    `;
+                  <div style="
+                    width: 230px;
+                    background-color: white;
+                    padding: 12px 14px;
+                    border-radius: 10px;
+                    box-shadow: 2px 2px 10px rgba(0,0,0,0.15);
+                    font-family: Pretendard, sans-serif;
+                    font-size: 13px;
+                    color: #333;
+                  ">
+                    <div style="font-weight: 600; margin-bottom: 6px;">
+                      📍 ${buildingName || '현재 위치'}
+                    </div>
+                    <div>${fullAddress || '-'}</div>
+                  </div>
+                `;
 
                   new window.Tmapv2.InfoWindow({
                     position: new window.Tmapv2.LatLng(lat, lon),
@@ -406,8 +429,30 @@ export default function GymPage() {
       {selectedGym && (
         <GymDetailPanel
           gymId={selectedGym.gymId}
+          map={mapInstanceRef.current}
+          myLocation={myLocation}
           visible={isPanelVisible}
           onClose={() => setSelectedGym(null)}
+          onRouteReady={(routeData) => {
+            setRouteInfo(routeData);
+            setIsPanelVisible(false);
+            setIsRouteVisible(true);
+          }}
+        />
+      )}
+      {isRouteVisible && routeInfo && (
+        <RoutePanel
+          endAddress={routeInfo.endAddress}
+          startAddress={routeInfo.startAddress}
+          steps={routeInfo.steps}
+          totalDistance={routeInfo.totalDistance}
+          totalTime={routeInfo.totalTime}
+          totalWalkDistance={routeInfo.totalWalkDistance}
+          transferCount={routeInfo.transferCount}
+          onClose={() => {
+            setIsRouteVisible(false);
+            setRouteInfo(null);
+          }}
         />
       )}
 
