@@ -32,7 +32,7 @@ const ScheduleView = () => {
       return;
     }
 
-    if (isOwner === true) {
+    if (isOwner !== null) {
       alert('일반 회원만 이용할 수 있습니다.');
       router.push('/');
     }

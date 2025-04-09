@@ -12,6 +12,7 @@ import ReturnHomeMessage from '@/app/(main)/login/components/HomeLink/HomeReturn
 import { registerUser } from '@/apis/userApi';
 import { UserData } from '@/types/UserData';
 import { mapGenderToApi } from '@/utils/formatUtils';
+import useToast from '@/hooks/useToast';
 
 interface UserInfoFormProps {
   setFormData: React.Dispatch<React.SetStateAction<UserData>>;
@@ -28,6 +29,7 @@ const UserInfoForm = ({ setFormData, formData }: UserInfoFormProps) => {
   });
 
   const router = useRouter();
+  const { showToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,10 +52,21 @@ const UserInfoForm = ({ setFormData, formData }: UserInfoFormProps) => {
 
     try {
       await registerUser(finalFormData);
-      alert('회원가입이 완료되었습니다.');
+
+      showToast({
+        title: '회원가입 완료',
+        description: '정상적으로 가입되었습니다.',
+        lazy: true,
+      });
+
       router.push('/');
     } catch {
-      alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
+      showToast({
+        title: '회원가입 실패',
+        description: '다시 시도해주세요.',
+        type: 'danger',
+        lazy: true,
+      });
     }
   };
 
