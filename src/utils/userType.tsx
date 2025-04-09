@@ -6,9 +6,12 @@ import { useAuthStore } from '@/stores/memberTypeStore';
 import { checkMember, checkTrainer } from '@/apis/userTypeApi';
 
 const FetchAuthOnMain = () => {
-  const { setAuth, resetAuth } = useAuthStore();
+  const { setAuth, resetAuth, isInitialized, isLoggedIn } = useAuthStore();
 
   useEffect(() => {
+    //  상태 복구가 완료되고 이미 로그인된 상태라면 fetch 생략
+    if (isInitialized && isLoggedIn) return;
+
     const fetchUser = async () => {
       try {
         const memberRes = await checkMember();
@@ -44,7 +47,7 @@ const FetchAuthOnMain = () => {
     };
 
     fetchUser();
-  }, [setAuth, resetAuth]);
+  }, [setAuth, resetAuth, isInitialized, isLoggedIn]);
 
   return null;
 };
