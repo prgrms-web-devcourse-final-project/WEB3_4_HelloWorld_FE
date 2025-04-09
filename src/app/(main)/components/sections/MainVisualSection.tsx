@@ -23,10 +23,7 @@ export default function MainVisualSection() {
           className="w-full h-full object-cover"
           preload="none"
         >
-          <source
-            src="https://ummilabidxl6voya.public.blob.vercel-storage.com/5319438-uhd_3840_2160_25fps-1Jd8aW76nnkbSiIGFEt2jCbSd6Gp4h.mp4"
-            type="video/mp4"
-          />
+          <source src="" type="video/mp4" />
         </video>
         <div className=" w-full  origin-center h-full absolute inset-0 left-0 flex bg-black/40 justify-center items-center z-20 ">
           <div className="text-center text-4xl/relaxed lg:text-8xl/relaxed font-bold rounded-full pb-0 lg:pb-16 z-20 text-gray-100">
