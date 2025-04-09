@@ -108,3 +108,22 @@ export const logoutUser = async (): Promise<void> => {
     throw new Error(error.message || '로그아웃에 실패했습니다.');
   }
 };
+
+// 트레이너 회원 탈퇴
+export const deleteTrainerAccount = async (): Promise<void> => {
+  const token = localStorage.getItem('accessToken');
+
+  const res = await fetch(`${API_BASE_URL}/trainer`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token ?? ''}`,
+    },
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+
+    throw new Error(error.message || '회원 탈퇴에 실패했습니다.');
+  }
+};
