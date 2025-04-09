@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 type UserStore = {
   user: any | null;
-  setUser: (user) => void;
+  setUser: (user: any) => void;
   clearUser: () => void;
   isLoggedIn: boolean;
   userType: 'member' | 'trainer' | 'owner' | null;

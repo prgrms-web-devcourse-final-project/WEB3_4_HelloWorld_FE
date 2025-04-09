@@ -55,10 +55,8 @@ export const useInitUser = () => {
   });
 
   useEffect(() => {
-    console.log(data);
     if (isSuccess && data) {
       setUser(data);
-      console.log(user);
       //   if (roles === 'trainer' && data.isOwner === true) {
       //     setUserType('owner');
       //   } else if (roles) {
