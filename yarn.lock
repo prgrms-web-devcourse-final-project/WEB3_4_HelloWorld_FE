@@ -4858,35 +4858,6 @@
   resolved "https://registry.yarnpkg.com/@tailwindcss/language-server/-/language-server-0.14.14.tgz#c65c6734511562ea179f9d3c93fe8f019060993a"
   integrity sha512-Xp+wSLXsj64GkvlnaJhEJTRzzo2/EFVjqBqT5FNUd4RMWmPG6jNktxuA/IU5sV3So7k9Gwz2VlS6dl3WpG9wxQ==
 
-"@tanstack/query-core@5.72.1":
-  version "5.72.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.72.1.tgz#c46e3e5eecf1628c478965c0540cae98838e24fe"
-  integrity sha512-nOu0EEkZuJ0BZnYgeaEfo44+psq1jBO7/zp3KudixD4dvgOVerrhAhDEKsWx2N7MxB59mjO4r0ddP/VqWGPK+Q==
-
-"@tanstack/query-devtools@5.72.1":
-  version "5.72.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-devtools/-/query-devtools-5.72.1.tgz#3ef35de317a55a688072a13cb628931ddec0f097"
-  integrity sha512-D0vEoQaiVq9ayCqvvxA9XkDq7TIesyPpvgP69arRtt5FQF6n/Hrta4SlkfXC4m9BCvFLlhLDcKGYa2eMQ4ZIIA==
-
-"@tanstack/react-query-devtools@^5.71.10":
-  version "5.72.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-5.72.1.tgz#9822a0799125dc67ff1bd846cf01a524b12fa998"
-  integrity sha512-ckNRgABst3MLjpM2nD/CzQToCiaT3jb3Xhtf+GP/0/9ij9SPT/SC+lc3wUDSkT0OupnHobBBF5E1/Xp6B+XZLg==
-  dependencies:
-    "@tanstack/query-devtools" "5.72.1"
-
-"@tanstack/react-query-next-experimental@^5.71.10":
-  version "5.72.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query-next-experimental/-/react-query-next-experimental-5.72.1.tgz#e9c543d5cc96bc04bdaaaa70cb1d75afc3674d7f"
-  integrity sha512-tmhQm4Tqhcg8S4DtlXROEN6BLawWzGBAJrbUM/80sXgEX6Ak8D3PvkUFaewzFrIjNtLcu3zTfll34xdr68gilg==
-
-"@tanstack/react-query@^5.71.10":
-  version "5.72.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-5.72.1.tgz#7c8bcb94bfc64e57377bfa3c5b2a764c4ae83229"
-  integrity sha512-4UEMyRx54xj144D2nDvDIMiXSG5BrqyCJrmyNoGbymNS+VWODcBDFrmRk9p2fe12UGZ4JtKPTNuW2Jg0aisUgQ==
-  dependencies:
-    "@tanstack/query-core" "5.72.1"
-
 "@tanstack/query-core@5.71.10":
   version "5.71.10"
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.71.10.tgz#1f2dc5abf595156e7d9c5d6e4f47e805a7083c30"
@@ -5836,6 +5807,18 @@ concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
+
+cookie@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-1.0.2.tgz#27360701532116bd3f1f9416929d176afe1e4610"
+  integrity sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==
+
+cookies-next@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/cookies-next/-/cookies-next-5.1.0.tgz#b6e1c7d11a4e1d38ed0586a7847cd0f403c539e1"
+  integrity sha512-9Ekne+q8hfziJtnT9c1yDUBqT0eDMGgPrfPl4bpR3xwQHLTd/8gbSf6+IEkP/pjGsDZt1TGbC6emYmFYRbIXwQ==
+  dependencies:
+    cookie "^1.0.1"
 
 cross-env@^7.0.3:
   version "7.0.3"
@@ -6853,6 +6836,11 @@ input-otp@1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/input-otp/-/input-otp-1.4.1.tgz#bc22e68b14b1667219d54adf74243e37ea79cf84"
   integrity sha512-+yvpmKYKHi9jIGngxagY9oWiiblPB7+nEO75F2l2o4vs+6vpPZZmUl4tBNYuTCvQjhvEIbdNeJu70bhfYP2nbw==
+
+install@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/install/-/install-0.13.0.tgz#6af6e9da9dd0987de2ab420f78e60d9c17260776"
+  integrity sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==
 
 internal-slot@^1.1.0:
   version "1.1.0"

@@ -15,14 +15,16 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { clsx } from 'clsx';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 import { ThemeSwitch } from '@/components/atoms/ThemeSwitch';
+import { useAuthStore } from '@/stores/memberTypeStore';
 import { logoutUser } from '@/apis/userApi';
-import { useMemberStore } from '@/stores/testAuthStore';
+import { formatCash } from '@/utils/formatter';
 export default function Header() {
   const path = usePathname();
   const router = useRouter();
-  const { isLoggedIn, userType, clearUser } = useMemberStore();
+  const { isLoggedIn, userType, isOwner, resetAuth, user } = useAuthStore();
 
   const isMainPage = path === '/' || path.includes('pt');
 
@@ -38,7 +40,7 @@ export default function Header() {
   //오너 페이지 따로 분리 할 경우 경로
   const handleMyPageClick = () => {
     if (userType === 'member') router.push('/membermypage');
-    else if (userType === 'owner') router.push('/mypage');
+    else if (userType === 'trainer' && isOwner) router.push('/mypage');
     else router.push('/mypage');
   };
 
@@ -47,12 +49,16 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      clearUser();
+      resetAuth();
       router.refresh();
     } catch {
       alert('로그아웃에 실패했습니다. 다시 시도 해주세요.');
     }
   };
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   return (
     <div className="fixed w-full z-50">
@@ -112,7 +118,7 @@ export default function Header() {
                   color="secondary"
                   name="User"
                   size="sm"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+                  src={user?.profileImage && '/public/gym/icons/healthboy.jpg'}
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -122,7 +128,9 @@ export default function Header() {
                   isReadOnly
                   className="h-14 gap-2"
                 >
-                  <p className="font-semibold">남은캐시 : 10000원</p>
+                  <p className="font-semibold">
+                    남은캐시 : {formatCash(Number(user?.cash))}원
+                  </p>
                 </DropdownItem>
                 <DropdownItem key="settings" onClick={handleMyPageClick}>
                   마이 페이지

@@ -1,10 +1,9 @@
 'use client';
-import { Link } from '@heroui/react';
+
 import {
   HomeIcon,
   UserGroupIcon,
   CalendarIcon,
-  ChartBarIcon,
   CogIcon,
   ClipboardDocumentListIcon,
   ChevronLeftIcon,
@@ -12,6 +11,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { cn } from '@heroui/react';
+import { UserIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
 
 import TrainerHeader from '@/components/organisms/TrainerHeader';
 
@@ -24,7 +25,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     label: '대시보드',
-    href: '/trainer',
+    href: '/mypage',
     icon: <HomeIcon className="w-5 h-5" />,
   },
   {
@@ -39,13 +40,13 @@ const navItems: NavItem[] = [
   },
   {
     label: 'PT 프로그램',
-    href: '/trainer/programs',
+    href: '/pt',
     icon: <ClipboardDocumentListIcon className="w-5 h-5" />,
   },
   {
-    label: '통계',
-    href: '/trainer/stats',
-    icon: <ChartBarIcon className="w-5 h-5" />,
+    label: '회원정보 수정',
+    href: '/mypage/edit',
+    icon: <UserIcon className="w-5 h-5" />,
   },
   {
     label: '설정',

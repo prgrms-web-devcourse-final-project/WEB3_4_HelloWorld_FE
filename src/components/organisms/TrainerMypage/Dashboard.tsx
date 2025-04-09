@@ -14,22 +14,17 @@ import {
   TableRow,
 } from '@heroui/react';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import GymListCardItem from '@/components/molecules/GYM/GymListCardItem';
 import NumberCountCard from '@/components/molecules/NumberCountCard';
 import DashboardItemWrap from '@/components/molecules/TrainerMypage/DashboardItemWrap';
 import LevelBadge from '@/components/atoms/LevelBadge';
-import { useMemberStore } from '@/stores/testAuthStore';
+import { useAuthStore } from '@/stores/memberTypeStore';
 
 export default function Dashboard() {
-  const trainerInfo = useMemberStore((state) => state.user);
   const router = useRouter();
-
-  useEffect(() => {
-    console.log(trainerInfo);
-  }, [trainerInfo]);
+  const trainerInfo = useAuthStore((state) => state.user);
 
   return (
     <div className="grid grid-cols-3 gap-4">
