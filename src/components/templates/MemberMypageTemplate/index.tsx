@@ -2,16 +2,19 @@
 
 import { Tabs, Tab } from '@nextui-org/react';
 import { memo, useState } from 'react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import UserForm from '@/components/organisms/MyPage/UserForm';
 import HistoryList from '@/components/templates/MemberMypageTemplate/HistoryList';
 import CouponListHistory from '@/components/templates/MemberMypageTemplate/CouponListHistory';
 import Logout from '@/components/templates/MemberMypageTemplate/Logout';
+import { useAuthStore } from '@/stores/memberTypeStore';
 
 const TABS = [
   { key: 'user', title: '개인정보' },
-  { key: 'history', title: '나의 수강 내역' },
-  { key: 'coupon', title: '나의 결제 내역' },
+  { key: 'history', title: '나의 PT 수강 내역' },
+  { key: 'coupon', title: '나의 헬스장 등록 내역' },
   { key: 'logout', title: '회원탈퇴' },
 ];
 
@@ -19,10 +22,18 @@ const MyPageTemplate = () => {
   const [selectedTab, setSelectedTab] = useState<
     'user' | 'history' | 'coupon' | 'logout'
   >('user');
+  const router = useRouter();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/');
+    }
+  }, [isLoggedIn, router]);
 
   return (
     <div className="pt-[300px] w-full flex justify-center">
-      <div className="w-full max-w-[1400px] px-4">
+      <div className="w-full max-w-[1450px] px-4">
         <div className="flex items-center border-b pb-2">
           <h2 className="font-point text-3xl font-bold text-mono_900 whitespace-nowrap">
             📌 마이페이지

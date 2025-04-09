@@ -1,5 +1,7 @@
 'use client';
 
+import type { CommonHistory } from '@/utils/convertReservationToHistory';
+
 import {
   Table,
   TableHeader,
@@ -11,21 +13,10 @@ import {
 } from '@nextui-org/react';
 import { useMemo, useState } from 'react';
 
-interface CommonHistory {
-  id: string;
-  status: string;
-  time: string;
-  content: string;
-  seller: string;
-  price: number;
-  period?: string;
+interface Props {
+  data: CommonHistory[];
 }
-
-interface Props<T = CommonHistory> {
-  data: T[];
-}
-
-const LessonHistoryTable = <T extends CommonHistory>({ data }: Props<T>) => {
+const LessonHistoryTableRaw = ({ data }: Props) => {
   const [page, setPage] = useState(1);
   const rowsPerPage = 8;
   const pages = Math.ceil(data.length / rowsPerPage);
@@ -39,7 +30,7 @@ const LessonHistoryTable = <T extends CommonHistory>({ data }: Props<T>) => {
 
   return (
     <Table
-      aria-label="Lesson history table"
+      aria-label="Lesson history table (raw)"
       bottomContent={
         <div className="flex w-full justify-center mt-12">
           <Pagination
@@ -78,28 +69,32 @@ const LessonHistoryTable = <T extends CommonHistory>({ data }: Props<T>) => {
       <TableBody
         className="py-6"
         emptyContent={
-          <div className="text-center text-gray-500">결제 내역이 없습니다.</div>
+          <div className="text-center text-gray-500">수강 내역이 없습니다.</div>
         }
         items={items}
       >
-        {(item) => (
-          <TableRow key={item.id} className="py-6 min-h-[20px]">
-            <TableCell>{item.status}</TableCell>
-            <TableCell>{item.time}</TableCell>
-            <TableCell>{item.content}</TableCell>
-            <TableCell>{item.seller}</TableCell>
-            <TableCell
-              className={
-                item.status === '만료' ? 'text-primary' : 'text-success'
-              }
-            >
-              {item.price.toLocaleString()}
-            </TableCell>
-          </TableRow>
-        )}
+        {(item) => {
+          const status = item.status;
+          const time = item.time;
+          const seller = item.seller;
+
+          return (
+            <TableRow key={item.id} className="py-6 min-h-[20px]">
+              <TableCell>{status}</TableCell>
+              <TableCell>{time}</TableCell>
+              <TableCell>{item.content}</TableCell>
+              <TableCell>{seller}</TableCell>
+              <TableCell
+                className={status === '만료' ? 'text-primary' : 'text-success'}
+              >
+                {item.price.toLocaleString()}
+              </TableCell>
+            </TableRow>
+          );
+        }}
       </TableBody>
     </Table>
   );
 };
 
-export default LessonHistoryTable;
+export default LessonHistoryTableRaw;

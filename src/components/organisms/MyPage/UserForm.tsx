@@ -13,16 +13,20 @@ import { UserData } from '@/types/UserData';
 const UserForm = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [userInfo, setUserInfo] = useState<UserData | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const data = await getUserInfo();
 
-        setUserInfo(data);
-      } catch {
-        alert('사용자 정보 불러오기 실패');
-      }
+        const mappedData = {
+          ...data,
+          profileImageUrl: data.profileUrl,
+        };
+
+        setUserInfo(mappedData);
+      } catch {}
     };
 
     fetchUser();
@@ -40,7 +44,10 @@ const UserForm = () => {
     const file = e.target.files?.[0];
 
     if (!file) return;
+
     const imageUrl = URL.createObjectURL(file);
+
+    setSelectedImage(file);
 
     setUserInfo((prev) =>
       prev ? { ...prev, profileImageUrl: imageUrl } : prev,
@@ -52,14 +59,15 @@ const UserForm = () => {
     if (!userInfo) return;
 
     try {
-      await updateUserInfo(userInfo);
-      alert('수정 완료 완료되었습니다');
+      await updateUserInfo(userInfo, selectedImage ?? undefined);
+      alert('수정 완료되었습니다');
     } catch {
       alert('수정 중 오류가 발생했습니다.');
     }
   };
 
-  if (!userInfo) return <p>로딩 중...</p>;
+  if (!userInfo)
+    return <p className="text-center text-mono_500 text-sm">로딩 중...</p>;
 
   return (
     <form className="flex flex-col w-full" onSubmit={handleSubmit}>
@@ -69,12 +77,12 @@ const UserForm = () => {
           type="button"
           onClick={() => fileInputRef.current?.click()}
         >
-          {userInfo.profileImageUrl && (
+          {userInfo.profileUrl && (
             <Image
               fill
-              alt="프로필 이미지"
+              alt="변경 되었으니 권환문제"
               className="rounded-full object-cover"
-              src={userInfo.profileImageUrl}
+              src={userInfo.profileUrl || '/assets/images/defaultProfile.png'}
             />
           )}
         </button>

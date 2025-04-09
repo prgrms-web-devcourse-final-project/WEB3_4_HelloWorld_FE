@@ -5,7 +5,7 @@ import React from 'react';
 
 const ReturnHomeMessage: React.FC = () => {
   return (
-    <div className=" text-center mb-[50px]">
+    <div className=" text-center mb-[150px]">
       <span className="text-sm text-mono_400">
         Wherever you want, <span className="text-main">M</span>ate{' '}
       </span>

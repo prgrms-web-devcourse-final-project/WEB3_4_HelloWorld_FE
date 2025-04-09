@@ -18,7 +18,7 @@ import { clsx } from 'clsx';
 
 import { ThemeSwitch } from '@/components/atoms/ThemeSwitch';
 import { useAuthStore } from '@/stores/memberTypeStore';
-
+import { logoutUser } from '@/apis/userApi';
 export default function Header() {
   const path = usePathname();
   const router = useRouter();
@@ -38,15 +38,20 @@ export default function Header() {
   //오너 페이지 따로 분리 할 경우 경로
   const handleMyPageClick = () => {
     if (userType === 'member') router.push('/membermypage');
-    else if (userType === 'trainer' && isOwner) router.push('/ownermypage');
+    else if (userType === 'trainer' && isOwner) router.push('/mypage');
     else router.push('/mypage');
   };
 
   const handlePointClick = () => router.push('/point');
   const handleLoginOrSignup = () => router.push('/login');
-  const handleLogout = () => {
-    resetAuth();
-    router.refresh();
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      resetAuth();
+      router.refresh();
+    } catch {
+      alert('로그아웃에 실패했습니다. 다시 시도 해주세요.');
+    }
   };
 
   return (
