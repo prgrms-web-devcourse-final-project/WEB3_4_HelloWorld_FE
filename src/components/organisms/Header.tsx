@@ -15,17 +15,17 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { clsx } from 'clsx';
 import Link from 'next/link';
-import { useEffect } from 'react';
 
 import { ThemeSwitch } from '@/components/atoms/ThemeSwitch';
 import { useAuthStore } from '@/stores/memberTypeStore';
 import { logoutUser } from '@/apis/userApi';
 import { formatCash } from '@/utils/formatter';
+import useToast from '@/hooks/useToast';
 export default function Header() {
   const path = usePathname();
   const router = useRouter();
   const { isLoggedIn, userType, isOwner, resetAuth, user } = useAuthStore();
-
+  const { showToast } = useToast();
   const isMainPage = path === '/' || path.includes('pt');
 
   const navTextClass = clsx('text-mono_700', {
@@ -51,14 +51,17 @@ export default function Header() {
       await logoutUser();
       resetAuth();
       router.refresh();
+      showToast({
+        title: '로그아웃 성공',
+        description: '로그아웃이 완료되었습니다.',
+      });
     } catch {
-      alert('로그아웃에 실패했습니다. 다시 시도 해주세요.');
+      showToast({
+        title: '로그아웃 실패',
+        description: '로그아웃에 실패했습니다. 다시 시도 해주세요.',
+      });
     }
   };
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   return (
     <div className="fixed w-full z-50">

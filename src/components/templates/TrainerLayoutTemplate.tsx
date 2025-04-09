@@ -2,9 +2,7 @@
 
 import {
   HomeIcon,
-  UserGroupIcon,
   CalendarIcon,
-  CogIcon,
   ClipboardDocumentListIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -28,19 +26,19 @@ const navItems: NavItem[] = [
     href: '/mypage',
     icon: <HomeIcon className="w-5 h-5" />,
   },
+  // {
+  //   label: '회원 관리',
+  //   href: '/trainer/members',
+  //   icon: <UserGroupIcon className="w-5 h-5" />,
+  // },
   {
-    label: '회원 관리',
-    href: '/trainer/members',
-    icon: <UserGroupIcon className="w-5 h-5" />,
-  },
-  {
-    label: '일정 관리',
-    href: '/trainer/schedule',
+    label: '헬스장 관리',
+    href: '/mypage/gym/edit',
     icon: <CalendarIcon className="w-5 h-5" />,
   },
   {
     label: 'PT 프로그램',
-    href: '/pt',
+    href: '/mypage/pt',
     icon: <ClipboardDocumentListIcon className="w-5 h-5" />,
   },
   {
@@ -48,11 +46,11 @@ const navItems: NavItem[] = [
     href: '/mypage/edit',
     icon: <UserIcon className="w-5 h-5" />,
   },
-  {
-    label: '설정',
-    href: '/trainer/settings',
-    icon: <CogIcon className="w-5 h-5" />,
-  },
+  // {
+  //   label: '설정',
+  //   href: '/trainer/settings',
+  //   icon: <CogIcon className="w-5 h-5" />,
+  // },
 ];
 
 export default function TrainerLayoutTemplate({
