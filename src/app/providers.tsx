@@ -29,7 +29,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <HeroUIProvider navigate={router.push}>
       <ReactQueryClientProvider>
-        <ToastProvider />
+        <ToastProvider placement="top-center" />
         <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
       </ReactQueryClientProvider>
     </HeroUIProvider>
