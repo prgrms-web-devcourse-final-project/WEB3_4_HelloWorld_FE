@@ -5,7 +5,6 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Link,
   DropdownItem,
   DropdownTrigger,
   Dropdown,
@@ -15,6 +14,7 @@ import {
 } from '@heroui/react';
 import { usePathname, useRouter } from 'next/navigation';
 import { clsx } from 'clsx';
+import Link from 'next/link';
 
 import { ThemeSwitch } from '@/components/atoms/ThemeSwitch';
 import { logoutUser } from '@/apis/userApi';

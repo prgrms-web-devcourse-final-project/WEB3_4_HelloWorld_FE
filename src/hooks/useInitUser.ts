@@ -37,6 +37,7 @@ export const useInitUser = () => {
 
       if (trainerRes.ok) {
         setRoles('trainer');
+
         setIsAuthenticated(true);
 
         return;
@@ -57,6 +58,7 @@ export const useInitUser = () => {
   useEffect(() => {
     if (isSuccess && data) {
       setUser(data);
+
       setIsLoggedIn(true);
       sessionStorage.setItem('isLoggedIn', 'true');
       if (roles === 'trainer' && data.isOwner === true) {
