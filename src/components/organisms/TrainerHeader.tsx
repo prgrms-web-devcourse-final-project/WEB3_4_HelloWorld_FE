@@ -14,11 +14,13 @@ import {
 } from '@heroui/react';
 import { usePathname } from 'next/navigation';
 import { clsx } from 'clsx';
+import { useRouter } from 'next/navigation';
 
 import { ThemeSwitch } from '@/components/atoms/ThemeSwitch';
-
+import { deleteTrainerAccount, logoutUser } from '@/apis/userApi';
 export default function TrainerHeader() {
   const path = usePathname();
+  const router = useRouter();
   const isMainPage = path === '/' || path.includes('pt');
 
   const navTextClass = clsx('text-mono_700', {
@@ -29,6 +31,20 @@ export default function TrainerHeader() {
     'bg-black/30': isMainPage,
     'bg-mono_100': !isMainPage,
   });
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      router.push('/');
+    } catch {}
+  };
+
+  const handleWithdraw = async () => {
+    try {
+      await deleteTrainerAccount();
+      router.push('/');
+    } catch {}
+  };
 
   return (
     <NavbarComponent
@@ -51,22 +67,22 @@ export default function TrainerHeader() {
           justify="end"
         >
           <NavbarItem>
-            <Link className={navTextClass} href="#">
+            <Link className={navTextClass} href="/pt">
               PT정보
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link className={navTextClass} href="#">
+            <Link className={navTextClass} href="/gym">
               헬스장정보
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link className={navTextClass} href="#">
+            <Link className={navTextClass} href="/myfitness">
               나의운동
             </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link className={navTextClass} href="#">
+            <Link className={navTextClass} href="/shop">
               헬스용품
             </Link>
           </NavbarItem>
@@ -94,13 +110,16 @@ export default function TrainerHeader() {
               <p className="font-semibold">남은캐시 : 10000원</p>
             </DropdownItem>
             <DropdownItem key="settings">마이 페이지</DropdownItem>
-            <DropdownItem key="team_settings">Team Settings</DropdownItem>
-            <DropdownItem key="analytics">Analytics</DropdownItem>
-            <DropdownItem key="system">System</DropdownItem>
-            <DropdownItem key="configurations">Configurations</DropdownItem>
-            <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
-            <DropdownItem key="logout" color="danger">
-              Log Out
+            <DropdownItem key="point">포인트 충전</DropdownItem>
+            <DropdownItem key="logout" color="danger" onClick={handleLogout}>
+              로그아웃
+            </DropdownItem>
+            <DropdownItem
+              key="withdraw"
+              color="danger"
+              onClick={handleWithdraw}
+            >
+              회원탈퇴
             </DropdownItem>
           </DropdownMenu>
         </Dropdown>

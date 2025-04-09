@@ -6,16 +6,18 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import Script from 'next/script';
 import { MapPinIcon, StarIcon } from '@heroicons/react/24/solid';
 import { Input, Pagination } from '@heroui/react';
 import { Image } from '@heroui/react';
 
 import { MyButton } from '@/components/atoms/Button';
 import GymDetailPanel from '@/components/GymDetailPanel';
+import RoutePanel from '@/components/RoutePanel';
 
 declare global {
   interface Window {
-    kakao: any;
+    Tmapv2: any;
   }
 }
 
@@ -182,56 +184,127 @@ export default function GymPage() {
 
   const [userAddress, setUserAddress] = useState<string | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
+  const [isRouteVisible, setIsRouteVisible] = useState(false);
+  const [routeInfo, setRouteInfo] = useState<{
+    startAddress: string;
+    endAddress: string;
+    totalTime: number;
+    totalDistance: number;
+    totalWalkDistance: number;
+    transferCount: number;
+    steps: {
+      mode: string;
+      sectionTime: number;
+      startName: string;
+      endName: string;
+      route: string;
+    }[];
+  } | null>(null);
 
   const toggleTranslateX = isOpen
     ? isPanelVisible
-      ? 'translate-x-[896px]' // 사이드바 + 상세 패널 열림
-      : 'translate-x-[436px]' // 사이드바만 열림
-    : 'translate-x-[16px]'; // 닫힘
+      ? 'translate-x-[896px]'
+      : 'translate-x-[436px]'
+    : 'translate-x-[16px]';
+  const [myLocation, setMyLocation] = useState<{
+    lat: number;
+    lon: number;
+  } | null>(null);
 
   useEffect(() => {
-    const script = document.createElement('script');
+    const interval = setInterval(() => {
+      if (window.Tmapv2 && mapRef.current) {
+        clearInterval(interval);
 
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY}&autoload=false&libraries=services`;
-    script.async = true;
-    script.onload = () => {
-      window.kakao.maps.load(() => {
+        const map = new window.Tmapv2.Map(mapRef.current, {
+          center: new window.Tmapv2.LatLng(37.5665, 126.978),
+          width: '100%',
+          height: '100%',
+          zoom: 15,
+          httpsMode: true,
+        });
+
+        mapInstanceRef.current = map;
+        map.setMapType(window.Tmapv2.Map.MapType.ROAD);
+
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition((position) => {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const lat = position.coords.latitude;
+              const lon = position.coords.longitude;
 
-            const container = mapRef.current;
-            const options = {
-              center: new window.kakao.maps.LatLng(lat, lng),
-              level: 3,
-            };
-            const map = new window.kakao.maps.Map(container, options);
+              setMyLocation({ lat, lon });
+              // 마커 생성 (더 안정적인 URL)
+              const marker = new window.Tmapv2.Marker({
+                position: new window.Tmapv2.LatLng(lat, lon),
+                icon: '/gym/icons/mapmarker.svg',
+                iconSize: new window.Tmapv2.Size(46, 50),
+                offset: new window.Tmapv2.Point(23, 50),
+                map,
+              });
 
-            const marker = new window.kakao.maps.Marker({
-              position: new window.kakao.maps.LatLng(lat, lng),
-              map,
-            });
+              map.setCenter(new window.Tmapv2.LatLng(lat, lon));
+              map.setZoom(15);
 
-            const geocoder = new window.kakao.maps.services.Geocoder();
-            const coord = new window.kakao.maps.LatLng(lat, lng);
+              // 주소 가져오기 + 팝업 생성
+              fetch(
+                `https://apis.openapi.sk.com/tmap/geo/reversegeocoding?version=1&lat=${lat}&lon=${lon}&coordType=WGS84GEO&addressType=A04`,
+                {
+                  method: 'GET',
+                  headers: {
+                    appKey: process.env.NEXT_PUBLIC_TMAP_APP_KEY || '',
+                  },
+                },
+              )
+                .then((res) => res.json())
+                .then((data) => {
+                  console.log('[리버스 지오코딩 응답]', data);
+                  const { fullAddress, buildingName } = data?.addressInfo || {};
 
-            geocoder.coord2Address(
-              coord.getLng(),
-              coord.getLat(),
-              (result: any, status: any) => {
-                if (status === window.kakao.maps.services.Status.OK) {
-                  const address = result[0].address.address_name;
+                  setUserAddress(fullAddress || null);
+                  const popupContent = `
+                  <div style="
+                    width: 230px;
+                    background-color: white;
+                    padding: 12px 14px;
+                    border-radius: 10px;
+                    box-shadow: 2px 2px 10px rgba(0,0,0,0.15);
+                    font-family: Pretendard, sans-serif;
+                    font-size: 13px;
+                    color: #333;
+                  ">
+                    <div style="font-weight: 600; margin-bottom: 6px;">
+                      📍 ${buildingName || '현재 위치'}
+                    </div>
+                    <div>${fullAddress || '-'}</div>
+                  </div>
+                `;
 
-                  setUserAddress(address);
-                }
-              },
-            );
-          });
+                  new window.Tmapv2.InfoWindow({
+                    position: new window.Tmapv2.LatLng(lat, lon),
+                    content: popupContent,
+                    type: 2,
+                    background: false,
+                    border: '0px',
+                    map,
+                  });
+                })
+                .catch((err) => {
+                  console.error('주소 가져오기 실패:', err.message);
+                });
+            },
+            (err) => {
+              console.error('위치 접근 실패:', err.message);
+            },
+          );
         }
-      });
-    };
-    document.head.appendChild(script);
+      } else {
+        console.log('[TMap] 로딩 중...');
+      }
+    }, 200);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -245,9 +318,15 @@ export default function GymPage() {
   }, [selectedGym]);
 
   return (
-    <div className="relative w-screen h-[calc(100vh-64px)]">
-      {/* 카카오맵 */}
-      <div ref={mapRef} className="absolute top-0 left-0 w-full h-full z-0" />
+    <div className="relative w-screen h-screen">
+      {/* TMap SDK 스크립트 */}
+      <Script
+        src="https://topopentile1.tmap.co.kr/scriptSDKV2/tmapjs2.min.js"
+        strategy="afterInteractive"
+      />
+
+      {/* TMap 지도 */}
+      <div ref={mapRef} className="absolute inset-0 w-full h-full z-0" />
 
       {/* 사이드바 */}
       <div
@@ -350,8 +429,30 @@ export default function GymPage() {
       {selectedGym && (
         <GymDetailPanel
           gymId={selectedGym.gymId}
+          map={mapInstanceRef.current}
+          myLocation={myLocation}
           visible={isPanelVisible}
           onClose={() => setSelectedGym(null)}
+          onRouteReady={(routeData) => {
+            setRouteInfo(routeData);
+            setIsPanelVisible(false);
+            setIsRouteVisible(true);
+          }}
+        />
+      )}
+      {isRouteVisible && routeInfo && (
+        <RoutePanel
+          endAddress={routeInfo.endAddress}
+          startAddress={routeInfo.startAddress}
+          steps={routeInfo.steps}
+          totalDistance={routeInfo.totalDistance}
+          totalTime={routeInfo.totalTime}
+          totalWalkDistance={routeInfo.totalWalkDistance}
+          transferCount={routeInfo.transferCount}
+          onClose={() => {
+            setIsRouteVisible(false);
+            setRouteInfo(null);
+          }}
         />
       )}
 
