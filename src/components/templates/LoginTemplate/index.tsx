@@ -49,13 +49,15 @@ const LoginTemplate = () => {
 
   useEffect(() => {
     if (additionalInfoCompleted === 'false') {
+      localStorage.setItem('isLoggedIn', 'true');
       setStep(1);
       if (role) {
         setSelectedTab(role === 'member' ? 'user' : 'trainer');
       }
     }
     // 임시 데이터라
-    if (additionalInfoCompleted === 'true' && role) {
+    if (additionalInfoCompleted === 'true') {
+      localStorage.setItem('isLoggedIn', 'true');
       setAuth({
         isLoggedIn: true,
         loginId: 1,

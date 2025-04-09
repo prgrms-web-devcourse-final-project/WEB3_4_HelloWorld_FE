@@ -17,12 +17,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { clsx } from 'clsx';
 
 import { ThemeSwitch } from '@/components/atoms/ThemeSwitch';
-import { useAuthStore } from '@/stores/memberTypeStore';
 import { logoutUser } from '@/apis/userApi';
+import { useMemberStore } from '@/stores/testAuthStore';
 export default function Header() {
   const path = usePathname();
   const router = useRouter();
-  const { isLoggedIn, userType, isOwner, resetAuth } = useAuthStore();
+  const { isLoggedIn, userType, clearUser } = useMemberStore();
 
   const isMainPage = path === '/' || path.includes('pt');
 
@@ -38,7 +38,7 @@ export default function Header() {
   //오너 페이지 따로 분리 할 경우 경로
   const handleMyPageClick = () => {
     if (userType === 'member') router.push('/membermypage');
-    else if (userType === 'trainer' && isOwner) router.push('/mypage');
+    else if (userType === 'owner') router.push('/mypage');
     else router.push('/mypage');
   };
 
@@ -47,7 +47,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      resetAuth();
+      clearUser();
       router.refresh();
     } catch {
       alert('로그아웃에 실패했습니다. 다시 시도 해주세요.');

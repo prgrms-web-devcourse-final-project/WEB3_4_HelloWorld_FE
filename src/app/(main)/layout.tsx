@@ -1,3 +1,5 @@
+'use client';
+
 import MainLayoutTemplate from '@/components/templates/MainLayoutTemplate';
 
 export default function MainLayout({

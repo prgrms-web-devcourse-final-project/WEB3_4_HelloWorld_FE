@@ -14,13 +14,23 @@ import {
   TableRow,
 } from '@heroui/react';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import GymListCardItem from '@/components/molecules/GYM/GymListCardItem';
 import NumberCountCard from '@/components/molecules/NumberCountCard';
 import DashboardItemWrap from '@/components/molecules/TrainerMypage/DashboardItemWrap';
 import LevelBadge from '@/components/atoms/LevelBadge';
+import { useMemberStore } from '@/stores/testAuthStore';
 
 export default function Dashboard() {
+  const trainerInfo = useMemberStore((state) => state.user);
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log(trainerInfo);
+  }, [trainerInfo]);
+
   return (
     <div className="grid grid-cols-3 gap-4">
       <Card className="col-span-2 p-2">
@@ -34,21 +44,33 @@ export default function Dashboard() {
                 width={200}
               />
               <div className="flex flex-col gap-2">
-                <p className="text-sm text-main font-semibold">사장</p>
+                <p className="text-sm text-main font-semibold">
+                  {trainerInfo?.isOwner ? '사장' : '트레이너'}
+                </p>
                 <div className="flex gap-2 items-center">
                   <LevelBadge level={4} />
                   <p className=" text-large">
-                    <span className="font-bold">이희수</span>님 안녕하세요
+                    <span className="font-bold">
+                      {trainerInfo?.trainerName}
+                    </span>
+                    님 안녕하세요
                   </p>
                 </div>
                 <div className="text-mono_400 text-small font-light">
-                  <p>960213/남</p>
-                  <p>국민은행:942902-00-238314</p>
+                  <p> {trainerInfo?.gender === 'MALE' ? '남' : '여'}</p>
+                  <p>{`${trainerInfo?.bank} : ${trainerInfo?.account}`}</p>
                 </div>
+                <p className="text-mono_600 line-clamp-3">
+                  {trainerInfo?.intro ?? '소개글이 아직 없습니다.'}
+                </p>
               </div>
             </div>
             <div className="">
-              <Button isIconOnly variant="light">
+              <Button
+                isIconOnly
+                variant="light"
+                onPress={() => router.push('/mypage/edit')}
+              >
                 <PencilSquareIcon className="text-mono_300 h-5 w-5" />
               </Button>
             </div>

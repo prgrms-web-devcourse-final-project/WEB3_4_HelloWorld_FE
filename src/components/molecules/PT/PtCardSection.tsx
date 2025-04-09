@@ -9,8 +9,15 @@ export default function PtCardSection({
 }) {
   return (
     <div className="flex flex-col gap-5 px-2">
-      <h3 className="text-mono_900 text-lg font-semibold">{title}</h3>
-      <Card className="py-5 px-8">{children}</Card>
+      <h3
+        className="text-mono_900 text-lg font-semibold"
+        id={`section-${title}`}
+      >
+        {title}
+      </h3>
+      <Card aria-labelledby={`section-${title}`} className="py-5 px-8">
+        {children}
+      </Card>
     </div>
   );
 }
