@@ -1,3 +1,6 @@
+'use client';
+
+import { useTheme } from 'next-themes';
 import { ApexOptions } from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
 
@@ -44,7 +47,7 @@ interface BarChartProps {
 }
 
 const defaultStyleOptions: BarChartStyleOptions = {
-  colors: ['#3B82F6', '#F68B8F'],
+  colors: ['#4A90E2', '#F68B8F'],
   columnWidth: '40%',
   horizontal: false,
   height: '100%',
@@ -54,7 +57,7 @@ const defaultStyleOptions: BarChartStyleOptions = {
   fontFamily: 'var(--font-pretendard)',
   fontSize: '14px',
   toolbar: false,
-  labelColor: 'var(--heroui-mono_600)',
+  labelColor: '#292524',
   animation: {
     enabled: true,
     speed: 1000,
@@ -89,7 +92,16 @@ const BarChart = ({
   title,
   subtitle,
 }: BarChartProps) => {
-  const mergedOptions = { ...defaultStyleOptions, ...styleOptions };
+  const { resolvedTheme } = useTheme();
+  const isDarkMode = resolvedTheme === 'dark';
+
+  const dynamicLabelColor = isDarkMode ? '#F9F9F8' : '#0C0A09';
+
+  const mergedOptions: BarChartStyleOptions = {
+    ...defaultStyleOptions,
+    ...styleOptions,
+    labelColor: dynamicLabelColor,
+  };
 
   const options: ApexOptions = {
     chart: {
@@ -118,6 +130,7 @@ const BarChart = ({
         fontSize: '18px',
         fontWeight: '600',
         fontFamily: mergedOptions.fontFamily,
+        color: mergedOptions.labelColor,
       },
     },
     subtitle: {
@@ -126,6 +139,7 @@ const BarChart = ({
       style: {
         fontSize: mergedOptions.fontSize,
         fontFamily: mergedOptions.fontFamily,
+        color: mergedOptions.labelColor,
       },
     },
     xaxis: {
@@ -147,18 +161,22 @@ const BarChart = ({
         },
       },
     },
-    colors: styleOptions.colors || mergedOptions.colors,
+    colors: mergedOptions.colors,
     dataLabels: {
       enabled: mergedOptions.dataLabels,
       style: {
         fontSize: mergedOptions.fontSize,
         fontFamily: mergedOptions.fontFamily,
+        colors: [mergedOptions.labelColor],
       },
     },
     legend: {
       position: mergedOptions.legendPosition,
       fontSize: mergedOptions.fontSize,
       fontFamily: mergedOptions.fontFamily,
+      labels: {
+        colors: mergedOptions.labelColor,
+      },
     },
     tooltip: {
       style: {
