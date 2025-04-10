@@ -1,5 +1,3 @@
-'use client';
-
 import Star from '@/components/molecules/StarGroup';
 
 type MainPtCardProps = {
@@ -7,12 +5,14 @@ type MainPtCardProps = {
   title: string;
   content: string;
   backgroundImage: string;
+  score: number;
 };
 
 export default function MainPtCard({
   className = '',
   title,
   content,
+  score,
   backgroundImage,
 }: MainPtCardProps) {
   return (
@@ -55,8 +55,8 @@ export default function MainPtCard({
               {title}
             </h1>
             <div className="z-10 flex items-center mb-1 gap-1">
-              <Star h="h-4" rate={4.7} readonly={true} w="w-4" />
-              <span className="text-sm text-gray200">4.7</span>
+              <Star h="h-4" rate={score} readonly={true} w="w-4" />
+              <span className="text-sm text-gray200">{score}</span>
             </div>
           </div>
           <div

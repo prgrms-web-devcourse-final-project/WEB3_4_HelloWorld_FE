@@ -10,3 +10,7 @@ export const calculateRate = (rate: number, index: number) => {
 
   return `${percentage}%`;
 };
+
+export const formatCash = (cash: number) => {
+  return cash.toLocaleString('ko-KR');
+};

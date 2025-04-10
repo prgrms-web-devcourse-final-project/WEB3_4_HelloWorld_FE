@@ -1,14 +1,18 @@
 'use client';
 import { Tabs, Tab, Pagination } from '@heroui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 
 import PtCardList from '@/components/molecules/PT/PtCardList';
 import SearchBar from '@/components/molecules/SearchBar';
 
-export default function PtProduct() {
+export default function PtProduct({ ptProduct }: { ptProduct: any }) {
   const items = Array.from({ length: 12 }, (_, index) => index);
   const [, setSelectedTab] = useState<React.Key>('all');
+
+  useEffect(() => {
+    console.log(ptProduct);
+  }, [ptProduct]);
 
   return (
     <>
@@ -35,7 +39,7 @@ export default function PtProduct() {
           </div>
         </div>
         <div>
-          <PtCardList items={items} />
+          <PtCardList items={ptProduct.content} />
         </div>
         <div className="flex justify-center items-center py-10 ">
           <Pagination showShadow color="primary" initialPage={1} total={10} />
