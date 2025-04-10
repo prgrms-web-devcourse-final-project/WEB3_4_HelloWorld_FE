@@ -24,7 +24,12 @@ export default function PtReservationPage() {
         <div className="h-full max-w-[320px] sticky  hidden md:block top-20 w-full">
           <div className="  ">
             <Card className="p-2 flex flex-col gap-2 w-full">
-              <MainPtCard backgroundImage={''} content={'dd'} title={'dd'} />
+              <MainPtCard
+                backgroundImage={''}
+                content={'dd'}
+                score={0}
+                title={'dd'}
+              />
               <MyButton>예약하기</MyButton>
             </Card>
           </div>

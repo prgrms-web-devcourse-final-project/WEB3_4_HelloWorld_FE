@@ -27,11 +27,12 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
 
   return (
-    <HeroUIProvider navigate={router.push}>
-      <ReactQueryClientProvider>
+    <ReactQueryClientProvider>
+      <HeroUIProvider navigate={router.push}>
         <ToastProvider placement="top-center" />
+
         <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-      </ReactQueryClientProvider>
-    </HeroUIProvider>
+      </HeroUIProvider>
+    </ReactQueryClientProvider>
   );
 }
