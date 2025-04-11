@@ -26,9 +26,26 @@ interface GymDetailPanelProps {
   onClose: () => void;
   map: any;
   myLocation: { lat: number; lon: number } | null;
-  onRouteReady?: (data: RouteInfo) => void;
+  onRouteReady?: (data: RouteData[]) => void;
+  panelTranslateX?: string;
 }
-interface RouteInfo {
+// interface RouteInfo {
+//   startAddress: string;
+//   endAddress: string;
+//   totalTime: number;
+//   totalDistance: number;
+//   totalWalkDistance: number;
+//   transferCount: number;
+//   steps: {
+//     mode: string;
+//     sectionTime: number;
+//     startName: string;
+//     endName: string;
+//     route: string;
+//   }[];
+//   rawLegs: any[]; // ✅ 실제 경로 데이터를 담기 위한 필드 (지도에 그릴 때 사용)
+// }
+interface RouteData {
   startAddress: string;
   endAddress: string;
   totalTime: number;
@@ -41,6 +58,10 @@ interface RouteInfo {
     startName: string;
     endName: string;
     route: string;
+  }[];
+  legs: {
+    mode: string;
+    passShape?: { linestring: string };
   }[];
 }
 
@@ -73,6 +94,7 @@ export default function GymDetailPanel({
   map,
   myLocation,
   onRouteReady,
+  panelTranslateX,
 }: GymDetailPanelProps) {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -110,14 +132,15 @@ export default function GymDetailPanel({
   }));
 
   const handleRouteSearch = async () => {
+    // 위치 체크
     if (!myLocation) {
       alert('현재 위치 정보를 가져올 수 없습니다.');
 
       return;
     }
+
     const myLat = myLocation.lat;
     const myLon = myLocation.lon;
-
     const gymLat = parseFloat(gym.yField);
     const gymLon = parseFloat(gym.xField);
 
@@ -142,87 +165,36 @@ export default function GymDetailPanel({
       );
 
       const data = await response.json();
+      const itineraries = data?.metaData?.plan?.itineraries;
 
-      const itinerary = data?.metaData?.plan?.itineraries?.[0];
-
-      if (!itinerary) {
+      if (!itineraries || itineraries.length === 0) {
         alert('경로 정보를 찾을 수 없습니다.');
 
         return;
       }
 
-      // 🧭 routeInfo 형식 만들기
-      const steps = itinerary.legs.map((leg: any) => ({
-        mode: leg.mode,
-        sectionTime: leg.sectionTime,
-        startName: leg.start?.name || '-',
-        endName: leg.end?.name || '-',
-        route: leg.route || leg.routeName || '-',
-      }));
-
-      // ✅ 부모에게 전달
-      onRouteReady?.({
+      // ✅ 모든 경로를 RouteInfo[]로 가공
+      const routeOptions: RouteData[] = itineraries.map((itinerary: any) => ({
         startAddress: '내 위치',
         endAddress: gym.address,
         totalTime: itinerary.totalTime,
         totalDistance: itinerary.totalDistance,
         totalWalkDistance: itinerary.totalWalkDistance,
         transferCount: itinerary.transferCount,
-        steps,
-      });
+        steps: itinerary.legs.map((leg: any) => ({
+          mode: leg.mode,
+          sectionTime: leg.sectionTime,
+          startName: leg.start?.name || '-',
+          endName: leg.end?.name || '-',
+          route: leg.route || leg.routeName || '-',
+        })),
+        legs: itinerary.legs,
+      }));
 
-      // ✅ summary 대신 직접 필드 사용
-      const time = itinerary.totalTime;
-      const distance = itinerary.totalDistance;
-      const transfers = itinerary.transferCount;
-      const walk = itinerary.totalWalkDistance;
-
-      alert(
-        `경로 찾기 성공!
-  예상 소요시간: ${(time / 60).toFixed(1)}분
-  이동 거리: ${(distance / 1000).toFixed(2)}km
-  환승 횟수: ${transfers}회
-  도보 거리: ${walk}m`,
-      );
-
-      // 기존 선 지우기
-      if (polylineRef.current) {
-        polylineRef.current.setMap(null);
-      }
-
-      // legs 경로 그리기
-      const legs = itinerary.legs;
-
-      legs.forEach(
-        (leg: { mode: string; passShape?: { linestring: string } }) => {
-          const linestring = leg.passShape?.linestring;
-
-          if (!linestring) return;
-
-          const coords = linestring.split(' ').map((point: string) => {
-            const [lon, lat] = point.split(',').map(Number);
-
-            return new window.Tmapv2.LatLng(lat, lon);
-          });
-
-          // 구간 유형별 색상 지정
-          let color = '#999999'; // default: 도보
-
-          if (leg.mode === 'BUS') color = '#0078FF';
-          if (leg.mode === 'SUBWAY') color = '#2DB400';
-
-          const polyline = new window.Tmapv2.Polyline({
-            path: coords,
-            strokeColor: color,
-            strokeWeight: 5,
-            map,
-          });
-
-          polylineRef.current = polyline;
-        },
-      );
+      // ✅ 부모 컴포넌트로 전달
+      onRouteReady?.(routeOptions);
     } catch (error) {
-      console.error('🔥 요청 실패:', error);
+      console.error('🔥 길찾기 요청 실패:', error);
       alert('길찾기 요청 중 문제가 발생했습니다');
     }
   };
@@ -233,7 +205,7 @@ export default function GymDetailPanel({
     absolute top-[80px] left-0 h-[calc(100%-96px)] w-[440px]
     bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden
     transition-transform duration-500 ease-in-out
-    ${visible ? 'translate-x-[440px]' : 'translate-x-0'}
+    ${panelTranslateX}
   `}
     >
       <button
