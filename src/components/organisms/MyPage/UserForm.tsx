@@ -9,11 +9,12 @@ import LevelBadge from '@/components/atoms/LevelBadge';
 import AddressInput from '@/components/molecules/AddressInput';
 import { getUserInfo, updateUserInfo } from '@/apis/userApi';
 import { UserData } from '@/types/UserData';
-
+import useToast from '@/hooks/useToast';
 const UserForm = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [userInfo, setUserInfo] = useState<UserData | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -60,9 +61,16 @@ const UserForm = () => {
 
     try {
       await updateUserInfo(userInfo, selectedImage ?? undefined);
-      alert('수정 완료되었습니다');
+      showToast({
+        title: '수정 완료',
+        description: '수정이 완료되었습니다.',
+        lazy: true,
+      });
     } catch {
-      alert('수정 중 오류가 발생했습니다.');
+      showToast({
+        title: '수정 실패',
+        description: '수정 중 오류가 발생했습니다.',
+      });
     }
   };
 

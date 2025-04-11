@@ -8,11 +8,12 @@ import dayjs from '@/utils/dayjsSetup';
 import ScrollContainerBox from '@/components/atoms/ScrollShadowBox';
 import { deleteDiaryApi, fetchDiaryListApi } from '@/apis/diaryApi';
 import { useCalendarStore } from '@/stores/calendarStore';
+import useToast from '@/hooks/useToast';
 
 const CalenderView = () => {
   const { selectedSchedules, setScheduleList, setSchedulesByDate } =
     useCalendarStore();
-
+  const { showToast } = useToast();
   const handleDelete = async (diaryId: number, date: string) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
@@ -28,9 +29,18 @@ const CalenderView = () => {
 
       setSchedulesByDate(date);
 
-      alert('삭제 완료되었습니다.');
-    } catch (err: any) {
-      alert(err.message || '삭제 실패');
+      showToast({
+        title: '삭제 되었습니다',
+        description: '삭제가 완료되었습니다.',
+        lazy: true,
+      });
+    } catch {
+      showToast({
+        title: '삭제 실패',
+        description: '다시 시도해주세요.',
+        type: 'danger',
+        lazy: true,
+      });
     }
   };
 

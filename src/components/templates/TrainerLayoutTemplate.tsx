@@ -1,17 +1,16 @@
 'use client';
-import { Link } from '@heroui/react';
+
 import {
   HomeIcon,
-  UserGroupIcon,
   CalendarIcon,
-  ChartBarIcon,
-  CogIcon,
   ClipboardDocumentListIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { cn } from '@heroui/react';
+import { UserIcon } from '@heroicons/react/24/solid';
+import Link from 'next/link';
 
 import TrainerHeader from '@/components/organisms/TrainerHeader';
 
@@ -24,34 +23,34 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     label: '대시보드',
-    href: '/trainer',
+    href: '/mypage',
     icon: <HomeIcon className="w-5 h-5" />,
   },
+  // {
+  //   label: '회원 관리',
+  //   href: '/trainer/members',
+  //   icon: <UserGroupIcon className="w-5 h-5" />,
+  // },
   {
-    label: '회원 관리',
-    href: '/trainer/members',
-    icon: <UserGroupIcon className="w-5 h-5" />,
-  },
-  {
-    label: '일정 관리',
-    href: '/trainer/schedule',
+    label: '헬스장 관리',
+    href: '/mypage/gym/edit',
     icon: <CalendarIcon className="w-5 h-5" />,
   },
   {
     label: 'PT 프로그램',
-    href: '/trainer/programs',
+    href: '/mypage/pt',
     icon: <ClipboardDocumentListIcon className="w-5 h-5" />,
   },
   {
-    label: '통계',
-    href: '/trainer/stats',
-    icon: <ChartBarIcon className="w-5 h-5" />,
+    label: '회원정보 수정',
+    href: '/mypage/edit',
+    icon: <UserIcon className="w-5 h-5" />,
   },
-  {
-    label: '설정',
-    href: '/trainer/settings',
-    icon: <CogIcon className="w-5 h-5" />,
-  },
+  // {
+  //   label: '설정',
+  //   href: '/trainer/settings',
+  //   icon: <CogIcon className="w-5 h-5" />,
+  // },
 ];
 
 export default function TrainerLayoutTemplate({
