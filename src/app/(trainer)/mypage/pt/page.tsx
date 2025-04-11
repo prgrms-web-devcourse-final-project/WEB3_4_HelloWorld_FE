@@ -68,14 +68,13 @@ export default function PtPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ptTime'] });
       showToast({
-        title: '등록 성공',
+        title: '성공',
         lazy: true,
         description: '스케줄이 등록되었습니다.',
       });
       router.replace('/mypage/pt');
     },
     onError: () => {
-      queryClient.invalidateQueries({ queryKey: ['ptTime'] });
       showToast({
         title: '등록 실패',
         lazy: true,

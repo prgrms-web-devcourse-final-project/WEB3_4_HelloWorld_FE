@@ -26,7 +26,6 @@ export default async function PtPage({ searchParams }: Props) {
     ...(searchParams as Record<string, string>),
   });
 
-  console.log(response);
   const response = await fetcher(`/ptProduct?${allParams.toString()}`, {
     method: 'GET',
     cache: 'no-store',

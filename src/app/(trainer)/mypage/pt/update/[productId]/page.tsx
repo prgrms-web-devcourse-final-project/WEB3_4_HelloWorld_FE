@@ -24,8 +24,6 @@ export default function UpdatePtPage() {
         },
       );
 
-      console.log(response);
-
       return response;
     },
   });
