@@ -1,4 +1,5 @@
 export interface GymType {
+  gymId : number;
   gymName: string;
   address: string;
   imageUrl: string;

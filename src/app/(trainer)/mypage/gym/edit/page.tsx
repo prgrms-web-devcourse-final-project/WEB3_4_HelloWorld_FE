@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Time } from '@internationalized/date';
 import {
   Autocomplete,
@@ -21,43 +21,8 @@ import {
 import { NumberInputBase } from '@/components/atoms/NumberInputBase';
 import { CustomTextarea } from '@/components/atoms/TextareaBase';
 import { FacilityButton } from '@/components/atoms/FacilityButton';
-const gyms = [
-  {
-    label: '비헬씨 서초점',
-    key: 'gym1',
-    location: '서울시 강남구 역삼동',
-    rating: 4.66,
-    phone: '02-123-4567', // 추가
-  },
-  {
-    label: '머슬팩토리',
-    key: 'gym2',
-    location: '서울시 강남구 강남대로',
-    rating: 4.5,
-    phone: '02-234-5678',
-  },
-  {
-    label: '강남 피트니스',
-    key: 'gym3',
-    location: '서울시 강남구 테헤란로',
-    rating: 4.7,
-    phone: '02-345-6789',
-  },
-  {
-    label: '스파르탄짐',
-    key: 'gym4',
-    location: '서울시 서초구 반포동',
-    rating: 4.4,
-    phone: '02-456-7890',
-  },
-  {
-    label: '아이언짐',
-    key: 'gym5',
-    location: '서울시 강남구 논현동',
-    rating: 4.55,
-    phone: '02-567-8901',
-  },
-];
+import { fetchGymList } from '@/apis/gymApi';
+import { GymType } from '@/types/gym';
 
 const allFacilities = [
   '수건',
@@ -95,6 +60,7 @@ const facilityIcons: Record<string, string> = {
 const maxSlots = 8;
 
 export default function GymEditPage() {
+  const [gyms, setGyms] = useState<GymType[]>([]);
   const [selectedGym, setSelectedGym] = useState<any>(null);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
   const [intro, setIntro] = useState('');
@@ -216,6 +182,26 @@ export default function GymEditPage() {
 
     alert('수정 완료!');
   };
+
+  useEffect(() => {
+    const loadGyms = async () => {
+      try {
+        const res = await fetchGymList();
+        const mappedGyms = res.content.map((gym) => ({
+          key: gym.gymId.toString(),
+          label: gym.gymName,
+          location: gym.address,
+          rating: 4.5, // 또는 API 응답에 있으면 그걸 사용
+          phone: '',   // API 응답에 있으면 채워주고, 없으면 빈 문자열
+        }));
+        setGyms(mappedGyms);
+      } catch (err) {
+        console.error('헬스장 목록 불러오기 실패:', err);
+      }
+    };
+  
+    loadGyms();
+  }, []);
 
   return (
     <div className=" inset-0 top-[64px] h-[calc(100vh-64px)] w-full flex justify-center ">
