@@ -146,7 +146,9 @@ export default function TrainerHeader() {
                 </p>
               </DropdownItem>
               <DropdownItem key="settings">마이 페이지</DropdownItem>
-              <DropdownItem key="point">포인트 충전</DropdownItem>
+              <DropdownItem key="point" onClick={() => router.push('/point')}>
+                포인트 충전
+              </DropdownItem>
               <DropdownItem key="logout" color="danger" onClick={handleLogout}>
                 로그아웃
               </DropdownItem>
