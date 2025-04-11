@@ -1,4 +1,5 @@
 export interface GymType {
+  gymId : number;
   gymName: string;
   address: string;
   imageUrl: string;
@@ -13,3 +14,11 @@ export type GymListResponse = {
   hasPrevious: boolean;
   isLast: boolean;
 };
+
+export interface MappingGym {
+  key: string;
+  label: string;
+  location: string;
+  rating: number;
+  phone: string;
+}
