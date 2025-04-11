@@ -2,15 +2,18 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 type FetchOptions = RequestInit & {
   headers?: HeadersInit;
+  token?: boolean;
 };
 
-async function fetcher<T>(url: string, options?: FetchOptions): Promise<T> {
+async function fetcher<T>(url: string, options: FetchOptions = {}): Promise<T> {
+  const { token = true, headers, ...restOptions } = options;
+
   const res = await fetch(`${API_BASE_URL}${url}`, {
-    credentials: 'include',
+    credentials: token ? 'include' : undefined,
     headers: {
-      ...(options?.headers || {}),
+      ...(headers || {}),
     },
-    ...options,
+    ...restOptions,
   });
 
   if (!res.ok) {

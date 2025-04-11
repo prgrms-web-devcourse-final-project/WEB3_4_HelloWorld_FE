@@ -1,3 +1,5 @@
+'use client';
+
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 

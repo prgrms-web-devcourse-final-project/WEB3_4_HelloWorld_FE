@@ -35,7 +35,10 @@ export default function Dashboard() {
               <Image
                 alt="profile"
                 className="object-cover aspect-square"
-                src="https://image.xportsnews.com/contents/images/upload/article/2017/0619/1497836487547559.jpg"
+                src={
+                  trainerInfo?.profile ||
+                  'https://image.xportsnews.com/contents/images/upload/article/2017/0619/1497836487547559.jpg'
+                }
                 width={200}
               />
               <div className="flex flex-col gap-2">

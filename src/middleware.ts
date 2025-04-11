@@ -12,12 +12,12 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  if (memberType === 'member' && path.startsWith('/mypage')) {
+  if ((memberType === 'member' || !memberType) && path.startsWith('/mypage')) {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
   if (
-    (memberType === 'trainer' || memberType === 'owner') &&
+    (memberType === 'trainer' || memberType === 'owner' || !memberType) &&
     path.startsWith('/membermypage')
   ) {
     return NextResponse.redirect(new URL('/', req.url));
