@@ -13,11 +13,12 @@ import ThreeLiftChartsTemplate from '@/components/molecules/Chart';
 import { useAuthStore } from '@/stores/memberTypeStore';
 import { fetchBigThreeStatusApi } from '@/apis/bigthreeApi';
 import { formatKg } from '@/utils/bigThree';
+import useToast from '@/hooks/useToast';
 
 const ScheduleView = () => {
   const router = useRouter();
   const { isLoggedIn, isOwner } = useAuthStore();
-
+  const { showToast } = useToast();
   const [isHydrated, setIsHydrated] = useState(false);
   const [bigThree, setBigThree] = useState<BigThreeStatus | null>(null);
 
@@ -35,8 +36,12 @@ const ScheduleView = () => {
       return;
     }
 
-    if (isOwner !== null) {
-      alert('일반 회원만 이용할 수 있습니다.');
+    if (isOwner === true || isOwner === false) {
+      showToast({
+        title: '일반 회원만 이용할 수 있습니다.',
+        description: '일반 회원만 이용할 수 있습니다.',
+        lazy: true,
+      });
       router.push('/');
     }
   }, [isHydrated, isLoggedIn, isOwner]);

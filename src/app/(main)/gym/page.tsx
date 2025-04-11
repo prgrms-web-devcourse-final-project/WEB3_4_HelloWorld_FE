@@ -186,7 +186,16 @@ export default function GymPage() {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const [isRouteVisible, setIsRouteVisible] = useState(false);
-  const [routeInfo, setRouteInfo] = useState<{
+  const [isRouteMode, setIsRouteMode] = useState(false);
+  const detailPanelX = isRouteMode
+    ? 'translate-x-[10px]' // RoutePanel 열리면 DetailPanel은 왼쪽(사이드바 자리)으로 이동
+    : isOpen
+      ? isPanelVisible
+        ? 'translate-x-[440px]' // ✅ 사이드바 옆으로 슬라이드되어 보이기
+        : 'translate-x-0' // 사이드바만 있을 때, 패널은 안 보임
+      : 'translate-x-0'; // 사이드바 닫힘이면 패널도 왼쪽에 숨김
+
+  type RouteData = {
     startAddress: string;
     endAddress: string;
     totalTime: number;
@@ -200,17 +209,31 @@ export default function GymPage() {
       endName: string;
       route: string;
     }[];
-  } | null>(null);
+    legs: {
+      mode: string;
+      passShape?: { linestring: string };
+    }[];
+  };
+
+  const [routeList, setRouteList] = useState<RouteData[]>([]);
+  const [selectedRouteIndex, setSelectedRouteIndex] = useState(0);
 
   const toggleTranslateX = isOpen
     ? isPanelVisible
       ? 'translate-x-[896px]'
       : 'translate-x-[436px]'
     : 'translate-x-[16px]';
+  const sidebarX = isRouteMode
+    ? '-translate-x-[420px]' // 길찾기 모드에서는 숨김
+    : isOpen
+      ? 'translate-x-0'
+      : '-translate-x-[420px]';
+
   const [myLocation, setMyLocation] = useState<{
     lat: number;
     lon: number;
   } | null>(null);
+  const polylineRef = useRef<any[]>([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -317,6 +340,64 @@ export default function GymPage() {
     }
   }, [selectedGym]);
 
+  useEffect(() => {
+    if (!isPanelVisible && selectedGym && !isRouteMode) {
+      const timer = setTimeout(() => {
+        setSelectedGym(null);
+      }, 500); // transition-duration 과 동일
+
+      return () => clearTimeout(timer);
+    }
+  }, [isPanelVisible, selectedGym, isRouteMode]);
+
+  useEffect(() => {
+    if (!isRouteVisible || routeList.length === 0 || !mapInstanceRef.current)
+      return;
+
+    const selectedRoute = routeList[selectedRouteIndex];
+    const map = mapInstanceRef.current;
+
+    // 기존 폴리라인 삭제
+    if (polylineRef.current.length > 0) {
+      polylineRef.current.forEach((line) => line.setMap(null));
+      polylineRef.current = [];
+    }
+
+    // 새 경로의 각 구간 그리기
+    if ('legs' in selectedRoute) {
+      const legs = selectedRoute.legs;
+      const newPolylines: any[] = [];
+
+      legs.forEach((leg: any) => {
+        const linestring = leg.passShape?.linestring;
+
+        if (!linestring) return;
+
+        const coords = linestring.split(' ').map((point: string) => {
+          const [lon, lat] = point.split(',').map(Number);
+
+          return new window.Tmapv2.LatLng(lat, lon);
+        });
+
+        let color = '#999999';
+
+        if (leg.mode === 'BUS') color = '#0078FF';
+        if (leg.mode === 'SUBWAY') color = '#2DB400';
+
+        const polyline = new window.Tmapv2.Polyline({
+          path: coords,
+          strokeColor: color,
+          strokeWeight: 5,
+          map,
+        });
+
+        newPolylines.push(polyline);
+      });
+
+      polylineRef.current = newPolylines;
+    }
+  }, [selectedRouteIndex, routeList, isRouteVisible]);
+
   return (
     <div className="relative w-screen h-screen">
       {/* TMap SDK 스크립트 */}
@@ -335,7 +416,7 @@ export default function GymPage() {
           bg-white w-[420px] rounded-tr-2xl rounded-br-2xl shadow-2xl
           flex flex-col gap-4 overflow-hidden
           transition-transform duration-500
-          ${isOpen ? 'translate-x-0' : '-translate-x-[420px]'}
+          ${sidebarX}
         `}
       >
         <div className="p-5 pt-6 flex flex-col gap-4 h-full">
@@ -431,55 +512,63 @@ export default function GymPage() {
           gymId={selectedGym.gymId}
           map={mapInstanceRef.current}
           myLocation={myLocation}
+          panelTranslateX={detailPanelX}
           visible={isPanelVisible}
-          onClose={() => setSelectedGym(null)}
-          onRouteReady={(routeData) => {
-            setRouteInfo(routeData);
+          onClose={() => setIsPanelVisible(false)}
+          onRouteReady={(routes) => {
+            setRouteList(routes); // 여러 경로 저장
+            setSelectedRouteIndex(0); // 첫 번째 경로 선택
             setIsPanelVisible(false);
             setIsRouteVisible(true);
+            setIsRouteMode(true);
           }}
         />
       )}
-      {isRouteVisible && routeInfo && (
+      {isRouteVisible && routeList.length > 0 && (
         <RoutePanel
-          endAddress={routeInfo.endAddress}
-          startAddress={routeInfo.startAddress}
-          steps={routeInfo.steps}
-          totalDistance={routeInfo.totalDistance}
-          totalTime={routeInfo.totalTime}
-          totalWalkDistance={routeInfo.totalWalkDistance}
-          transferCount={routeInfo.transferCount}
+          endAddress={routeList[selectedRouteIndex].endAddress}
+          routeList={routeList}
+          selectedRouteIndex={selectedRouteIndex}
+          startAddress={routeList[selectedRouteIndex].startAddress}
+          steps={routeList[selectedRouteIndex].steps}
+          totalDistance={routeList[selectedRouteIndex].totalDistance}
+          totalTime={routeList[selectedRouteIndex].totalTime}
+          totalWalkDistance={routeList[selectedRouteIndex].totalWalkDistance}
+          transferCount={routeList[selectedRouteIndex].transferCount}
           onClose={() => {
             setIsRouteVisible(false);
-            setRouteInfo(null);
+            setRouteList([]);
+            setIsRouteMode(false);
+          }}
+          onSelectRoute={(index) => {
+            setSelectedRouteIndex(index);
           }}
         />
       )}
 
       {/* 사이드바 토글 버튼 */}
-      <button
-        className={`
-          absolute top-[50%] translate-y-[-50%] z-30
-          transition-transform duration-500 ease-in-out
-          ${toggleTranslateX}
-          w-8 h-8 shadow-md bg-white border border-mono_200
-          flex items-center justify-center hover:bg-mono_100
-        `}
-        onClick={() => {
-          if (isOpen && selectedGym) {
-            setIsOpen(false);
-            setSelectedGym(null);
-          } else {
-            setIsOpen(!isOpen);
-          }
-        }}
-      >
-        {isOpen ? (
-          <ChevronLeftIcon className="w-4 h-4 text-mono_600" />
-        ) : (
-          <ChevronRightIcon className="w-4 h-4 text-mono_600" />
-        )}
-      </button>
+      {!isRouteMode && (
+        <button
+          className={`absolute top-[50%] left-0 translate-x-[${isOpen ? (isPanelVisible ? 896 : 436) : 16}px] translate-y-[-50%] z-30
+        transition-transform duration-500 ease-in-out
+        w-8 h-8 shadow-md bg-white border border-mono_200
+        flex items-center justify-center hover:bg-mono_100`}
+          onClick={() => {
+            if (isOpen && selectedGym) {
+              setIsOpen(false);
+              setSelectedGym(null);
+            } else {
+              setIsOpen(!isOpen);
+            }
+          }}
+        >
+          {isOpen ? (
+            <ChevronLeftIcon className="w-4 h-4 text-mono_600" />
+          ) : (
+            <ChevronRightIcon className="w-4 h-4 text-mono_600" />
+          )}
+        </button>
+      )}
     </div>
   );
 }
