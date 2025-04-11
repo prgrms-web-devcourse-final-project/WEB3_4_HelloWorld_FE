@@ -10,6 +10,7 @@ interface ButtonProps {
   height?: string; // 사용자 지정 높이 (예: '60px')
   children: React.ReactNode;
   className?: string; // 추가 스타일링을 위한 className
+  onClick?: () => void;
 }
 
 const CustomButton: FC<ButtonProps> = ({
@@ -19,6 +20,7 @@ const CustomButton: FC<ButtonProps> = ({
   height = '48px', // 기본 높이
   children,
   className = '',
+  onClick,
 }) => {
   // size prop에 따라 텍스트 크기만 지정 (버튼 높이는 inline style로 제어)
   let textSizeClass = '';
@@ -36,6 +38,7 @@ const CustomButton: FC<ButtonProps> = ({
       className={`${textSizeClass} bg-main text-main-foreground hover:opacity-90 rounded-xl dark:bg-primary dark:text-primary-foreground ${className}`}
       style={{ width, height }} // 여기서 사용자 지정 width와 height 적용
       type={type}
+      onClick={onClick}
     >
       {children}
     </HeroButton>
