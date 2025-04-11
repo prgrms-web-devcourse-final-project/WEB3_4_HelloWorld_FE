@@ -22,7 +22,7 @@ import { NumberInputBase } from '@/components/atoms/NumberInputBase';
 import { CustomTextarea } from '@/components/atoms/TextareaBase';
 import { FacilityButton } from '@/components/atoms/FacilityButton';
 import { fetchGymList } from '@/apis/gymApi';
-import { GymType } from '@/types/gym';
+import { MappingGym } from '@/types/gym';
 
 const allFacilities = [
   '수건',
@@ -60,7 +60,7 @@ const facilityIcons: Record<string, string> = {
 const maxSlots = 8;
 
 export default function GymEditPage() {
-  const [gyms, setGyms] = useState<GymType[]>([]);
+  const [gyms, setGyms] = useState<MappingGym[]>([]);
   const [selectedGym, setSelectedGym] = useState<any>(null);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
   const [intro, setIntro] = useState('');
@@ -186,20 +186,20 @@ export default function GymEditPage() {
   useEffect(() => {
     const loadGyms = async () => {
       try {
-        const res = await fetchGymList();
+        const res = await fetchGymList('피트니스'); // 입력값 받아서 검색됨
         const mappedGyms = res.content.map((gym) => ({
           key: gym.gymId.toString(),
           label: gym.gymName,
           location: gym.address,
           rating: 4.5, // 또는 API 응답에 있으면 그걸 사용
-          phone: '',   // API 응답에 있으면 채워주고, 없으면 빈 문자열
+          phone: '', // API 응답에 있으면 채워주고, 없으면 빈 문자열
         }));
         setGyms(mappedGyms);
       } catch (err) {
         console.error('헬스장 목록 불러오기 실패:', err);
       }
     };
-  
+
     loadGyms();
   }, []);
 

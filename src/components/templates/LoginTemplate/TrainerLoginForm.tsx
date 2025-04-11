@@ -65,7 +65,7 @@ const TrainerLoginForm = () => {
   useEffect(() => {
     const fetchGyms = async () => {
       try {
-        const data = await fetchGymList();
+        const data = await fetchGymList(); // 얘도 검색값 받아야됨
 
         setGyms(data.content);
       } catch {}
