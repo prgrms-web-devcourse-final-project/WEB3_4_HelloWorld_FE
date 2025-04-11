@@ -114,7 +114,6 @@ export default function TrainerPtProductForm({
       info: formState.info,
     };
 
-    console.log(ptProductData);
     if (isEditMode) {
       ptProductData.deleteImageIds = deleteImages;
     }
@@ -130,8 +129,6 @@ export default function TrainerPtProductForm({
       if (typeof img !== 'string') {
         formData.append('images', img);
       }
-
-      console.log(images);
     });
 
     mutate(formData);

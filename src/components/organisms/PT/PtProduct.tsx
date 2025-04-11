@@ -17,7 +17,6 @@ export default function PtProduct({ ptProduct }: { ptProduct: any }) {
   const { user } = useAuthStore();
   const createQueryStrings = useCreateQuery();
   const onSearch = () => {
-    console.log(search);
     if (keyword !== '' || search !== '') {
       createQueryStrings({
         searchTerm: search,
@@ -52,7 +51,6 @@ export default function PtProduct({ ptProduct }: { ptProduct: any }) {
     },
   ];
 
-  console.log(ptProduct);
   if (!ptProduct) return <Loading />;
 
   return (

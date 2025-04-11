@@ -77,7 +77,18 @@ export default function Dashboard() {
       </Card>
       <DashboardItemWrap title="소속 헬스장">
         <div className="flex gap-4">
-          <GymListCardItem />
+          <GymListCardItem
+            gym={{
+              gymName: '',
+              gymAddress: '',
+              gymOpen: '',
+              gymClose: '',
+              gymScore: 0,
+              gymX: 0,
+              gymY: 0,
+              images: [],
+            }}
+          />
         </div>
       </DashboardItemWrap>
       <DashboardItemWrap date="2025.01.01" title="회원 수">

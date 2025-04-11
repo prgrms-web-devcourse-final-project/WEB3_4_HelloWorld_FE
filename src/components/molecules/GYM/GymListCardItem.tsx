@@ -6,7 +6,7 @@ import { Gym } from '@/types/pt.types';
 
 export default function GymListCardItem({ gym }: { gym: Gym }) {
   return (
-    <div className="flex items-center justify-between w-full h-full p-3 bg-white rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm">
+    <div className="flex items-center justify-between w-full h-full p-3 bg-mono_100 rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm">
       <div className="flex flex-col justify-center gap-1 w-[65%] h-full">
         <h3 className="text-[20px] font-medium font-pretendard text-mono_700">
           {gym?.gymName}

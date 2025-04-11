@@ -48,8 +48,6 @@ export default function UserList() {
             <TableColumn>이름</TableColumn>
             <TableColumn>진행도</TableColumn>
             <TableColumn>메모</TableColumn>
-            <TableColumn>예약 내역</TableColumn>
-            <TableColumn>예약 내역</TableColumn>
           </TableHeader>
           <TableBody>
             {data &&

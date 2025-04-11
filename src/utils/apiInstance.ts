@@ -16,13 +16,32 @@ async function fetcher<T>(url: string, options: FetchOptions = {}): Promise<T> {
     ...restOptions,
   });
 
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
+  const status = res.status;
 
-    throw new Error(error.message || 'Fetch failed');
+  if (!res.ok) {
+    const errorText = await res.text();
+    let errorData = {};
+
+    try {
+      errorData = JSON.parse(errorText);
+    } catch {
+      errorData = { message: errorText };
+    }
+
+    throw new Error((errorData as any).message || 'Fetch failed');
   }
 
-  return res.json();
+  if (status === 204) return {} as T;
+
+  const text = await res.text();
+
+  if (!text) return {} as T;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error('Invalid JSON response');
+  }
 }
 
 export default fetcher;

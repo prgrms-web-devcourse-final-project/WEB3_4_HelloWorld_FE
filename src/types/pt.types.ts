@@ -1,12 +1,13 @@
 export type Trainer = {
   trainerId: number;
   trainerName: string;
-  contact: string;
-  email: string;
-  gender: 'MALE' | 'FEMALE';
-  profile: string | null;
+  contact?: string;
+  email?: string;
+  gender?: 'MALE' | 'FEMALE';
+  profile?: string | null;
   trainerScore?: number;
   awards?: Award[];
+  score?: number;
 };
 export type Award = {
   awardName: string;
@@ -27,9 +28,12 @@ export type Gym = {
 export type PtProduct = {
   ptProductId: number;
   productName: string;
+  ptProductFee?: number;
   ptInfo: string;
   fee: number;
+  info?: string;
   images: string[];
+  trainer: Trainer;
 };
 
 export type PtDetailResponse = {
