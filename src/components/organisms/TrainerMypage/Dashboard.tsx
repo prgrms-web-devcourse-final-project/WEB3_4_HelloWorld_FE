@@ -35,7 +35,10 @@ export default function Dashboard() {
               <Image
                 alt="profile"
                 className="object-cover aspect-square"
-                src="https://image.xportsnews.com/contents/images/upload/article/2017/0619/1497836487547559.jpg"
+                src={
+                  trainerInfo?.profile ||
+                  'https://image.xportsnews.com/contents/images/upload/article/2017/0619/1497836487547559.jpg'
+                }
                 width={200}
               />
               <div className="flex flex-col gap-2">
@@ -74,7 +77,18 @@ export default function Dashboard() {
       </Card>
       <DashboardItemWrap title="소속 헬스장">
         <div className="flex gap-4">
-          <GymListCardItem />
+          <GymListCardItem
+            gym={{
+              gymName: '',
+              gymAddress: '',
+              gymOpen: '',
+              gymClose: '',
+              gymScore: 0,
+              gymX: 0,
+              gymY: 0,
+              images: [],
+            }}
+          />
         </div>
       </DashboardItemWrap>
       <DashboardItemWrap date="2025.01.01" title="회원 수">

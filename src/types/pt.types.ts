@@ -1,40 +1,52 @@
-// 수상 내역 타입
-interface Award {
-  year: string;
-  awardName: string;
-  info: string;
-}
-
-// 트레이너 정보 타입
-interface Trainer {
+export type Trainer = {
   trainerId: number;
   trainerName: string;
-  gender: 'Male' | 'Female';
-  profile: string;
-  contact: string;
-  email: string;
-  trainerScore: number;
-  awards: Award[];
-}
-
-// 헬스장 정보 타입
-interface Gym {
+  contact?: string;
+  email?: string;
+  gender?: 'MALE' | 'FEMALE';
+  profile?: string | null;
+  trainerScore?: number;
+  awards?: Award[];
+  score?: number;
+};
+export type Award = {
+  awardName: string;
+  info: string;
+  year: string;
+};
+export type Gym = {
   gymName: string;
   gymAddress: string;
-  gymX: string;
-  gymY: string;
   gymOpen: string;
   gymClose: string;
   gymScore: number;
+  gymX: number;
+  gymY: number;
   images: string[];
-}
+};
 
-// PT 상품 정보 타입
-export interface PtProduct {
+export type PtProduct = {
   ptProductId: number;
+  productName: string;
+  ptProductFee?: number;
+  ptInfo: string;
+  fee: number;
+  info?: string;
+  images: string[];
   trainer: Trainer;
+};
+
+export type PtDetailResponse = {
+  trainer?: Trainer;
+  gym?: Gym;
+  ptProducts?: PtProduct[];
+};
+export type PtUpdateResponse = {
+  trainer?: Trainer;
+  gym?: Gym;
+  ptProductId: number;
+  productName: string;
   ptInfo: string;
   fee: number;
   images: string[];
-  gym: Gym;
-}
+};

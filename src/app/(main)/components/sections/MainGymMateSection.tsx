@@ -22,7 +22,9 @@ export default function MainGymMateSection() {
           <div className="flex justify-between gap-10">
             <MainSection
               isFixedColor
-              description="짐 메이트와 함께하는 사용자와 전문가들이 늘고 있다~~ 정도"
+              description="운동을 함께하는 사용자와 트레이너들의 이야기,
+지금 짐 메이트에서 확인해보세요."
+              link="/gym"
               subTitle="WHIT GYM MATE"
               title={`GYM MATE 함께 하는 사람들`}
             >

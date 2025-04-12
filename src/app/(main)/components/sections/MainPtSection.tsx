@@ -1,26 +1,52 @@
 'use client';
 import { useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { useQuery } from '@tanstack/react-query';
 
-import Animation from '@/utils/animations';
-import MainPtCard from '@/components/molecules/Main/MainPtCard';
 import MainSection from '@/components/organisms/Main/MainSection';
+import Animation from '@/utils/animations';
 
 import 'swiper/css';
+
+import { PtProduct } from '@/types/pt.types';
+import fetcher from '@/utils/apiInstance';
+import MainPtCard from '@/components/molecules/Main/MainPtCard';
+
+type PtResponse = {
+  content: PtProduct[];
+};
+
 export default function MainPtSection() {
+  const { data } = useQuery({
+    queryKey: ['ptProductList'],
+    queryFn: async () => {
+      const response = await fetcher<PtResponse>(`/ptProduct`, {
+        method: 'GET',
+        token: false,
+      });
+
+      return response;
+    },
+  });
+
   useEffect(() => {
+    if (!data?.content) return;
     const cleanup = Animation.ptSection.main();
 
     return () => {
       cleanup?.();
     };
-  }, []);
+  }, [data]);
 
   return (
     <MainSection
-      description={'짐 메이트와 함께하는 사용자와 전문가'}
-      subTitle={'인기 트레이너'}
-      title={'나만의 PT트레이너'}
+      isRouteButton
+      buttonText="우리동네 PT프로그램 찾기"
+      description="지역별 트레이너들이 제공하는 다양한 PT 상품을 비교하고,
+나에게 딱 맞는 운동 계획을 시작해보세요."
+      link="/pt"
+      subTitle="PT 프로그램"
+      title="우리동네 PT상품"
     >
       <Swiper
         className="overflow-visible"
@@ -28,15 +54,17 @@ export default function MainPtSection() {
         spaceBetween={50}
         style={{ maxWidth: 'unset !important' }}
       >
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-          <SwiperSlide key={item} virtualIndex={item}>
+        {data?.content.map((item, index) => (
+          <SwiperSlide key={index} virtualIndex={index}>
             <MainPtCard
-              backgroundImage={''}
-              content={
-                'pt는 아무데서나 받으시면 안됩니다. 전문가와 상담하고 지금 바로 나의 바디를 체인지 해보세요 지금 바로 나의 바디를 체인지 해보세요 '
-              }
-              score={4.7}
-              title={'김호석 트레이너'}
+              key={index}
+              backgroundImage={item.trainer.profile || ''}
+              content={item.info || ''}
+              id={item.trainer.trainerId.toString()}
+              productName={item.productName}
+              ptProductFee={item.ptProductFee}
+              score={item.trainer.score || 0}
+              title={item.trainer.trainerName}
             />
           </SwiperSlide>
         ))}

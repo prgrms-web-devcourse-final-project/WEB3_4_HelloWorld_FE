@@ -26,15 +26,18 @@ export default function Header() {
   const router = useRouter();
   const { isLoggedIn, userType, isOwner, resetAuth, user } = useAuthStore();
   const { showToast } = useToast();
+
   const isMainPage = path === '/' || path.includes('pt');
 
-  const navTextClass = clsx('text-mono_700', {
+  console.log(isMainPage);
+  const navTextClass = clsx({
     'text-gray-100': isMainPage,
+    'text-mono_700': !isMainPage,
   });
 
   const navBgClass = clsx({
     'bg-black/30': isMainPage,
-    'bg-mono_100': !isMainPage,
+    'text-mono_100': !isMainPage,
   });
 
   //오너 페이지 따로 분리 할 경우 경로
@@ -115,13 +118,14 @@ export default function Header() {
             <Dropdown placement="bottom-end">
               <DropdownTrigger>
                 <Avatar
-                  isBordered
                   as="button"
-                  className="transition-transform"
-                  color="secondary"
                   name="User"
                   size="sm"
-                  src={user?.profileImage && '/public/gym/icons/healthboy.jpg'}
+                  src={
+                    user?.profile ||
+                    user?.profileImage ||
+                    '/gym/icons/healthboy.jpg'
+                  }
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
@@ -135,10 +139,10 @@ export default function Header() {
                     남은캐시 : {formatCash(Number(user?.cash))}원
                   </p>
                 </DropdownItem>
-                <DropdownItem key="settings" onClick={handleMyPageClick}>
+                <DropdownItem key="settings" onPress={handleMyPageClick}>
                   마이 페이지
                 </DropdownItem>
-                <DropdownItem key="point" onClick={handlePointClick}>
+                <DropdownItem key="point" onPress={handlePointClick}>
                   포인트 충전
                 </DropdownItem>
                 <DropdownItem
@@ -151,7 +155,7 @@ export default function Header() {
               </DropdownMenu>
             </Dropdown>
           ) : (
-            <Button color="primary" size="sm" onClick={handleLoginOrSignup}>
+            <Button color="primary" size="sm" onPress={handleLoginOrSignup}>
               로그인 / 회원가입
             </Button>
           )}
