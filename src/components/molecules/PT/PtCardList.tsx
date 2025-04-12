@@ -6,8 +6,11 @@ export default function PtCardList({ items }: { items: any[] }) {
       {items.map((item, index) => (
         <MainPtCard
           key={index}
-          backgroundImage={item.trainer.profileImage}
+          backgroundImage={item.trainer.profile}
           content={item.info}
+          id={item.trainer.trainerId}
+          productName={item.productName}
+          ptProductFee={item.ptProductFee}
           score={item.trainer.score}
           title={item.trainer.trainerName}
         />

@@ -2,7 +2,9 @@ import { Image, useDisclosure } from '@heroui/react';
 
 import ModalImageGallery from '../ModalImageGallery';
 
-export default function PtProductDetailItem({ item }: { item: any }) {
+import { PtProduct } from '@/types/pt.types';
+
+export default function PtProductDetailItem({ item }: { item: PtProduct }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
@@ -30,7 +32,7 @@ export default function PtProductDetailItem({ item }: { item: any }) {
         ))}
       </div>
       <p className="text-mono_700 text-base  font-medium whitespace-pre">
-        {item.infomation}
+        {item.ptInfo}
       </p>
       <ModalImageGallery
         imageList={item.images}

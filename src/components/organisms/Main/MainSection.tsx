@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
 
 import Section from '@/components/atoms/Section';
 import { MyButton } from '@/components/atoms/Button';
@@ -12,6 +13,7 @@ type MainSectionProps = {
   isRouteButton?: boolean;
   buttonText?: string;
   isFixedColor?: boolean;
+  link: string;
 };
 
 export default function MainSectionTitle({
@@ -21,8 +23,11 @@ export default function MainSectionTitle({
   children,
   isRouteButton = false,
   buttonText = '더보기',
+  link = '',
   isFixedColor = false,
 }: MainSectionProps) {
+  const router = useRouter();
+
   return (
     <Section>
       <div className="flex justify-between pb-[3vw] items-end lg:flex-row flex-col">
@@ -64,6 +69,7 @@ export default function MainSectionTitle({
               endContent={<ArrowRightIcon className="w-4 h-4" />}
               size="sm"
               variant="light"
+              onPress={() => router.push(link)}
             >
               {buttonText}
             </MyButton>

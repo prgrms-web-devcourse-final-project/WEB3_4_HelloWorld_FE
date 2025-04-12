@@ -6,7 +6,7 @@ export default function PtTimePage() {
   return (
     <div>
       <PtCardSection>
-        <ScheduleTimeCheckGroup isReadOnly={false} />
+        <ScheduleTimeCheckGroup availableTimes={{}} isReadOnly={false} />
       </PtCardSection>
     </div>
   );

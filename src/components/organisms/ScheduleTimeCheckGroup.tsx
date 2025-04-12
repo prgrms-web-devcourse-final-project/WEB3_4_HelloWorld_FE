@@ -19,17 +19,31 @@ const formatTime = (time: number): string => {
 
 export default function ScheduleTimeCheckGroup({
   isReadOnly = true,
+  isSelectTap = true,
+  availableTimes,
+  setSelectedTab,
+  selectedTime,
+  setSelectTime,
+  selectedTab,
 }: {
+  isSelectTap?: boolean;
   isReadOnly?: boolean;
+  availableTimes?: AvailableTimesType | null;
+  selectedTab?: string;
+  selectedTime?: AvailableTimesType | null;
+  setSelectTime?: (value: number, e: any) => void;
+  setSelectedTab?: (value: number) => void;
 }) {
-  const availableTimes: AvailableTimesType = {
-    '3': [9, 10, 11, 12, 13, 14, 15, 16, 17],
-    '4': [15, 16, 17],
-  };
+  if (!availableTimes)
+    return <p className=" w-full text-center">스케줄이 없습니다.</p>;
 
   return (
     <div>
-      <Tabs fullWidth={true}>
+      <Tabs
+        fullWidth={true}
+        selectedKey={selectedTab}
+        onSelectionChange={(key) => setSelectedTab?.(Number(key))}
+      >
         {Object.entries(availableTimes).map(([key, value]) => (
           <Tab key={key} title={ptSchedules[Number(key)].label}>
             <div className="grid grid-cols-3 py-5 gap-2">
@@ -38,7 +52,12 @@ export default function ScheduleTimeCheckGroup({
                   key={time}
                   color="test"
                   isDisabled={isReadOnly}
+                  isSelected={selectedTime?.[key]?.includes(time) ?? false}
+                  name={time.toString()}
                   radius="bg_sm"
+                  onChange={(e) =>
+                    setSelectTime?.(Number(e.target.name), e.target.checked)
+                  }
                 >
                   {formatTime(time)}
                 </MyCheckbox>
