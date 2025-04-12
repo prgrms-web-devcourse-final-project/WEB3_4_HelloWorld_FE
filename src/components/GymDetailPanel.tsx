@@ -1,3 +1,5 @@
+import type { GymDetailResponse } from '@/types/gym';
+
 import { useState, useEffect, useRef } from 'react';
 import NextImage from 'next/image';
 import { Button } from '@heroui/react';
@@ -14,11 +16,13 @@ import GymTabs from './molecules/GymTabs';
 import GymIntroSection from './molecules/GymIntroSection';
 import GymTimeFeeSection from './molecules/GymTimeFeeSection';
 import SelectedFacilitySection from './molecules/SelectedFacilitySection';
-import EquipmentSection from './molecules/EquipmentSection';
 import GymTrainerSection from './molecules/GymTrainerSection';
-import GymReviewSection from './molecules/GymReviewSection';
 
-import { dummyGymDetailData } from '@/constants/dummyGymDetailData';
+import {
+  fetchGymDetail,
+  fetchGymFacilities,
+  fetchGymTrainers,
+} from '@/apis/gymApi';
 
 interface GymDetailPanelProps {
   gymId: number;
@@ -29,22 +33,7 @@ interface GymDetailPanelProps {
   onRouteReady?: (data: RouteData[]) => void;
   panelTranslateX?: string;
 }
-// interface RouteInfo {
-//   startAddress: string;
-//   endAddress: string;
-//   totalTime: number;
-//   totalDistance: number;
-//   totalWalkDistance: number;
-//   transferCount: number;
-//   steps: {
-//     mode: string;
-//     sectionTime: number;
-//     startName: string;
-//     endName: string;
-//     route: string;
-//   }[];
-//   rawLegs: any[]; // ✅ 실제 경로 데이터를 담기 위한 필드 (지도에 그릴 때 사용)
-// }
+
 interface RouteData {
   startAddress: string;
   endAddress: string;
@@ -99,50 +88,65 @@ export default function GymDetailPanel({
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [liked, setLiked] = useState(false);
   const [selectedTab, setSelectedTab] = useState('home');
-  const [isVisible, setIsVisible] = useState(false);
+  const [gymData, setGymData] = useState<GymDetailResponse | null>(null);
+  const [trainers, setTrainers] = useState<any[]>([]);
+  const [availableFacilities, setAvailableFacilities] = useState<string[]>([]);
+
   const polylineRef = useRef<any>(null);
 
   useEffect(() => {
-    setIsVisible(visible);
-  }, [visible]);
-  const gymData = dummyGymDetailData[gymId];
+    if (visible) {
+      const fetchData = async () => {
+        try {
+          const detail = await fetchGymDetail(gymId);
+
+          setGymData(detail);
+
+          const trainerData = await fetchGymTrainers(gymId);
+          const parsedTrainers = trainerData.map((t: any) => ({
+            name: t.trainerName,
+            description: t.intro,
+            specialty: t.field,
+            career: t.career,
+            image: t.profileUrl,
+            price: t.ptProducts?.[0]?.ptProductFee?.toLocaleString() || '-',
+            awards: t.awards || [],
+          }));
+
+          setTrainers(parsedTrainers);
+
+          const facilityData = await fetchGymFacilities(gymId);
+          const enabled = Object.entries(facilityData.facilityResponse)
+            .filter(([_, val]) => val)
+            .map(([key]) => facilityLabelMap[key.toLowerCase()]);
+
+          setAvailableFacilities(enabled);
+        } catch (err) {
+          console.error('❌ 패널 로딩 실패:', err);
+        }
+      };
+
+      fetchData();
+    }
+  }, [visible, gymId]);
 
   if (!gymData) return null;
 
-  const { gym, gymImages, reviews, machines, gymProducts, trainers } = gymData;
-
-  const availableFacilities = Object.entries(gym.facilities)
-    .filter(([_, val]) => val)
-    .map(([key]) => facilityLabelMap[key]);
-
-  const mappedMachines = machines.map((m) => ({
-    name: m.name,
-    count: 1,
-    image: m.machineImages[0] || '/gym_sample.jpg',
-  }));
-
-  const mappedReviews = reviews.map((r, index) => ({
-    id: `${r.reviewId}`,
-    nickname: `회원${index + 1}`,
-    profileImage: '/gym/review/profile1.jpg',
-    date: '2025.04.01',
-    rating: r.score,
-    images: r.reviewImages,
-    content: r.content,
-  }));
+  const {
+    gymName,
+    address,
+    phoneNumber,
+    startTime,
+    endTime,
+    xField,
+    yField,
+    intro,
+    gymImages,
+    gymProductResponses,
+  } = gymData;
 
   const handleRouteSearch = async () => {
-    // 위치 체크
-    if (!myLocation) {
-      alert('현재 위치 정보를 가져올 수 없습니다.');
-
-      return;
-    }
-
-    const myLat = myLocation.lat;
-    const myLon = myLocation.lon;
-    const gymLat = parseFloat(gym.yField);
-    const gymLon = parseFloat(gym.xField);
+    if (!myLocation) return alert('현재 위치 정보를 가져올 수 없습니다.');
 
     try {
       const response = await fetch(
@@ -154,29 +158,23 @@ export default function GymDetailPanel({
             appKey: process.env.NEXT_PUBLIC_TMAP_APP_KEY || '',
           },
           body: JSON.stringify({
-            startX: myLon.toString(),
-            startY: myLat.toString(),
-            endX: gymLon.toString(),
-            endY: gymLat.toString(),
+            startX: myLocation.lon.toString(),
+            startY: myLocation.lat.toString(),
+            endX: xField,
+            endY: yField,
             lang: 0,
             format: 'json',
           }),
         },
       );
-
       const data = await response.json();
       const itineraries = data?.metaData?.plan?.itineraries;
 
-      if (!itineraries || itineraries.length === 0) {
-        alert('경로 정보를 찾을 수 없습니다.');
+      if (!itineraries) return alert('경로 정보를 찾을 수 없습니다.');
 
-        return;
-      }
-
-      // ✅ 모든 경로를 RouteInfo[]로 가공
       const routeOptions: RouteData[] = itineraries.map((itinerary: any) => ({
         startAddress: '내 위치',
-        endAddress: gym.address,
+        endAddress: address,
         totalTime: itinerary.totalTime,
         totalDistance: itinerary.totalDistance,
         totalWalkDistance: itinerary.totalWalkDistance,
@@ -191,22 +189,16 @@ export default function GymDetailPanel({
         legs: itinerary.legs,
       }));
 
-      // ✅ 부모 컴포넌트로 전달
       onRouteReady?.(routeOptions);
-    } catch (error) {
-      console.error('🔥 길찾기 요청 실패:', error);
+    } catch (err) {
+      console.error('길찾기 요청 실패:', err);
       alert('길찾기 요청 중 문제가 발생했습니다');
     }
   };
 
   return (
     <div
-      className={`
-    absolute top-[80px] left-0 h-[calc(100%-96px)] w-[440px]
-    bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden
-    transition-transform duration-500 ease-in-out
-    ${panelTranslateX}
-  `}
+      className={`absolute top-[80px] left-0 h-[calc(100%-96px)] w-[440px] bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden transition-transform duration-500 ease-in-out ${panelTranslateX}`}
     >
       <button
         className="absolute top-2 right-2 z-20 hover:opacity-70 transition"
@@ -214,7 +206,7 @@ export default function GymDetailPanel({
       >
         <XMarkIcon className="w-8 h-8 text-white" />
       </button>
-      {/* 이미지 모달 */}
+
       <div className="flex gap-[2px] w-full h-[220px] rounded-tl-2xl rounded-tr-2xl overflow-hidden">
         <div className="w-2/3 h-full">
           <button
@@ -248,12 +240,12 @@ export default function GymDetailPanel({
           ))}
         </div>
       </div>
-      {/* 패널 상단 */}
+
       <div className="flex justify-between items-start p-4 border-b border-mono_200">
         <div className="flex flex-col gap-[8px]">
-          <h3 className="text-[20px] font-bold text-mono_800">{gym.gymName}</h3>
+          <h3 className="text-[20px] font-bold text-mono_800">{gymName}</h3>
           <p className="text-[14px] text-mono_500">
-            {gym.address} | {gym.phoneNumber}
+            {address} | {phoneNumber}
           </p>
         </div>
         <div className="flex flex-col items-end gap-2">
@@ -278,7 +270,6 @@ export default function GymDetailPanel({
             >
               <MapIcon className="w-6 h-6 text-mono_600 hover:text-main" />
             </Button>
-
             <Button isIconOnly radius="sm" variant="light">
               <ShareIcon className="w-6 h-6 text-mono_600 hover:text-main" />
             </Button>
@@ -296,26 +287,18 @@ export default function GymDetailPanel({
       <div className="h-[48px] px-2 border-b border-mono_200">
         <GymTabs selectedTab={selectedTab} onChange={setSelectedTab} />
       </div>
-      {/* 탭 별 컨텐츠 */}
-      <div
-        className="
-        flex-1 p-4 overflow-y-auto
-        scrollbar-thin scrollbar-thumb-rounded-xl
-        scrollbar-track-transparent scrollbar-thumb-mono_200
-        transition-all duration-300
-        [&:active]:scrollbar-thumb-mono_300
-      "
-      >
+
+      <div className="flex-1 p-4 overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-xl scrollbar-track-transparent scrollbar-thumb-mono_200 transition-all duration-300 [&:active]:scrollbar-thumb-mono_300">
         {selectedTab === 'home' && (
           <>
-            <GymIntroSection content={gym.intro} />
+            <GymIntroSection content={intro} />
             <div className="mt-6">
               <GymTimeFeeSection
-                feeInfo={gymProducts.map(
+                feeInfo={gymProductResponses.map(
                   (p) =>
-                    `${p.productName}: ${p.productPrice.toLocaleString()}원`,
+                    `${p.gymProductMonth}개월권: ${p.gymProductFee.toLocaleString()}원`,
                 )}
-                timeInfo={[`${gym.startTime} ~ ${gym.endTime}`]}
+                timeInfo={[`${startTime} ~ ${endTime}`]}
               />
             </div>
             <div className="mt-6">
@@ -326,14 +309,14 @@ export default function GymDetailPanel({
               />
             </div>
             <div className="mt-6">
+              <GymTrainerSection trainers={trainers} />
+            </div>
+            {/* <div className="mt-6">
               <EquipmentSection equipments={mappedMachines} />
             </div>
             <div className="mt-6">
-              <GymTrainerSection trainers={trainers} />
-            </div>
-            <div className="mt-6">
               <GymReviewSection reviews={mappedReviews} />
-            </div>
+            </div> */}
           </>
         )}
 
@@ -343,11 +326,11 @@ export default function GymDetailPanel({
           </div>
         )}
 
-        {selectedTab === 'review' && (
+        {/* {selectedTab === 'review' && (
           <div className="mt-4">
             <GymReviewSection fullView reviews={mappedReviews} />
           </div>
-        )}
+        )} */}
 
         {selectedTab === 'facility' && (
           <>
@@ -358,9 +341,9 @@ export default function GymDetailPanel({
                 selected={false}
               />
             </div>
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <EquipmentSection fullView equipments={mappedMachines} />
-            </div>
+            </div> */}
           </>
         )}
       </div>
