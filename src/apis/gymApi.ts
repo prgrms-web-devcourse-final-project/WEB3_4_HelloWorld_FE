@@ -13,7 +13,7 @@ interface FetchGymListParams {
   isPartner?: boolean;
 }
 
-export const fetchGymList = async (
+export const fetchFilteredGymList = async (
   params: FetchGymListParams,
 ): Promise<GymListResponse> => {
   const queryParams = new URLSearchParams();
@@ -69,6 +69,16 @@ export const fetchGymFacilities = async (gymId: number) => {
   const res = await fetch(`${API_BASE_URL}/gym/${gymId}/facility`);
 
   if (!res.ok) throw new Error('편의시설 조회 실패');
+
+  return await res.json();
+};
+
+export const fetchGymList = async (): Promise<GymListResponse> => {
+  const res = await fetch(`${API_BASE_URL}/gym/search`, {
+    credentials: 'include',
+  });
+
+  if (!res.ok) throw new Error('헬스장 목록 조회 실패');
 
   return await res.json();
 };

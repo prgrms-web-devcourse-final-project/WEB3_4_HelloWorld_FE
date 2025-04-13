@@ -56,7 +56,7 @@ interface RouteData {
 
 const facilityLabelMap: Record<string, string> = {
   towel: '수건',
-  showerRoom: '샤워실',
+  showerroom: '샤워실',
   parking: '주차장',
   sauna: '사우나',
   locker: '개인락커',
