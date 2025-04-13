@@ -15,23 +15,62 @@ import {
 } from '@heroui/react';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import ScheduleTimeCheckGroup from '../ScheduleTimeCheckGroup';
 
 import GymListCardItem from '@/components/molecules/GYM/GymListCardItem';
 import NumberCountCard from '@/components/molecules/NumberCountCard';
 import DashboardItemWrap from '@/components/molecules/TrainerMypage/DashboardItemWrap';
 import LevelBadge from '@/components/atoms/LevelBadge';
 import { useAuthStore } from '@/stores/memberTypeStore';
-
+import fetcher from '@/utils/apiInstance';
+import { PtDetailResponse } from '@/types/pt.types';
+type AvailableResponse = {
+  availableTimes: AvailableTimesType;
+};
+type AvailableTimesType = {
+  [key: string]: number[];
+};
 export default function Dashboard() {
   const router = useRouter();
   const trainerInfo = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  const cachedData = queryClient.getQueryData(['ptTime']);
+  const { user } = useAuthStore();
+  const { data: time } = useQuery({
+    queryKey: ['ptTime'],
+    queryFn: async () => {
+      const response = await fetcher<AvailableResponse | null>(`/classtime`, {
+        method: 'GET',
+      });
+
+      return response;
+    },
+    enabled: !cachedData,
+  });
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['ptProductDetail'],
+    queryFn: async () => {
+      const response = await fetcher<PtDetailResponse>(
+        `/ptProduct/trainer/${user.trainerId}`,
+        {
+          method: 'GET',
+          token: false,
+        },
+      );
+
+      return response;
+    },
+    enabled: user !== null,
+  });
 
   return (
     <div className="grid grid-cols-3 gap-4">
       <Card className="col-span-2 p-2">
         <CardBody>
           <div className="flex justify-between">
-            <div className="flex gap-4">
+            <div className="flex  gap-4">
               <Image
                 alt="profile"
                 className="object-cover aspect-square"
@@ -77,22 +116,11 @@ export default function Dashboard() {
       </Card>
       <DashboardItemWrap title="소속 헬스장">
         <div className="flex gap-4">
-          <GymListCardItem
-            gym={{
-              gymName: '',
-              gymAddress: '',
-              gymOpen: '',
-              gymClose: '',
-              gymScore: 0,
-              gymX: 0,
-              gymY: 0,
-              images: [],
-            }}
-          />
+          <GymListCardItem gym={data?.gym!} />
         </div>
       </DashboardItemWrap>
-      <DashboardItemWrap date="2025.01.01" title="회원 수">
-        <div className="flex gap-4" />
+      <DashboardItemWrap date="변경하기" title="나의 스케줄">
+        <ScheduleTimeCheckGroup availableTimes={time?.availableTimes} />
       </DashboardItemWrap>
       <DashboardItemWrap title="회원 수">
         <div className="flex gap-4" />

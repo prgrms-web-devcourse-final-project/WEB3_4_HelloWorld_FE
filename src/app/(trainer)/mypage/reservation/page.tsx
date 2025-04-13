@@ -7,13 +7,17 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  useDisclosure,
 } from '@heroui/react';
-import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import PtCardSection from '@/components/molecules/PT/PtCardSection';
 import fetcher from '@/utils/apiInstance';
 import Loading from '@/app/loading';
+import Modal from '@/components/atoms/Modal';
+import StudentCard from '@/components/molecules/TrainerMypage/StudentCard';
+import useStudentMutation from '@/hooks/useStudentMutation';
+import { formatCash } from '@/utils/formatter';
 export type Reservation = {
   reservationId: number;
   productName: string;
@@ -23,27 +27,36 @@ export type Reservation = {
   cancelDate: string;
   completedDate: string;
   trainerId: number;
+  studentId: number;
 };
 export default function ReservationList() {
+  const { isOpen, onOpenChange, onClose, onOpen } = useDisclosure();
+
   const { data, isLoading } = useQuery({
-    queryKey: ['reservationList'],
+    queryKey: ['reservation', 'member'],
     queryFn: async () =>
       await fetcher<any>('/reservation/trainer', {
         method: 'GET',
         cache: 'force-cache',
       }),
   });
+  const { mutate: fetchStudent, data: student } = useStudentMutation(() =>
+    onOpen(),
+  );
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const onModalHandelr = (e: React.Key) => {
+    fetchStudent(String(e));
+  };
+
   if (isLoading) return <Loading />;
-  if (!data) return <div>데이터가 없습니다.</div>;
 
   return (
     <div>
       <PtCardSection title="예약 목록">
-        <Table aria-label="Example static collection table">
+        <Table
+          aria-label="Example static collection table"
+          selectionMode="single"
+        >
           <TableHeader>
             <TableColumn>상품명</TableColumn>
             <TableColumn>시간</TableColumn>
@@ -55,13 +68,16 @@ export default function ReservationList() {
           <TableBody>
             {data &&
               data?.content?.map((item: Reservation) => (
-                <TableRow key={item.reservationId}>
-                  <TableCell>{item.productName}</TableCell>
-                  <TableCell>{item.time}</TableCell>
-                  <TableCell>{item.price}</TableCell>
-                  <TableCell>{item.date}</TableCell>
-                  <TableCell>{item.cancelDate}</TableCell>
-                  <TableCell>{item.completedDate}</TableCell>
+                <TableRow
+                  key={item.reservationId || ''}
+                  onClick={(e) => onModalHandelr(item.studentId)}
+                >
+                  <TableCell>{item.productName || ''}</TableCell>
+                  <TableCell>{item.time + ':00' || ''}</TableCell>
+                  <TableCell>{formatCash(item.price) + '원' || ''}</TableCell>
+                  <TableCell>{item.date || ''}</TableCell>
+                  <TableCell>{item.cancelDate || ''}</TableCell>
+                  <TableCell>{item.completedDate || ''}</TableCell>
                 </TableRow>
               ))}
             {data?.content?.length === 0 && (
@@ -74,6 +90,9 @@ export default function ReservationList() {
           </TableBody>
         </Table>
       </PtCardSection>
+      <Modal isOpen={isOpen} size="xl" onOpenChange={onOpenChange}>
+        <StudentCard student={student} />
+      </Modal>
     </div>
   );
 }
