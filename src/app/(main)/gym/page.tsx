@@ -1,10 +1,9 @@
 import dynamic from 'next/dynamic';
 
-const GymPageTemplate = dynamic(
-  () => import('@/components/templates/GymPageTemplate'),
-  { ssr: false },
-);
+const GymPage = dynamic(() => import('@/components/templates/GymPage'), {
+  ssr: false,
+});
 
-export default function GymPage() {
-  return <GymPageTemplate />;
+export default function GymPages() {
+  return <GymPage />;
 }

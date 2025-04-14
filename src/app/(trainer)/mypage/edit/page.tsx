@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Textarea, Input, Button } from '@heroui/react';
+import { Textarea } from '@heroui/react';
 import Image from 'next/image';
-import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+import { PlusIcon } from '@heroicons/react/24/solid';
 import { useMutation } from '@tanstack/react-query';
 
 import PtCardSection from '@/components/molecules/PT/PtCardSection';
@@ -13,6 +13,7 @@ import { MyButton } from '@/components/atoms/Button';
 import { useAuthStore } from '@/stores/memberTypeStore';
 import fetcher from '@/utils/apiInstance';
 import useToast from '@/hooks/useToast';
+import AwardForm from '@/components/organisms/TrainerMypage/AwardForm';
 
 export default function MyPageEdit() {
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -216,7 +217,7 @@ export default function MyPageEdit() {
           <InputField
             containerMarginBottom="0"
             height="62px"
-            label="경력"
+            label="전문분야"
             labelInputGap="5px"
             name="field"
             placeholder="ex)다이어트"
@@ -237,35 +238,7 @@ export default function MyPageEdit() {
             onChange={handleChange}
           />
 
-          <div className="flex flex-col gap-3">
-            {awards.map((award, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <Input
-                  name={`award-${index}`}
-                  placeholder={`수상 내역 ${index + 1}`}
-                  value={award}
-                  onChange={(e) => handleAwardChange(index, e.target.value)}
-                />
-                <Button
-                  className="p-1"
-                  type="button"
-                  variant="ghost"
-                  onPress={() => removeAward(index)}
-                >
-                  <TrashIcon className="w-4 h-4 text-red-500" />
-                </Button>
-              </div>
-            ))}
-            <Button
-              className="w-fit mt-2"
-              type="button"
-              variant="light"
-              onPress={addAward}
-            >
-              <PlusIcon className="w-4 h-4 mr-1" />
-              수상 내역 추가
-            </Button>
-          </div>
+          <AwardForm />
         </div>
       </form>
     </PtCardSection>

@@ -13,6 +13,7 @@ async function fetcher<T>(url: string, options: FetchOptions = {}): Promise<T> {
     headers: {
       ...(headers || {}),
     },
+
     ...restOptions,
   });
 
