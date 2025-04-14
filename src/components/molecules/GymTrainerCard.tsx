@@ -7,7 +7,12 @@ interface GymTrainerCardProps {
   price: string;
   specialty?: string;
   career?: string;
-  awards?: string;
+  awards?: {
+    awardYear: string;
+    awardName: string;
+    awardInfo: string;
+  }[];
+
   image: string;
 }
 
@@ -17,7 +22,7 @@ export default function GymTrainerCard({
   price,
   specialty,
   career,
-  awards,
+  awards = [],
   image,
 }: GymTrainerCardProps) {
   return (
@@ -42,7 +47,18 @@ export default function GymTrainerCard({
             • <span className="text-mono_600">경력 :</span> {career || '-'}
           </p>
           <p>
-            • <span className="text-mono_600">수상이력 :</span> {awards || '-'}
+            • <span className="text-mono_600">수상이력 :</span>{' '}
+            {awards.length > 0 ? (
+              <ul className="list-disc list-inside pl-2">
+                {awards.map((award, idx) => (
+                  <li key={idx}>
+                    {award.awardYear} - {award.awardName} ({award.awardInfo})
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              '-'
+            )}
           </p>
         </div>
       </div>
