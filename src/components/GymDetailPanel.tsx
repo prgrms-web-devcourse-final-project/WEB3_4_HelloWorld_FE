@@ -18,6 +18,7 @@ import GymTimeFeeSection from './molecules/GymTimeFeeSection';
 import SelectedFacilitySection from './molecules/SelectedFacilitySection';
 import GymTrainerSection from './molecules/GymTrainerSection';
 import GymReviewSection from './molecules/GymReviewSection';
+import GymPurchaseModal from './molecules/GymPurchaseModal';
 
 import {
   fetchGymDetail,
@@ -95,6 +96,7 @@ export default function GymDetailPanel({
   const [availableFacilities, setAvailableFacilities] = useState<string[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
   const polylineRef = useRef<any>(null);
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -294,6 +296,7 @@ export default function GymDetailPanel({
             className="w-[100px] h-[32px] text-[14px] bg-main text-white hover:opacity-90"
             radius="sm"
             size="sm"
+            onClick={() => setIsPurchaseModalOpen(true)} // ✅ 이 부분 추가
           >
             등록
           </Button>
@@ -368,6 +371,12 @@ export default function GymDetailPanel({
         imageList={gymImages}
         isOpen={isGalleryOpen}
         onOpenChange={() => setIsGalleryOpen(false)}
+      />
+      <GymPurchaseModal
+        gymName={gymName}
+        isOpen={isPurchaseModalOpen}
+        products={gymProductResponses}
+        onClose={() => setIsPurchaseModalOpen(false)}
       />
     </div>
   );
