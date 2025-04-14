@@ -221,8 +221,9 @@ export default function GymPage() {
 
     // 새 마커 생성 (이건 기존 그대로 두면 됨)
     gyms.forEach((gym) => {
-      const lat = parseFloat(gym.yField);
-      const lon = parseFloat(gym.xField);
+      const lat = gym.yField;
+      const lon = gym.xField;
+
       const position = new window.Tmapv2.LatLng(lat, lon);
 
       const marker = new window.Tmapv2.Marker({
@@ -273,14 +274,9 @@ export default function GymPage() {
 
     const map = mapInstanceRef.current;
 
-    const latSum = gymList.reduce(
-      (sum, gym) => sum + parseFloat(gym.yField),
-      0,
-    );
-    const lonSum = gymList.reduce(
-      (sum, gym) => sum + parseFloat(gym.xField),
-      0,
-    );
+    const latSum = gymList.reduce((sum, gym) => sum + gym.yField, 0);
+    const lonSum = gymList.reduce((sum, gym) => sum + gym.xField, 0);
+
     const avgLat = latSum / gymList.length;
     const avgLon = lonSum / gymList.length;
 
@@ -678,10 +674,7 @@ export default function GymPage() {
                     tabIndex={0}
                     onClick={() => {
                       setSelectedGym(gym);
-                      focusGymWithOffset(
-                        parseFloat(gym.yField),
-                        parseFloat(gym.xField),
-                      );
+                      focusGymWithOffset(gym.yField, gym.xField);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ')
@@ -699,16 +692,16 @@ export default function GymPage() {
                       <div className="text-[14px] gap-2 text-mono_400">
                         <span
                           className={`${
-                            isGymOpenNow(gym.startTime, gym.endTime)
+                            isGymOpenNow(gym.startTime ?? '', gym.endTime ?? '')
                               ? 'text-[#5BA744]'
                               : 'text-red-500'
                           } font-medium`}
                         >
                           ●{' '}
-                          {isGymOpenNow(gym.startTime, gym.endTime)
+                          {isGymOpenNow(gym.startTime ?? '', gym.endTime ?? '')
                             ? '운영중'
                             : '운영 종료'}
-                        </span>{' '}
+                        </span>
                         |{' '}
                         <span className="text-mono_400 font-normal">
                           {gym.startTime === '00:00' && gym.endTime === '24:00'
@@ -725,7 +718,7 @@ export default function GymPage() {
                       alt="gym"
                       className="rounded-lg object-cover"
                       height={100}
-                      src={gym.thumbnailImage}
+                      src={gym.thumbnailImage ?? '/gym_sample.jpg'} // ✅ null, undefined 대응
                       width={160}
                     />
                   </div>
@@ -930,7 +923,7 @@ export default function GymPage() {
       {/* 상세 패널 */}
       {selectedGym && (
         <GymDetailPanel
-          gymId={selectedGym.gymId}
+          gymId={selectedGym!.gymId as number} // ✅ 타입을 number로 단언
           map={mapInstanceRef.current}
           myLocation={myLocation}
           panelTranslateX={detailPanelX}
@@ -941,7 +934,6 @@ export default function GymPage() {
             setSelectedRouteIndex(0);
             setIsPanelVisible(false);
             setIsRouteVisible(true);
-            setIsRouteMode(true);
           }}
         />
       )}
