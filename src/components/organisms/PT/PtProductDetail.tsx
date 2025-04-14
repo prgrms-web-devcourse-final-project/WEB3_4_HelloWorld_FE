@@ -24,7 +24,7 @@ import Loading from '@/app/loading';
 import useToast from '@/hooks/useToast';
 import { formatCash } from '@/utils/formatter';
 import MulitpleImageUploader from '@/components/molecules/MultipleImageUpload';
-
+import { TrainerReviewResponse } from '@/types/review';
 export default function PtProductDetail() {
   const params = useParams();
   const { trainerId } = params;
@@ -32,7 +32,6 @@ export default function PtProductDetail() {
   const [images, setImages] = useState<File[]>([]);
   const [content, setContent] = useState<string>('');
   const [score, setScore] = useState<number>(0);
-
   const queryClient = useQueryClient();
   const { onOpen, isOpen, onClose } = useDisclosure();
   const { showToast } = useToast();
@@ -49,6 +48,22 @@ export default function PtProductDetail() {
 
       return response;
     },
+    staleTime: 0,
+  });
+  const { data: review } = useQuery({
+    queryKey: ['ptProductDetail', 'review'],
+    queryFn: async () => {
+      const response = await fetcher<TrainerReviewResponse>(
+        `/trainer/${trainerId}/trainerreview`,
+        {
+          method: 'GET',
+          token: false,
+        },
+      );
+
+      return response;
+    },
+    staleTime: 0,
   });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,7 +208,9 @@ export default function PtProductDetail() {
                   rate={data.trainer?.trainerScore}
                   w={'w-5'}
                 />
-                <p className="text-mono_400  text-sm">12개의 후기</p>
+                <p className="text-mono_400  text-sm">
+                  {review?.content.length}개의 후기
+                </p>
               </div>
             </div>
             <MyButton
@@ -255,7 +272,20 @@ export default function PtProductDetail() {
         )}
 
         <PtCardSection>
-          <PtReviewItem />
+          <div className="flex flex-col gap-10 py-5">
+            {review &&
+              review?.content?.map((item, index) => {
+                return (
+                  <div key={index}>
+                    <PtReviewItem
+                      content={item.content}
+                      imageUrls={item.imageUrls}
+                      score={item.score}
+                    />
+                  </div>
+                );
+              })}
+          </div>
         </PtCardSection>
       </div>
 

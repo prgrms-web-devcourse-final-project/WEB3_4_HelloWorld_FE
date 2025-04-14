@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   CardBody,
-  CardHeader,
   Image,
   Table,
   TableBody,
@@ -26,6 +25,8 @@ import LevelBadge from '@/components/atoms/LevelBadge';
 import { useAuthStore } from '@/stores/memberTypeStore';
 import fetcher from '@/utils/apiInstance';
 import { PtDetailResponse } from '@/types/pt.types';
+import { formatCash } from '@/utils/formatter';
+import { Reservation } from '@/app/(trainer)/mypage/reservation/page';
 type AvailableResponse = {
   availableTimes: AvailableTimesType;
 };
@@ -48,6 +49,14 @@ export default function Dashboard() {
       return response;
     },
     enabled: !cachedData,
+  });
+  const { data: reservation } = useQuery({
+    queryKey: ['reservation', 'member'],
+    queryFn: async () =>
+      await fetcher<any>('/reservation/trainer', {
+        method: 'GET',
+        cache: 'force-cache',
+      }),
   });
   const { data, isLoading, isError } = useQuery({
     queryKey: ['ptProductDetail'],
@@ -122,8 +131,34 @@ export default function Dashboard() {
       <DashboardItemWrap date="변경하기" title="나의 스케줄">
         <ScheduleTimeCheckGroup availableTimes={time?.availableTimes} />
       </DashboardItemWrap>
-      <DashboardItemWrap title="회원 수">
-        <div className="flex gap-4" />
+      <DashboardItemWrap title="내 PT 상품">
+        <div className="w-full flex flex-col gap-2">
+          {data &&
+            data.ptProducts?.slice(0, 3).map((item, index) => (
+              <div
+                key={index}
+                className=" bg-mono_050 w-full flex gap-3 rounded-lg items-center justify-start p-3"
+              >
+                <div>
+                  <Image
+                    className="aspect-square object-cover"
+                    src={item.images[0] || '/gym/icons/healthboy.jpg'}
+                    width={80}
+                  />
+                </div>
+                <div className="w-full text-small text-mono_300">
+                  <h4 className="text-medium text-mono_600 font-bold">
+                    {item.productName}
+                  </h4>
+                  <p>{item.ptInfo}</p>
+                  <span>{formatCash(item.fee) + '원'}</span>
+                </div>
+              </div>
+            ))}
+        </div>
+        {!data && (
+          <p className="w-full h-full text-center py-3">PT 상품이 없습니다.</p>
+        )}
       </DashboardItemWrap>
       <DashboardItemWrap date="2025.01.01" title="회원 수">
         <div className="flex gap-4">
@@ -141,39 +176,44 @@ export default function Dashboard() {
           />
         </div>
       </DashboardItemWrap>
-      <Card className="col-span-3">
-        <CardHeader>
-          <Table aria-label="Example static collection table" shadow="none">
+      <div className="col-span-3">
+        <DashboardItemWrap title="예약 목록">
+          <Table
+            aria-label="Example static collection table"
+            selectionMode="single"
+            shadow="none"
+          >
             <TableHeader>
-              <TableColumn>NAME</TableColumn>
-              <TableColumn>ROLE</TableColumn>
-              <TableColumn>STATUS</TableColumn>
+              <TableColumn>상품명</TableColumn>
+              <TableColumn>시간</TableColumn>
+              <TableColumn>금액</TableColumn>
+              <TableColumn>예약일</TableColumn>
+              <TableColumn>예약취소일자</TableColumn>
+              <TableColumn>상태</TableColumn>
             </TableHeader>
             <TableBody>
-              <TableRow key="1">
-                <TableCell>Tony Reichert</TableCell>
-                <TableCell>CEO</TableCell>
-                <TableCell>Active</TableCell>
-              </TableRow>
-              <TableRow key="2">
-                <TableCell>Zoey Lang</TableCell>
-                <TableCell>Technical Lead</TableCell>
-                <TableCell>Paused</TableCell>
-              </TableRow>
-              <TableRow key="3">
-                <TableCell>Jane Fisher</TableCell>
-                <TableCell>Senior Developer</TableCell>
-                <TableCell>Active</TableCell>
-              </TableRow>
-              <TableRow key="4">
-                <TableCell>William Howard</TableCell>
-                <TableCell>Community Manager</TableCell>
-                <TableCell>Vacation</TableCell>
-              </TableRow>
+              {data &&
+                reservation?.content?.map((item: Reservation) => (
+                  <TableRow key={item.reservationId || ''}>
+                    <TableCell>{item.productName || ''}</TableCell>
+                    <TableCell>{item.time + ':00' || ''}</TableCell>
+                    <TableCell>{formatCash(item.price) + '원' || ''}</TableCell>
+                    <TableCell>{item.date || ''}</TableCell>
+                    <TableCell>{item.cancelDate || ''}</TableCell>
+                    <TableCell>{item.completedDate || ''}</TableCell>
+                  </TableRow>
+                ))}
+              {reservation?.content?.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} style={{ textAlign: 'center' }}>
+                    예약 내역이 없습니다.
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
-        </CardHeader>
-      </Card>
+        </DashboardItemWrap>
+      </div>
     </div>
   );
 }

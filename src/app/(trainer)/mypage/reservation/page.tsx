@@ -56,6 +56,7 @@ export default function ReservationList() {
         <Table
           aria-label="Example static collection table"
           selectionMode="single"
+          shadow="none"
         >
           <TableHeader>
             <TableColumn>상품명</TableColumn>
