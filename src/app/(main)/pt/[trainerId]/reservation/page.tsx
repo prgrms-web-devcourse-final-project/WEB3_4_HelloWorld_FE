@@ -1,9 +1,10 @@
 'use client';
 
-import { Calendar, Card, RadioGroup } from '@heroui/react';
+import { Calendar, Card, Chip, RadioGroup, useDisclosure } from '@heroui/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
-import { getLocalTimeZone, today } from '@internationalized/date';
+import { useParams, useRouter } from 'next/navigation';
+import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
+import { useEffect, useState } from 'react';
 
 import { MyButton } from '@/components/atoms/Button';
 import GymListCardItem from '@/components/molecules/GYM/GymListCardItem';
@@ -16,14 +17,25 @@ import { PtDetailResponse } from '@/types/pt.types';
 import { PtPlanGroup } from '@/components/molecules/PT/PtPlanGroup';
 import useToast from '@/hooks/useToast';
 import { formatCash } from '@/utils/formatter';
+import { getDayOfWeek } from '@/utils/dateUtils';
+import Modal from '@/components/atoms/Modal';
 type AvailableResponse = {
-  availableTimes: AvailableTimesType;
+  availableTimes?: AvailableTimesType;
+  reservationTimes?: AvailableTimesType;
 };
 type AvailableTimesType = {
   [key: string]: number[];
 };
 export default function PtReservationPage() {
+  const [selectedDate, setSelectedDate] = useState<number>(0);
+  const [productId, setProductId] = useState<string>('');
+  const [disabledTime, setDisabledTime] = useState<number[]>([]);
+  const [reservationTime, setReservationTime] = useState<number>(0);
+  const [lastMonth, setLastMonth] = useState<number | null>(null);
+  const [date, setDate] = useState<string>('null');
+  const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
   const { showToast } = useToast();
+  const router = useRouter();
   const params = useParams();
   const { data, isLoading, isError } = useQuery({
     queryKey: ['ptProductDetail', params.trainerId],
@@ -40,6 +52,90 @@ export default function PtReservationPage() {
     },
     enabled: !!params.trainerId,
   });
+  const { data: trainerTime } = useQuery({
+    queryKey: ['ptTrainertime', params.trainerId],
+    queryFn: async () => {
+      const response = await fetcher<AvailableResponse>(
+        `/classtime/${params.trainerId}`,
+        {
+          method: 'GET',
+          token: true,
+        },
+      );
+
+      return response;
+    },
+    enabled: !!params.trainerId,
+  });
+  const onDayChange = (e: CalendarDate) => {
+    setDisabledTime([]);
+    const { year, day, month } = e;
+    const dayOfWeek = getDayOfWeek(year, month, day);
+    const date = `${year}-0${month}-${day}`;
+
+    if (time?.reservationTimes && time.reservationTimes[date]) {
+      setDisabledTime(time.reservationTimes[date]);
+    }
+    setDate(date);
+    setSelectedDate(dayOfWeek);
+  };
+  const onMonthChange = (date: CalendarDate) => {
+    const { year, month, day } = date;
+
+    if (lastMonth !== null && date.month !== lastMonth) {
+      mutate({ year, month });
+    }
+
+    setLastMonth(date.month);
+  };
+  const onScheduleSelectHandler = (value: number, checked: any) => {
+    setReservationTime(value);
+  };
+  const onSubmit = () => {
+    const payload = {
+      date: date,
+      time: reservationTime,
+      cancelDate: null,
+      completedDate: null,
+    };
+
+    onSubmitReservaetion({ productId, payload });
+  };
+  const { mutate: onSubmitReservaetion } = useMutation({
+    mutationFn: async ({
+      productId,
+      payload,
+    }: {
+      productId: string;
+      payload: any;
+    }) => {
+      const res = await fetcher<AvailableResponse>(
+        `/reservation/ptProduct/${productId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        },
+      );
+
+      return res;
+    },
+    onSuccess: () => {
+      showToast({
+        title: '예약 성공',
+        description: '성공',
+      });
+      router.replace('/pt/complete');
+    },
+    onError: () => {
+      showToast({
+        title: '예약 실패',
+        description: 'PT 예약에 실패했습니다.',
+      });
+    },
+  });
   const { mutate, data: time } = useMutation({
     mutationFn: async ({ year, month }: { year: number; month: number }) => {
       const res = await fetcher<AvailableResponse>(
@@ -51,26 +147,33 @@ export default function PtReservationPage() {
 
       return res;
     },
-    onSuccess: () => {},
     onError: () => {
       showToast({
-        title: '수정 실패',
-        description: '트레이너 정보 수정에 실패했습니다.',
+        title: '불러오기 실패',
+        description: '트레이너 일정 불러오기를 실패했습니다.',
       });
     },
   });
 
+  useEffect(() => {
+    const now = today(getLocalTimeZone());
+    const { year, month, day } = now;
+    const dayOfWeek = getDayOfWeek(year, month, day);
+
+    setSelectedDate(dayOfWeek);
+    mutate({ year, month });
+  }, [trainerTime]);
   if (!data) return <p> 정보가 없습니다.</p>;
 
   return (
     <PtLayout>
-      <div className="flex   gap-8">
+      <div className="flex pb-20  gap-8">
         <div className="w-full flex flex-col gap-8">
           <PtCardSection title="헬스장 정보">
             <GymListCardItem gym={data?.gym!} />
           </PtCardSection>
           <PtCardSection title="상품선택">
-            <RadioGroup>
+            <RadioGroup onValueChange={(e) => setProductId(e)}>
               {data.ptProducts?.map((item, index) => (
                 <PtPlanGroup
                   key={index}
@@ -87,12 +190,6 @@ export default function PtReservationPage() {
           <PtCardSection>
             <Calendar
               aria-label="Date (Controlled)"
-              bottomContent={
-                <ScheduleTimeCheckGroup
-                  availableTimes={time?.availableTimes}
-                  isReadOnly={false}
-                />
-              }
               classNames={{
                 headerWrapper: 'py-4',
                 title: 'text-lg',
@@ -105,14 +202,35 @@ export default function PtReservationPage() {
               }}
               defaultValue={today(getLocalTimeZone())}
               minValue={today(getLocalTimeZone())}
-              onChange={(e) => {
-                console.log(e);
-              }}
-              onFocusChange={
-                (e) => console.log(e)
-                // mutate({ year: e.year, month: e.month })
+              onChange={(e) =>
+                // onDayChange(e);
+                onDayChange(e)
               }
+              onFocusChange={(e) => onMonthChange(e)}
             />
+          </PtCardSection>
+          <PtCardSection>
+            <ScheduleTimeCheckGroup
+              isDisabled
+              availableTimes={
+                selectedDate
+                  ? {
+                      [selectedDate]:
+                        trainerTime?.availableTimes?.[selectedDate] ?? [],
+                    }
+                  : null
+              }
+              disabledTime={disabledTime}
+              isReadOnly={false}
+              selectedTime={{ [selectedDate]: [reservationTime] }}
+              setSelectTime={onScheduleSelectHandler}
+            />
+            <div className="w-full pb-3 gap-2 items-center flex justify-end">
+              <Chip size="sm" variant="bordered">
+                {' '}
+              </Chip>{' '}
+              <small>마감</small>
+            </div>
           </PtCardSection>
         </div>
         <div className="h-full max-w-[320px] sticky  hidden md:block top-20 w-full">
@@ -127,11 +245,30 @@ export default function PtReservationPage() {
                 title={data.trainer?.trainerName ?? ''}
               />
 
-              <MyButton>예약하기</MyButton>
+              <MyButton
+                isDisabled={!(date && reservationTime && productId)}
+                onPress={onOpen}
+              >
+                예약하기
+              </MyButton>
             </Card>
           </div>
         </div>
       </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <div className="py-5 px-3 flex flex-col gap-3 items-center">
+          <h3 className=" font-semibold text-lg">
+            예약날짜 : {date} {reservationTime + ':00'}
+          </h3>
+          <p>정말로 예약 하시겠습니까?</p>
+          <div className=" w-full flex justify-center gap-4">
+            <MyButton onPress={onSubmit}>예약하기</MyButton>
+            <MyButton color="mono" onPress={onClose}>
+              돌아가기
+            </MyButton>
+          </div>
+        </div>
+      </Modal>
     </PtLayout>
   );
 }

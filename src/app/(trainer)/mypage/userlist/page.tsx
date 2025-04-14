@@ -8,13 +8,17 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  useDisclosure,
 } from '@heroui/react';
-import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import PtCardSection from '@/components/molecules/PT/PtCardSection';
 import fetcher from '@/utils/apiInstance';
 import Loading from '@/app/loading';
+import Modal from '@/components/atoms/Modal';
+import useToast from '@/hooks/useToast';
+import StudentCard from '@/components/molecules/TrainerMypage/StudentCard';
+import useStudentMutation from '@/hooks/useStudentMutation';
 export type Student = {
   studentId: number;
   name: string;
@@ -24,6 +28,8 @@ export type Student = {
   profileUrl: string;
 };
 export default function UserList() {
+  const { isOpen, onOpenChange, onClose, onOpen } = useDisclosure();
+  const { showToast } = useToast();
   const { data, isLoading } = useQuery({
     queryKey: ['studentList'],
     queryFn: async () =>
@@ -32,19 +38,26 @@ export default function UserList() {
         cache: 'force-cache',
       }),
   });
+  const { mutate: fetchStudent, data: student } = useStudentMutation(() =>
+    onOpen(),
+  );
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const onModalHandelr = (e: React.Key) => {
+    fetchStudent(String(e));
+  };
+
   if (isLoading) return <Loading />;
-  if (!data) return <div>데이터가 없습니다.</div>;
 
   return (
     <div>
       <PtCardSection title="예약 회원 목록">
-        <Table aria-label="Example static collection table">
+        <Table
+          aria-label="Example static collection table"
+          selectionMode="single"
+          onRowAction={(e) => onModalHandelr(e)}
+        >
           <TableHeader>
-            <TableColumn>프로필</TableColumn>
+            <TableColumn width={100}>프로필</TableColumn>
             <TableColumn>이름</TableColumn>
             <TableColumn>진행도</TableColumn>
             <TableColumn>메모</TableColumn>
@@ -56,14 +69,14 @@ export default function UserList() {
                   <TableCell>
                     <Avatar size="md" src={item.profileUrl} />
                   </TableCell>
-                  <TableCell>{item.name}</TableCell>
-                  <TableCell>{item.progress}</TableCell>
-                  <TableCell>{item.memo}</TableCell>
+                  <TableCell>{item.name || ''}</TableCell>
+                  <TableCell>{item.progress || '미진행'}</TableCell>
+                  <TableCell>{item.memo || '내용없음'}</TableCell>
                 </TableRow>
               ))}
             {data?.content?.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} style={{ textAlign: 'center' }}>
+                <TableCell colSpan={5} style={{ textAlign: 'center' }}>
                   회원이 없습니다.
                 </TableCell>
               </TableRow>
@@ -71,6 +84,20 @@ export default function UserList() {
           </TableBody>
         </Table>
       </PtCardSection>
+      <Modal isOpen={isOpen} size="xl" onOpenChange={onOpenChange}>
+        <StudentCard student={student} />
+      </Modal>
     </div>
   );
 }
+bench: 234;
+deadlift: 234;
+gender: 'MALE';
+height: '240';
+level: 4;
+memo: null;
+name: '이희수';
+profileUrl: null;
+progress: null;
+squat: 424;
+weight: '60';

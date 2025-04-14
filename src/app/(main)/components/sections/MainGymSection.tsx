@@ -41,7 +41,7 @@ export default function MainGymSection() {
           />
         </div>
 
-        <KakaoMap className="md:col-span-2 col-span-3 w-full rounded-lg" />
+        <KakaoMap />
         <div className="md:flex-row flex flex-col col-span-3 gap-6">
           <MainGymCardItem
             className="w-full"

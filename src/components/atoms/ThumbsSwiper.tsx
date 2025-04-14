@@ -28,8 +28,14 @@ export default function SyncedGallerySwiper({ images }: Props) {
         thumbs={{ swiper: thumbsSwiper }}
       >
         {images.map((src, idx) => (
-          <SwiperSlide key={idx} className="w-full">
-            <Image className="w-full !max-w-none  object-cover" src={src} />
+          <SwiperSlide key={idx} className="w-full  ">
+            <div className="w-full flex max-h-96 justify-center items-center">
+              <Image
+                className="w-full  aspect-square object-cover"
+                height={400}
+                src={src}
+              />
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
@@ -39,7 +45,7 @@ export default function SyncedGallerySwiper({ images }: Props) {
         watchSlidesProgress
         breakpoints={{
           640: {
-            slidesPerView: 2,
+            slidesPerView: 1,
             spaceBetween: 20,
           },
           768: {
@@ -60,7 +66,7 @@ export default function SyncedGallerySwiper({ images }: Props) {
         {images.map((src, idx) => (
           <SwiperSlide key={idx}>
             <Image
-              className="w-full h-20 object-cover  cursor-pointer opacity-80 hover:opacity-100 transition"
+              className="w-full h-20 object-cover aspect-square cursor-pointer opacity-80 hover:opacity-100 transition"
               fallbackSrc={'https://via.placeholder.com/300x200'}
               loading="lazy"
               src={src}

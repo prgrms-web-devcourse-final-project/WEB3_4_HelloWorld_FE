@@ -1,6 +1,6 @@
 'use client';
 
-import { Tab, Tabs } from '@heroui/react';
+import { CardBody, Tab, Tabs } from '@heroui/react';
 
 import { MyCheckbox } from '@/components/atoms/CheckBox';
 import { ptSchedules } from '@/constants/pt_schedules';
@@ -19,23 +19,31 @@ const formatTime = (time: number): string => {
 
 export default function ScheduleTimeCheckGroup({
   isReadOnly = true,
+  isDisabled = false,
   isSelectTap = true,
   availableTimes,
   setSelectedTab,
+  disabledTime,
   selectedTime,
   setSelectTime,
   selectedTab,
 }: {
   isSelectTap?: boolean;
   isReadOnly?: boolean;
+  isDisabled?: boolean;
   availableTimes?: AvailableTimesType | null;
+  disabledTime?: number[];
   selectedTab?: string;
   selectedTime?: AvailableTimesType | null;
   setSelectTime?: (value: number, e: any) => void;
   setSelectedTab?: (value: number) => void;
 }) {
-  if (!availableTimes)
-    return <p className=" w-full text-center">스케줄이 없습니다.</p>;
+  if (!availableTimes || Object.keys(availableTimes).length === 0)
+    return (
+      <CardBody className=" w-full h-full flex items-center justify-center">
+        <span> 스케줄이 없습니다.</span>
+      </CardBody>
+    );
 
   return (
     <div>
@@ -51,7 +59,11 @@ export default function ScheduleTimeCheckGroup({
                 <MyCheckbox
                   key={time}
                   color="test"
-                  isDisabled={isReadOnly}
+                  isDisabled={
+                    !isDisabled && isReadOnly
+                      ? isReadOnly
+                      : disabledTime?.includes(time)
+                  }
                   isSelected={selectedTime?.[key]?.includes(time) ?? false}
                   name={time.toString()}
                   radius="bg_sm"

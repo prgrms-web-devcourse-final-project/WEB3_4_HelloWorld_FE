@@ -1,8 +1,27 @@
+'use client';
+import { Image, useDisclosure } from '@heroui/react';
+
 import Star from '../StarGroup';
+import ModalImageGallery from '../ModalImageGallery';
 
 import LevelBadge from '@/components/atoms/LevelBadge';
 
-export default function PtReviewItem() {
+type ReviewItemProps = {
+  level?: number;
+  name?: string;
+  date?: string;
+  score: number;
+  content: string;
+  imageUrls: any[];
+};
+
+export default function PtReviewItem({
+  content,
+  score,
+  imageUrls,
+}: ReviewItemProps) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   return (
     <div className="flex gap-4 flex-col">
       <div className="flex items-center justify-between">
@@ -12,23 +31,41 @@ export default function PtReviewItem() {
           <span className="text-mono_400 text-sm">2025.04.03</span>
         </div>
         <div>
-          <Star h={'h-4'} rate={4.2} readonly={true} w={'h-4'} />
+          <Star h={'h-4'} rate={score} readonly={true} w={'h-4'} />
         </div>
       </div>
-      <div>
-        <span className="text-mono_600 text-sm">
-          처음에는 PT 받을까 말까 고민이 많았는데, 나피티 트레이너님 덕분에 정말
-          잘한 선택이 되었습니다! 3개월 동안 PT를 받으면서 체중은 7kg 감량하고,
-          근육량은 2kg 늘었어요. 특히 잘못된 자세 교정에 많은 도움을 받았습니다.
-          예전에는 스쿼트할 때 무릎이 많이 아팠는데, 이제는 전혀 통증이 없어요.
-          트레이너님이 전문적인 지식을 바탕으로 운동 방법을 자세히 설명해주시고,
-          매 세션마다 체계적으로 프로그램을 진행해주셔서 좋았습니다. 식단 관리도
-          현실적으로 조언해주셔서 무리 없이 잘 따라갈 수 있었어요. 운동할 때는
-          엄격하시지만 평소에는 편하게 대화할 수 있어서 좋았고, 제가 지치려고 할
-          때마다 동기부여도 잘 해주셨습니다. 다음 달에 PT 3개월 더 등록하려고요.
-          완전 추천합니다! 👍
-        </span>
+      <div className="flex justify-between">
+        <div>
+          <span className="text-mono_600 text-sm">{content}</span>
+        </div>
+        <div className=" w-full max-w-20 gap-1 grid grid-rows-2 grid-cols-2">
+          {imageUrls?.map((image: any, index: number) => (
+            <div key={index} className={` w-full h-full relative`}>
+              <Image
+                className="w-full aspect-square h-full object-cover"
+                loading="lazy"
+                src={image.imageUrl}
+              />
+
+              {index === 3 && (
+                <div className="absolute cursor-pointer rounded-medium hover:bg-stone-700 transition-all duration-300 inset-0 z-50 left-0 top-0 w-full h-full bg-black/50 flex justify-center items-center">
+                  <button
+                    className="text-white w-full h-full text-2xl font-bold"
+                    onClick={onOpen}
+                  >
+                    +
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
+      <ModalImageGallery
+        imageList={imageUrls}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      />
     </div>
   );
 }

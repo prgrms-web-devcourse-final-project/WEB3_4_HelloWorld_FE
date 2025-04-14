@@ -1,16 +1,16 @@
 // 기본 카드용
 export interface GymType {
-  gymId: number;
   gymName: string;
-  startTime: string;
-  endTime: string;
   address: string;
-  xField: string;
-  yField: string;
-  avgScore: number;
-  isPartner: boolean;
-  thumbnailImage: string;
   imageUrl?: string;
+  gymId?: number;
+  startTime?: string;
+  endTime: string;
+  avgScore?: number;
+  isPartner?: boolean;
+  thumbnailImage?: string | null;
+  xField: number;
+  yField: number;
 }
 
 export type GymListResponse = {
