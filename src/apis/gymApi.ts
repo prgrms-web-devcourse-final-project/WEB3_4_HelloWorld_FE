@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface FetchGymListParams {
   sortOption?: 'score' | 'nearby';
-  searchOption?: 'none' | 'trainer' | 'district';
+  searchOption?: 'none' | 'gym' | 'district';
   searchTerm?: string;
   page?: number;
   pageSize?: number;
@@ -69,6 +69,17 @@ export const fetchGymFacilities = async (gymId: number) => {
   const res = await fetch(`${API_BASE_URL}/gym/${gymId}/facility`);
 
   if (!res.ok) throw new Error('편의시설 조회 실패');
+
+  return await res.json();
+};
+
+// 리뷰 목록 조회
+export const fetchGymReviews = async (gymId: number) => {
+  const res = await fetch(`${API_BASE_URL}/gym/${gymId}/review`);
+
+  if (!res.ok) {
+    throw new Error('리뷰 목록 조회 실패');
+  }
 
   return await res.json();
 };

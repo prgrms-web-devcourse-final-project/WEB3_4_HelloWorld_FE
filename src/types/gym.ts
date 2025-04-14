@@ -10,6 +10,7 @@ export interface GymType {
   avgScore: number;
   isPartner: boolean;
   thumbnailImage: string;
+  imageUrl?: string;
 }
 
 export type GymListResponse = {

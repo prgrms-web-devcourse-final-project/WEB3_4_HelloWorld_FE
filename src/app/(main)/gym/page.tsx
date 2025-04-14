@@ -165,9 +165,9 @@ export default function GymPage() {
   const polylineRef = useRef<any[]>([]);
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchOption, setSearchOption] = useState<
-    'none' | 'trainer' | 'district'
-  >('none');
+  const [searchOption, setSearchOption] = useState<'none' | 'gym' | 'district'>(
+    'none',
+  );
 
   const [mapCenter, setMapCenter] = useState<{
     lat: number;
@@ -601,14 +601,14 @@ export default function GymPage() {
                 const selected = Array.from(keys)[0] as
                   | 'none'
                   | 'district'
-                  | 'trainer';
+                  | 'gym';
 
                 setSearchOption(selected);
               }}
             >
               <SelectItem key="none">전체 검색</SelectItem>
               <SelectItem key="district">지역 검색</SelectItem>
-              <SelectItem key="trainer">트레이너 검색</SelectItem>
+              <SelectItem key="gym">헬스장 검색</SelectItem>
             </Select>
 
             <Input
@@ -621,8 +621,13 @@ export default function GymPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  setPage(1);
-                  fetchAndSetGyms();
+                  if (page === 1) {
+                    // 이미 1페이지면 그냥 검색 실행
+                    fetchAndSetGyms();
+                  } else {
+                    // 1페이지로 이동시키면, useEffect에서 fetch가 실행됨
+                    setPage(1);
+                  }
                 }
               }}
             />

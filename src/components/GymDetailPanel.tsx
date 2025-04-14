@@ -17,11 +17,13 @@ import GymIntroSection from './molecules/GymIntroSection';
 import GymTimeFeeSection from './molecules/GymTimeFeeSection';
 import SelectedFacilitySection from './molecules/SelectedFacilitySection';
 import GymTrainerSection from './molecules/GymTrainerSection';
+import GymReviewSection from './molecules/GymReviewSection';
 
 import {
   fetchGymDetail,
   fetchGymFacilities,
   fetchGymTrainers,
+  fetchGymReviews,
 } from '@/apis/gymApi';
 
 interface GymDetailPanelProps {
@@ -91,7 +93,7 @@ export default function GymDetailPanel({
   const [gymData, setGymData] = useState<GymDetailResponse | null>(null);
   const [trainers, setTrainers] = useState<any[]>([]);
   const [availableFacilities, setAvailableFacilities] = useState<string[]>([]);
-
+  const [reviews, setReviews] = useState<any[]>([]);
   const polylineRef = useRef<any>(null);
 
   useEffect(() => {
@@ -121,6 +123,20 @@ export default function GymDetailPanel({
             .map(([key]) => facilityLabelMap[key.toLowerCase()]);
 
           setAvailableFacilities(enabled);
+
+          // ✅ 리뷰 데이터 추가
+          const reviewRes = await fetchGymReviews(gymId);
+          const parsedReviews = reviewRes.content.map((r: any) => ({
+            id: r.gymReviewId,
+            nickname: '익명', // 닉네임 필드 없으므로 가공 필요
+            date: r.createdAt.split('T')[0],
+            rating: r.score,
+            images: r.images.map((img: any) => img.imageUrl),
+            content: r.content,
+            profileImage: '/default_profile.png', // 기본 이미지
+          }));
+
+          setReviews(parsedReviews);
         } catch (err) {
           console.error('❌ 패널 로딩 실패:', err);
         }
@@ -326,11 +342,11 @@ export default function GymDetailPanel({
           </div>
         )}
 
-        {/* {selectedTab === 'review' && (
+        {selectedTab === 'review' && (
           <div className="mt-4">
-            <GymReviewSection fullView reviews={mappedReviews} />
+            <GymReviewSection fullView reviews={reviews} />
           </div>
-        )} */}
+        )}
 
         {selectedTab === 'facility' && (
           <>
