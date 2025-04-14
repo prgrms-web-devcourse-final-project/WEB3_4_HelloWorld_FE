@@ -1,3 +1,4 @@
+// 기본 카드용
 export interface GymType {
   gymName: string;
   address: string;
@@ -21,3 +22,26 @@ export type GymListResponse = {
   hasPrevious: boolean;
   isLast: boolean;
 };
+
+// 상세 페이지용
+export interface GymDetailResponse {
+  gymId: number;
+  gymName: string;
+  startTime: string;
+  endTime: string;
+  phoneNumber: string;
+  address: string;
+  xField: string;
+  yField: string;
+  avgScore: number;
+  intro: string;
+  isPartner: boolean;
+  gymImages: string[];
+  gymProductResponses: GymProduct[];
+}
+
+export interface GymProduct {
+  gymProductId: number;
+  gymProductMonth: number;
+  gymProductFee: number;
+}

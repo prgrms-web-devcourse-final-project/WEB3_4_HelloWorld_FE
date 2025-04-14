@@ -10,8 +10,12 @@ export interface Trainer {
   price: string;
   specialty: string;
   career: string;
-  awards: string;
   image: string;
+  awards: {
+    awardYear: string;
+    awardName: string;
+    awardInfo: string;
+  }[]; // ✅ string[] ❌ => 객체 배열로 수정
 }
 
 interface GymTrainerSectionProps {
@@ -38,7 +42,6 @@ export default function GymTrainerSection({
         ))}
       </div>
 
-      {/* 홈탭에서만 더보기 버튼 보여줌 */}
       {!fullView && trainers.length > 2 && (
         <button
           className="w-full h-[32px] bg-mono_100 hover:bg-mono_300 flex justify-center items-center rounded-md transition"
