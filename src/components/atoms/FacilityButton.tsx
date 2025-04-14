@@ -29,7 +29,7 @@ export const FacilityButton = ({
           : disableHover
             ? 'text-mono_500' // ✅ hover 없이 색 고정
             : 'text-mono_500 hover:bg-main hover:text-mono_050',
-        disabled && 'pointer-events-none', // ✅ 클릭도 막음
+        disabled && 'pointer-events-none bg-mono_100', // ✅ 클릭도 막음
       )}
       color="facility"
       size="facility"
@@ -37,7 +37,7 @@ export const FacilityButton = ({
     >
       <Image
         alt={label}
-        className="w-10 h-10 object-contain"
+        className="w-10 h-10 object-contain dark:invert"
         height={40}
         src={icon}
         width={40}

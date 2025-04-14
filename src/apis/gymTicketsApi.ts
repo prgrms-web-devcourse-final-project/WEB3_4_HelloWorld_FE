@@ -19,3 +19,21 @@ export const fetchGymTickets = async (): Promise<GymTicketListResponse> => {
 
   return data;
 };
+
+// 일반 유저 티켓 생성
+export const fetchPurchaseTicketApi = async (
+  gymProductId: number,
+): Promise<void> => {
+  const url = `${API_BASE_URL}/gymTicket/purchase/${gymProductId}`;
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {},
+    credentials: 'include',
+    body: '',
+  });
+
+  if (!res.ok) {
+    throw new Error(`구매 요청 실패: ${res.status}`);
+  }
+};

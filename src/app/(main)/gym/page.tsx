@@ -14,6 +14,9 @@ import { Image } from '@heroui/react';
 import { MyButton } from '@/components/atoms/Button';
 import GymDetailPanel from '@/components/GymDetailPanel';
 import RoutePanel from '@/components/RoutePanel';
+import { fetchGymListApi, fetchNearbyGymsApi } from '@/apis/gymApi';
+import { GymData } from '@/types/gyms';
+import useToast from '@/hooks/useToast';
 
 declare global {
   interface Window {
@@ -21,165 +24,19 @@ declare global {
   }
 }
 
-const dummyGyms = [
-  {
-    gymId: 1,
-    gymName: '비헬씨 서초점',
-    startTime: '06:00',
-    endTime: '23:00',
-    address: '서울시 서초구 강남대로 123',
-    xField: '127.0321',
-    yField: '37.4979',
-    avgScore: 4.8,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 2,
-    gymName: '세연헬스',
-    startTime: '08:00',
-    endTime: '24:00',
-    address: '서울 노원구 역삼동 123-4',
-    xField: '127.123456',
-    yField: '37.123456',
-    avgScore: 4.6,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 3,
-    gymName: '머슬팩토리 강남점',
-    startTime: '07:00',
-    endTime: '23:00',
-    address: '서울시 강남구 테헤란로 501',
-    xField: '127.0453',
-    yField: '37.5051',
-    avgScore: 4.2,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 4,
-    gymName: '헬스플래닛 신촌점',
-    startTime: '00:00',
-    endTime: '24:00',
-    address: '서울시 마포구 신촌로 88',
-    xField: '126.9368',
-    yField: '37.5599',
-    avgScore: 4.9,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 5,
-    gymName: '골드짐 영등포',
-    startTime: '06:00',
-    endTime: '22:00',
-    address: '서울시 영등포구 여의도동 17',
-    xField: '126.9245',
-    yField: '37.5218',
-    avgScore: 4.1,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 6,
-    gymName: '피트니스247 합정',
-    startTime: '09:00',
-    endTime: '21:00',
-    address: '서울시 마포구 합정동 23',
-    xField: '126.9092',
-    yField: '37.5503',
-    avgScore: 3.8,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 7,
-    gymName: '아이언짐 강서',
-    startTime: '05:00',
-    endTime: '23:00',
-    address: '서울시 강서구 화곡로 52',
-    xField: '126.8491',
-    yField: '37.5500',
-    avgScore: 4.7,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 8,
-    gymName: '더짐 노원',
-    startTime: '10:00',
-    endTime: '22:00',
-    address: '서울시 노원구 상계동 456',
-    xField: '127.0641',
-    yField: '37.6543',
-    avgScore: 4.0,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 9,
-    gymName: '챔피언짐 동작',
-    startTime: '06:00',
-    endTime: '22:00',
-    address: '서울시 동작구 사당로 98',
-    xField: '126.9814',
-    yField: '37.4911',
-    avgScore: 3.9,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 10,
-    gymName: '파워짐 송파',
-    startTime: '05:00',
-    endTime: '23:00',
-    address: '서울시 송파구 잠실동 789',
-    xField: '127.1035',
-    yField: '37.5143',
-    avgScore: 4.5,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 11,
-    gymName: '에브리핏 관악',
-    startTime: '08:00',
-    endTime: '20:00',
-    address: '서울시 관악구 봉천로 12',
-    xField: '126.9411',
-    yField: '37.4800',
-    avgScore: 4.3,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-  {
-    gymId: 12,
-    gymName: '바디빌더 헬스클럽',
-    startTime: '06:00',
-    endTime: '22:00',
-    address: '서울시 성동구 성수이로 100',
-    xField: '127.0447',
-    yField: '37.5443',
-    avgScore: 4.6,
-    isPartner: true,
-    thumbnailImage: '/gym_sample.jpg',
-  },
-];
-
 export default function GymPage() {
   const [selected, setSelected] = useState('최신순');
   const filters = ['최신순', '평점순', '거리순'];
-
-  const gyms = dummyGyms;
+  const { showToast } = useToast();
+  const [gyms, setGyms] = useState<GymData[]>([]);
   const [page, setPage] = useState(1);
   const perPage = 6;
   const totalPages = Math.ceil(gyms.length / perPage);
   const currentList = gyms.slice((page - 1) * perPage, page * perPage);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [isOpen, setIsOpen] = useState(true);
-  const [selectedGym, setSelectedGym] = useState<(typeof gyms)[0] | null>(null);
+  const [selectedGym, setSelectedGym] = useState<GymData | null>(null);
   const [isPanelVisible, setIsPanelVisible] = useState(false);
 
   const [userAddress, setUserAddress] = useState<string | null>(null);
@@ -188,12 +45,56 @@ export default function GymPage() {
   const [isRouteVisible, setIsRouteVisible] = useState(false);
   const [isRouteMode, setIsRouteMode] = useState(false);
   const detailPanelX = isRouteMode
-    ? 'translate-x-[10px]' // RoutePanel 열리면 DetailPanel은 왼쪽(사이드바 자리)으로 이동
+    ? 'translate-x-[10px]'
     : isOpen
       ? isPanelVisible
-        ? 'translate-x-[440px]' // ✅ 사이드바 옆으로 슬라이드되어 보이기
-        : 'translate-x-0' // 사이드바만 있을 때, 패널은 안 보임
-      : 'translate-x-0'; // 사이드바 닫힘이면 패널도 왼쪽에 숨김
+        ? 'translate-x-[440px]'
+        : 'translate-x-0'
+      : 'translate-x-0';
+
+  useEffect(() => {
+    const fetchGyms = async () => {
+      const data = await fetchGymListApi(0, 150);
+
+      setGyms(data);
+    };
+
+    fetchGyms();
+  }, []);
+  const handleSearchSubmit = async (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key !== 'Enter') return;
+
+    if (selected === '거리순') {
+      const nearbyGyms = await fetchNearbyGymsApi(searchTerm, 0, 150);
+
+      setGyms(nearbyGyms);
+    } else {
+      handleSearch(); // 거리순이 아니면 이 함수로 대체
+    }
+  };
+
+  // 거리순 외 검색 API 요청
+  const handleSearch = async () => {
+    const data = await fetchGymListApi(0, 150, searchTerm);
+
+    setGyms(data);
+    setPage(1);
+  };
+
+  // 거리순 필터 클릭
+  const handleFilterClick = async (item: string) => {
+    setSelected(item);
+
+    if (item === '거리순') {
+      const nearbyGyms = await fetchNearbyGymsApi(searchTerm, 0, 150);
+
+      setGyms(nearbyGyms);
+    } else {
+      handleSearch(); //  거리순 아닌 경우도 통일
+    }
+  };
 
   type RouteData = {
     startAddress: string;
@@ -224,7 +125,7 @@ export default function GymPage() {
       : 'translate-x-[436px]'
     : 'translate-x-[16px]';
   const sidebarX = isRouteMode
-    ? '-translate-x-[420px]' // 길찾기 모드에서는 숨김
+    ? '-translate-x-[420px]'
     : isOpen
       ? 'translate-x-0'
       : '-translate-x-[420px]';
@@ -258,8 +159,7 @@ export default function GymPage() {
               const lon = position.coords.longitude;
 
               setMyLocation({ lat, lon });
-              // 마커 생성 (더 안정적인 URL)
-              const marker = new window.Tmapv2.Marker({
+              new window.Tmapv2.Marker({
                 position: new window.Tmapv2.LatLng(lat, lon),
                 icon: '/gym/icons/mapmarker.svg',
                 iconSize: new window.Tmapv2.Size(46, 50),
@@ -270,7 +170,6 @@ export default function GymPage() {
               map.setCenter(new window.Tmapv2.LatLng(lat, lon));
               map.setZoom(15);
 
-              // 주소 가져오기 + 팝업 생성
               fetch(
                 `https://apis.openapi.sk.com/tmap/geo/reversegeocoding?version=1&lat=${lat}&lon=${lon}&coordType=WGS84GEO&addressType=A04`,
                 {
@@ -282,27 +181,16 @@ export default function GymPage() {
               )
                 .then((res) => res.json())
                 .then((data) => {
-                  console.log('[리버스 지오코딩 응답]', data);
                   const { fullAddress, buildingName } = data?.addressInfo || {};
 
                   setUserAddress(fullAddress || null);
+
                   const popupContent = `
-                  <div style="
-                    width: 230px;
-                    background-color: white;
-                    padding: 12px 14px;
-                    border-radius: 10px;
-                    box-shadow: 2px 2px 10px rgba(0,0,0,0.15);
-                    font-family: Pretendard, sans-serif;
-                    font-size: 13px;
-                    color: #333;
-                  ">
-                    <div style="font-weight: 600; margin-bottom: 6px;">
-                      📍 ${buildingName || '현재 위치'}
+                    <div style="width: 230px; background-color: white; padding: 12px 14px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.15); font-family: Pretendard, sans-serif; font-size: 13px; color: #333;">
+                      <div style="font-weight: 600; margin-bottom: 6px;">📍 ${buildingName || '현재 위치'}</div>
+                      <div>${fullAddress || '-'}</div>
                     </div>
-                    <div>${fullAddress || '-'}</div>
-                  </div>
-                `;
+                  `;
 
                   new window.Tmapv2.InfoWindow({
                     position: new window.Tmapv2.LatLng(lat, lon),
@@ -312,18 +200,11 @@ export default function GymPage() {
                     border: '0px',
                     map,
                   });
-                })
-                .catch((err) => {
-                  console.error('주소 가져오기 실패:', err.message);
                 });
             },
-            (err) => {
-              console.error('위치 접근 실패:', err.message);
-            },
+            (err) => console.error('위치 접근 실패:', err.message),
           );
         }
-      } else {
-        console.log('[TMap] 로딩 중...');
       }
     }, 200);
 
@@ -342,9 +223,7 @@ export default function GymPage() {
 
   useEffect(() => {
     if (!isPanelVisible && selectedGym && !isRouteMode) {
-      const timer = setTimeout(() => {
-        setSelectedGym(null);
-      }, 500); // transition-duration 과 동일
+      const timer = setTimeout(() => setSelectedGym(null), 500);
 
       return () => clearTimeout(timer);
     }
@@ -357,13 +236,11 @@ export default function GymPage() {
     const selectedRoute = routeList[selectedRouteIndex];
     const map = mapInstanceRef.current;
 
-    // 기존 폴리라인 삭제
     if (polylineRef.current.length > 0) {
       polylineRef.current.forEach((line) => line.setMap(null));
       polylineRef.current = [];
     }
 
-    // 새 경로의 각 구간 그리기
     if ('legs' in selectedRoute) {
       const legs = selectedRoute.legs;
       const newPolylines: any[] = [];
@@ -398,6 +275,13 @@ export default function GymPage() {
     }
   }, [selectedRouteIndex, routeList, isRouteVisible]);
 
+  const handleRouteReady = (routes: RouteData[]) => {
+    setRouteList(routes);
+    setSelectedRouteIndex(0);
+    setIsRouteVisible(true);
+    setIsRouteMode(true);
+  };
+
   return (
     <div className="relative w-screen h-screen">
       {/* TMap SDK 스크립트 */}
@@ -413,14 +297,14 @@ export default function GymPage() {
       <div
         className={`
           absolute top-[64px] left-0 h-[calc(100%-64px)] z-20
-          bg-white w-[420px] rounded-tr-2xl rounded-br-2xl shadow-2xl
+          bg-mono_100 w-[420px] rounded-tr-2xl rounded-br-2xl shadow-2xl
           flex flex-col gap-4 overflow-hidden
           transition-transform duration-500
           ${sidebarX}
         `}
       >
         <div className="p-5 pt-6 flex flex-col gap-4 h-full">
-          <h2 className="text-xl font-bold text-mono_700 font-point">
+          <h2 className="text-xl font-bold text-mono_900 font-point">
             오늘의 운동 장소
           </h2>
           <Input
@@ -428,7 +312,14 @@ export default function GymPage() {
               <MagnifyingGlassIcon className="w-5 h-5 text-mono_400" />
             }
             placeholder="지역 / 지하철역 / 센터 / 선생님 검색"
+            value={searchTerm}
             variant="flat"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchTerm(e.target.value)
+            }
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === 'Enter') handleSearchSubmit(e);
+            }}
           />
           <div className="flex gap-2">
             {filters.map((item) => (
@@ -436,7 +327,25 @@ export default function GymPage() {
                 key={item}
                 color={selected === item ? 'main' : 'mono'}
                 size="custom"
-                onClick={() => setSelected(item)}
+                onClick={() => {
+                  if (item === '거리순') {
+                    const isLoggedIn =
+                      typeof window !== 'undefined' &&
+                      !!localStorage.getItem('auth');
+
+                    if (!isLoggedIn) {
+                      showToast({
+                        title: '로그인 후 사용 가능합니다',
+                        description: '로그인 후 사용 가능합니다',
+                        type: 'danger',
+                      });
+
+                      return;
+                    }
+                  }
+
+                  handleFilterClick(item);
+                }}
               >
                 {item}
               </MyButton>
@@ -455,10 +364,69 @@ export default function GymPage() {
             {currentList.map((gym) => (
               <div
                 key={gym.gymId}
-                className="flex items-center justify-between w-[368px] h-[140px] p-3 bg-white rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm"
+                className="flex items-center justify-between w-[368px] h-[140px] p-3 bg-mono_100 rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm"
                 role="button"
                 tabIndex={0}
-                onClick={() => setSelectedGym(gym)}
+                onClick={() => {
+                  setSelectedGym(gym);
+
+                  const { xField, yField } = gym;
+
+                  if (
+                    xField &&
+                    yField &&
+                    mapInstanceRef.current &&
+                    window.Tmapv2
+                  ) {
+                    const lat = parseFloat(yField);
+                    const lon = parseFloat(xField);
+
+                    const newCenter = new window.Tmapv2.LatLng(lat, lon);
+
+                    // 1. 지도 이동
+                    mapInstanceRef.current.setCenter(newCenter);
+                    mapInstanceRef.current.setZoom(15);
+
+                    // 2. 마커 생성
+                    const marker = new window.Tmapv2.Marker({
+                      position: newCenter,
+                      icon: '/gym/icons/mapmarker.svg',
+                      iconSize: new window.Tmapv2.Size(46, 50),
+                      offset: new window.Tmapv2.Point(20, 50),
+                      map: mapInstanceRef.current,
+                    });
+
+                    // 3. 인포윈도우 정의
+                    const infoContent = `
+                      <div style="padding: 8px 12px; background: white; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 14px; font-family: Pretendard, sans-serif;">
+                        <strong>${gym.gymName}</strong><br/>
+                        ${gym.address}<br/>
+                        평점: ${gym.avgScore}
+                      </div>
+                    `;
+
+                    const infoWindow = new window.Tmapv2.InfoWindow({
+                      position: newCenter,
+                      content: infoContent,
+                      type: 2,
+                      border: '0px',
+                      background: false,
+                    });
+
+                    let isInfoOpen = false;
+
+                    // 4. 마커 클릭 시 toggle 동작
+                    marker.addListener('click', () => {
+                      if (!isInfoOpen) {
+                        infoWindow.setMap(mapInstanceRef.current);
+                        isInfoOpen = true;
+                      } else {
+                        infoWindow.setMap(null);
+                        isInfoOpen = false;
+                      }
+                    });
+                  }
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') setSelectedGym(gym);
                 }}
@@ -513,15 +481,9 @@ export default function GymPage() {
           map={mapInstanceRef.current}
           myLocation={myLocation}
           panelTranslateX={detailPanelX}
-          visible={isPanelVisible}
-          onClose={() => setIsPanelVisible(false)}
-          onRouteReady={(routes) => {
-            setRouteList(routes); // 여러 경로 저장
-            setSelectedRouteIndex(0); // 첫 번째 경로 선택
-            setIsPanelVisible(false);
-            setIsRouteVisible(true);
-            setIsRouteMode(true);
-          }}
+          visible={!!selectedGym}
+          onClose={() => setSelectedGym(null)}
+          onRouteReady={handleRouteReady}
         />
       )}
       {isRouteVisible && routeList.length > 0 && (
@@ -551,7 +513,7 @@ export default function GymPage() {
         <button
           className={`absolute top-[50%] left-0 translate-x-[${isOpen ? (isPanelVisible ? 896 : 436) : 16}px] translate-y-[-50%] z-30
         transition-transform duration-500 ease-in-out
-        w-8 h-8 shadow-md bg-white border border-mono_200
+        w-8 h-8 shadow-md bg-mono_100 border border-mono_200
         flex items-center justify-center hover:bg-mono_100`}
           onClick={() => {
             if (isOpen && selectedGym) {

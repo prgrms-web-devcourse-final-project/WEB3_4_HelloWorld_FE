@@ -14,7 +14,7 @@ export default function GymTimeFeeSection({
         <h4 className="text-[16px] font-semibold font-pretendard text-mono_800">
           운영 시간
         </h4>
-        <div className="p-3 bg-white rounded-xl border border-mono_100 shadow-sm text-[14px] text-mono_600 font-pretendard whitespace-pre-line">
+        <div className="p-3 bg-mono_100 rounded-xl border border-mono_100 shadow-sm text-[14px] text-mono_600 font-pretendard whitespace-pre-line">
           {timeInfo.join('\n')}
         </div>
       </div>
@@ -24,7 +24,7 @@ export default function GymTimeFeeSection({
         <h4 className="text-[16px] font-semibold font-pretendard text-mono_800">
           이용 정보
         </h4>
-        <div className="p-3 bg-white rounded-xl border border-mono_100 shadow-sm text-[14px] text-mono_600 font-pretendard whitespace-pre-line">
+        <div className="p-3 bg-mono_100 rounded-xl border border-mono_100 shadow-sm text-[14px] text-mono_600 font-pretendard whitespace-pre-line">
           {feeInfo.join('\n')}
         </div>
       </div>

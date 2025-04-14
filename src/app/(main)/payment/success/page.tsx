@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 
+import { getUserInfo } from '@/apis/userApi';
 import Loading from '@/app/loading';
 
 const PaymentSuccessPage = () => {
@@ -47,6 +48,12 @@ const PaymentSuccessPage = () => {
 
     confirmPayment();
   }, [orderId, paymentKey, amount, router]);
+
+  useEffect(() => {
+    if (isSuccess === true) {
+      getUserInfo();
+    }
+  }, [isSuccess]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen text-black px-4">
