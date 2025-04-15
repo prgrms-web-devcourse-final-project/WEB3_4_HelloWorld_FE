@@ -11,6 +11,7 @@ export interface GymType {
   thumbnailImage?: string | null;
   xField: number;
   yField: number;
+  phone?: string;
 }
 
 export type GymListResponse = {

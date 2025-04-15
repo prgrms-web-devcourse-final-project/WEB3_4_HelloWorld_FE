@@ -1,4 +1,4 @@
-import { GymListResponse, GymDetailResponse } from '@/types/gym';
+import { GymType, GymListResponse, GymDetailResponse } from '@/types/gym';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -82,6 +82,38 @@ export const fetchGymReviews = async (gymId: number) => {
   }
 
   return await res.json();
+};
+
+// 사장님이 등록한 헬스장 목록 조회
+export const fetchGymListOwnerApi = async (
+  page: number,
+  pageSize: number,
+  searchTerm?: string,
+): Promise<GymType[]> => {
+  const searchOption = searchTerm ? 'GYM' : 'NONE';
+
+  const query = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+    searchOption,
+    searchTerm: searchTerm || '',
+  });
+
+  const url = `${API_BASE_URL}/gym/search/owner?${query.toString()}`;
+
+  try {
+    const res = await fetch(url, { credentials: 'include' });
+
+    if (!res.ok) throw new Error(`요청 실패: ${res.status}`);
+
+    const json = await res.json();
+
+    return json.content ?? [];
+  } catch (err) {
+    console.error('❌ fetchGymListOwnerApi 실패:', err);
+
+    return [];
+  }
 };
 
 export const fetchGymList = async (): Promise<GymListResponse> => {
