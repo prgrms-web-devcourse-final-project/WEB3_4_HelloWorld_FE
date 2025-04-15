@@ -7,6 +7,11 @@ export interface TrainerReview {
   trainerReviewId: number;
   score: number;
   content: string;
+  memberName: string;
+  createdAt: string;
+  memberProfileUrl: string;
+  memberLevel: number;
+  modifiedAt: Date | null;
   imageUrls: TrainerReviewImage[];
 }
 

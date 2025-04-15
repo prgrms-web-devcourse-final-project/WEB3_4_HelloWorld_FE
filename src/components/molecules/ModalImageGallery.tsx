@@ -4,7 +4,7 @@ import ThumbsSwiper from '../atoms/ThumbsSwiper';
 type ImageItem = string | { imageUrl: string; imageId: number };
 
 interface ModalImageGalleryProps {
-  imageList: ImageItem[];
+  imageList?: ImageItem[];
   isOpen: boolean;
   onOpenChange: () => void;
 }
@@ -15,7 +15,7 @@ export default function ModalImageGallery({
   onOpenChange,
 }: ModalImageGalleryProps) {
   // string[] 형태로 변환
-  const imageUrls = imageList.map((item) =>
+  const imageUrls = imageList?.map((item) =>
     typeof item === 'string' ? item : item.imageUrl,
   );
 

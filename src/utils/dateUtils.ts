@@ -28,3 +28,17 @@ export const getDayOfWeek = (year: number, month: number, day: number) => {
 
   return dayOfWeek;
 };
+export function getTimeAgo(dateTimeString: string): string {
+  const now = new Date();
+  const past = new Date(dateTimeString);
+  const diffMs = now.getTime() - past.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+
+  if (diffSec < 60) return '방금 전';
+  if (diffSec < 3600) return `${Math.floor(diffSec / 60)}분 전`;
+  if (diffSec < 86400) return `${Math.floor(diffSec / 3600)}시간 전`;
+  if (diffSec < 2592000) return `${Math.floor(diffSec / 86400)}일 전`;
+  if (diffSec < 31104000) return `${Math.floor(diffSec / 2592000)}개월 전`;
+
+  return `${Math.floor(diffSec / 31104000)}년 전`;
+}

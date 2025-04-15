@@ -58,7 +58,7 @@ export default function Dashboard() {
         cache: 'force-cache',
       }),
   });
-  const { data, isLoading, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ['ptProductDetail'],
     queryFn: async () => {
       const response = await fetcher<PtDetailResponse>(

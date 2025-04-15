@@ -50,7 +50,7 @@ export default function MainPtCard({
             group-hover:opacity-80 group-hover:transition-[opacity] group-hover:duration-300 group-hover:ease-out
           "
             style={{
-              backgroundImage: `url(${backgroundImage || '/gym/icons/healthboy.jpg'})`,
+              backgroundImage: `url(${backgroundImage || '/gym/icons/default.png'})`,
             }}
           />
           <div

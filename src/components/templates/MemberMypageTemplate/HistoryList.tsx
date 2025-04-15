@@ -1,29 +1,40 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import LessonHistoryTable from '@/app/(main)/membermypage/components/Table';
-import { getMemberReservations } from '@/apis/reservationApi';
 import {
   convertReservationToHistory,
   CommonHistory,
 } from '@/utils/convertReservationToHistory';
+import fetcher from '@/utils/apiInstance';
+import { ReservationResponse } from '@/types/reservation';
 
 export default function HistoryList() {
   const [data, setData] = useState<CommonHistory[]>([]);
+  const { data: trainerTime } = useQuery({
+    queryKey: ['mypage', 'user'],
+    queryFn: async () => {
+      const response = await fetcher<ReservationResponse>(
+        `/reservation/member`,
+        {
+          method: 'GET',
+          token: true,
+        },
+      );
+
+      return response;
+    },
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getMemberReservations();
-        const converted = convertReservationToHistory(response.content);
+    if (trainerTime) {
+      const converted = convertReservationToHistory(trainerTime.content);
 
-        setData(converted);
-      } catch {}
-    };
-
-    fetchData();
-  }, []);
+      setData(converted);
+    }
+  }, [trainerTime]);
 
   return (
     <div className="w-full flex flex-col items-start mb-[300px]">

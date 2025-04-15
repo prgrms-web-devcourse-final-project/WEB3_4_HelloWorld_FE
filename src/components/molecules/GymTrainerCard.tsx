@@ -29,12 +29,13 @@ export default function GymTrainerCard({
     <button className="w-full flex justify-between items-start p-4 rounded-xl border border-mono_100 shadow-sm bg-mono_100 text-left gap-4">
       {/* 텍스트 영역 */}
       <div className="flex-1 flex flex-col gap-1">
-        <h5 className="text-[20px] font-medium font-pretendard text-mono_900">
-          {name} 트레이너
-        </h5>
         <p className="text-[14px] text-mono_600 font-pretendard">
           “{description}”
         </p>
+        <h5 className="text-[20px] font-medium font-pretendard text-mono_900">
+          {name} 트레이너
+        </h5>
+
         <p className="text-[14px] font-semibold text-mono_700 font-pretendard">
           1회 PT {price} p ~
         </p>
@@ -67,7 +68,7 @@ export default function GymTrainerCard({
       <div className="w-[96px] h-[160px] rounded-lg overflow-hidden flex-shrink-0">
         <Image
           alt={name}
-          className="w-full h-full object-cover"
+          className="w-ful aspect-video h-full object-cover"
           height={160}
           src={image}
           width={96}

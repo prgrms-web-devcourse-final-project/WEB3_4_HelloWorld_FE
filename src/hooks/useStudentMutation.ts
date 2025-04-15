@@ -18,7 +18,6 @@ export default function useStudentMutation(onOpen?: () => void) {
       return response;
     },
     onSuccess: (data, studentId) => {
-      // 예: 캐시 업데이트
       queryClient.setQueryData(['student', studentId], data);
 
       if (onOpen) {
