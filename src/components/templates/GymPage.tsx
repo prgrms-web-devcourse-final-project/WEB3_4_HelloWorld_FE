@@ -240,7 +240,8 @@ export default function GymPage() {
           <div style="
             white-space: nowrap;
             padding: 4px 8px;
-            background: mono_100;
+            background: #F5F5F4;
+            border: 2px solid #006FEE;
             border-radius: 6px;
             font-size: 13px;
             font-weight: bold;
@@ -250,7 +251,7 @@ export default function GymPage() {
           </div>
         `,
         type: 2,
-        background: false,
+        background: true,
         border: '0px',
         map,
       });
@@ -267,7 +268,7 @@ export default function GymPage() {
   // ✅ 위치 기반 헬스장 조회
   useEffect(() => {
     if (myLocation) fetchAndSetGyms();
-  }, [myLocation, selected, isPartnerOnly, page, searchTerm, searchOption]);
+  }, [myLocation, selected, isPartnerOnly, page]);
 
   useEffect(() => {
     if (!mapInstanceRef.current || gymList.length === 0) return;
@@ -372,9 +373,9 @@ export default function GymPage() {
 
               const marker = new window.Tmapv2.Marker({
                 position: new window.Tmapv2.LatLng(lat, lon),
-                icon: '/gym/icons/mapmarker.svg',
-                iconSize: new window.Tmapv2.Size(46, 50),
-                offset: new window.Tmapv2.Point(23, 50),
+                icon: '/gym/icons/mapmarker.png',
+                iconSize: new window.Tmapv2.Size(36, 36),
+                offset: new window.Tmapv2.Point(18, 36),
                 map,
               });
 
@@ -399,7 +400,8 @@ export default function GymPage() {
                   const popupContent = `
                     <div style="
                       width: 230px;
-                      background-color: mono_100;
+                      background-color: #F5F5F4;
+                      border: 2px solid #f25267;
                       padding: 12px 14px;
                       border-radius: 10px;
                       box-shadow: 2px 2px 10px rgba(0,0,0,0.15);
@@ -418,7 +420,7 @@ export default function GymPage() {
                     position: new window.Tmapv2.LatLng(lat, lon),
                     content: popupContent,
                     type: 2,
-                    background: false,
+                    background: true,
                     border: '0px',
                     map,
                   });
@@ -485,6 +487,7 @@ export default function GymPage() {
         const linestring = leg.passShape?.linestring;
 
         if (!linestring) return null;
+        console.log('🚏 구간 mode:', leg.mode);
 
         const coords = linestring.split(' ').map((point: string) => {
           const [lon, lat] = point.split(',').map(Number);
@@ -497,8 +500,9 @@ export default function GymPage() {
 
         let color = '#999999';
 
-        if (leg.mode === 'BUS') color = '#0078FF';
-        if (leg.mode === 'SUBWAY') color = '#2DB400';
+        if (leg.mode === 'WALK') color = '#999999';
+        if (leg.mode === 'BUS') color = '#2DB400';
+        if (leg.mode === 'SUBWAY') color = '#0078FF';
 
         return new window.Tmapv2.Polyline({
           path: coords,
@@ -823,7 +827,7 @@ export default function GymPage() {
                         mapCenterMarkerRef.current = marker;
 
                         const popupContent = `
-                          <div style="width: 230px; background-color: mono_100; padding: 12px 14px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.15); font-family: Pretendard, sans-serif; font-size: 13px; color: #333;">
+                          <div style="width: 230px; background-color: #F5F5F4; border: 2px solid #f25267; padding: 12px 14px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.15); font-family: Pretendard, sans-serif; font-size: 13px; color: #333;">
                             <div style="font-weight: 600; margin-bottom: 6px;">선택한 위치</div>
                             <div>${address || '-'}</div>
                           </div>
@@ -836,7 +840,7 @@ export default function GymPage() {
                           ),
                           content: popupContent,
                           type: 2,
-                          background: false,
+                          background: true,
                           border: '0px',
                           map: mapInstanceRef.current,
                         });

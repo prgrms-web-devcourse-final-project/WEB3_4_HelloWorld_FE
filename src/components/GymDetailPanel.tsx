@@ -130,12 +130,12 @@ export default function GymDetailPanel({
           const reviewRes = await fetchGymReviews(gymId);
           const parsedReviews = reviewRes.content.map((r: any) => ({
             id: r.gymReviewId,
-            nickname: '익명', // 닉네임 필드 없으므로 가공 필요
+            nickname: r.memberName || '익명',
             date: r.createdAt.split('T')[0],
             rating: r.score,
             images: r.images.map((img: any) => img.imageUrl),
             content: r.content,
-            profileImage: '/default_profile.png', // 기본 이미지
+            profileImage: r.memberProfileUrl || '/gym/icons/defaultprofile.svg',
           }));
 
           setReviews(parsedReviews);
@@ -332,10 +332,10 @@ export default function GymDetailPanel({
             </div>
             {/* <div className="mt-6">
               <EquipmentSection equipments={mappedMachines} />
-            </div>
-            <div className="mt-6">
-              <GymReviewSection reviews={mappedReviews} />
             </div> */}
+            <div className="mt-6">
+              <GymReviewSection reviews={reviews} />
+            </div>
           </>
         )}
 
