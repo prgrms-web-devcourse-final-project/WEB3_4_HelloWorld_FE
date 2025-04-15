@@ -28,7 +28,7 @@ export default function MainGymMateSection() {
               subTitle="WHIT GYM MATE"
               title={`GYM MATE 함께 하는 사람들`}
             >
-              <div className="flex flex-col gap-4">
+              <div className="flex max-w-xl flex-col gap-4">
                 <NumberCountCard countNumber={120000} title={'누적 회원수'} />
                 <div className="flex w-full gap-4">
                   <NumberCountCard

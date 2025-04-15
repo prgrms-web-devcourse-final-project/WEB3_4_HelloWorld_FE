@@ -25,7 +25,7 @@ export default function useAwardMutation(action: ActionType) {
         method = 'PUT';
       } else if (action === 'delete') {
         method = 'DELETE';
-        url = `/trainer/award/${data}`; // `data`는 awardId
+        url = `/trainer/award/${data}`;
       }
 
       await fetcher(url, {

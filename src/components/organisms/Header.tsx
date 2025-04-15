@@ -136,7 +136,7 @@ export default function Header() {
                   className="h-14 gap-2"
                 >
                   <p className="font-semibold">
-                    남은캐시 : {formatCash(Number(user?.cash))}원
+                    남은캐시 : {formatCash(Number(user?.cash)) || 0}원
                   </p>
                 </DropdownItem>
                 <DropdownItem key="settings" onPress={handleMyPageClick}>

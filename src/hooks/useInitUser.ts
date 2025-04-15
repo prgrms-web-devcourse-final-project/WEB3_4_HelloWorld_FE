@@ -21,8 +21,8 @@ export const useInitUser = () => {
     queryKey: ['userType'],
     queryFn: () => fetchMemberData(userType),
     retry: false,
-    staleTime: Infinity,
-    enabled: isLoggedIn && userType !== null && user === null,
+    staleTime: 0,
+    enabled: isLoggedIn && userType !== null,
   });
 
   useEffect(() => {

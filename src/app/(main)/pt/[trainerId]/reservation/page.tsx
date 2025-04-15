@@ -70,13 +70,14 @@ export default function PtReservationPage() {
   const onDayChange = (e: CalendarDate) => {
     setDisabledTime([]);
     const { year, day, month } = e;
-    const dayOfWeek = getDayOfWeek(year, month, day);
-    const date = `${year}-0${month}-${day}`;
 
-    if (time?.reservationTimes && time.reservationTimes[date]) {
-      setDisabledTime(time.reservationTimes[date]);
+    const dayOfWeek = getDayOfWeek(year, month, day);
+    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+    if (time?.reservationTimes && time.reservationTimes[dateStr]) {
+      setDisabledTime(time.reservationTimes[dateStr]);
     }
-    setDate(date);
+    setDate(dateStr);
     setSelectedDate(dayOfWeek);
   };
   const onMonthChange = (date: CalendarDate) => {
@@ -122,6 +123,7 @@ export default function PtReservationPage() {
 
       return res;
     },
+
     onSuccess: () => {
       showToast({
         title: '예약 성공',
@@ -159,7 +161,9 @@ export default function PtReservationPage() {
     const now = today(getLocalTimeZone());
     const { year, month, day } = now;
     const dayOfWeek = getDayOfWeek(year, month, day);
+    const dateStr = now.toString();
 
+    setDate(dateStr);
     setSelectedDate(dayOfWeek);
     mutate({ year, month });
   }, [trainerTime]);
