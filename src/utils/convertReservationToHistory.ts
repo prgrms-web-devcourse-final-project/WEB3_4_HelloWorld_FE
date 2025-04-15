@@ -7,6 +7,9 @@ export interface CommonHistory {
   content: string;
   seller: string;
   price: number;
+  trainerId: number;
+  reservationId: number;
+  cancelDate: string | null;
 }
 
 export const convertReservationToHistory = (
@@ -17,12 +20,18 @@ export const convertReservationToHistory = (
     const time = `${item.date} ${item.time}:00`;
     const content = item.productName;
     const seller = `트레이너 #${item.trainerId}`;
+    const trainerId = item.trainerId;
+    const reservationId = item.reservationId;
+    const cancelDate = item.cancelDate;
 
     return {
       id: String(item.reservationId),
       status,
       time,
+      reservationId,
+      trainerId,
       content,
+      cancelDate,
       seller,
       price: item.price,
     };

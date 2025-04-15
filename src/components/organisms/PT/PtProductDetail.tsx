@@ -15,6 +15,7 @@ import {
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { parseAbsolute } from '@internationalized/date';
 
 import MainPtCard from '@/components/molecules/Main/MainPtCard';
 import { MyButton } from '@/components/atoms/Button';
@@ -137,6 +138,9 @@ export default function PtProductDetail() {
   });
 
   useEffect(() => {
+    const nowUtcISOString = new Date().toISOString();
+    const abs = parseAbsolute(nowUtcISOString, 'Asia/Seoul');
+
     if (isSuccess) {
       const data = reservationMember.content
         .slice()
@@ -146,8 +150,7 @@ export default function PtProductDetail() {
       if (!data) return;
       const isTrue = isPastDate(data.date);
 
-      console.log(isTrue);
-      setIsReservate(isTrue);
+      setIsReservate(isTrue && abs.hour >= data.time);
     }
   }, [reservationMember, isReservate]);
   if (isError) {
@@ -214,7 +217,7 @@ export default function PtProductDetail() {
           <GymListCardItem gym={data?.gym!} />
         </PtCardSection>
         <PtCardSection title="PT 수강 후기">
-          <div className="flex py-8 justify-between">
+          <div className="flex py-8 justify-between items-center">
             <div className="flex items-center h-full gap-6">
               <p className="text-mono_700 text-5xl font-semibold">
                 {data.trainer?.trainerScore}
@@ -227,11 +230,11 @@ export default function PtProductDetail() {
                   w={'w-5'}
                 />
                 <p className="text-mono_400  text-sm">
-                  {reviewPages?.pages.length}개의 후기
+                  {reviewPages?.pages[0].content.length}개의 후기
                 </p>
               </div>
             </div>
-            {isReservate && (
+            {isReservate ? (
               <MyButton
                 size="xl"
                 startContent={<PencilIcon className="w-5 h-5 text-stone-100" />}
@@ -239,6 +242,10 @@ export default function PtProductDetail() {
               >
                 리뷰 작성하기
               </MyButton>
+            ) : (
+              <small>
+                리뷰는 예약 후<br /> 예약 시간이 지나야 작성 가능합니다.
+              </small>
             )}
           </div>
         </PtCardSection>
