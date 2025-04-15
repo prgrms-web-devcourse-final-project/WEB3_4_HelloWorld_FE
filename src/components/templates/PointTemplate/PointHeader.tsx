@@ -2,17 +2,17 @@
 
 import type { UserData } from '@/types/UserData';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { UserGroupIcon } from '@heroicons/react/24/solid';
-import { v4 as uuidv4 } from 'uuid';
-import { useEffect, useState } from 'react';
 
-import LevelBadge from '@/components/atoms/LevelBadge';
 import { getUserInfo } from '@/apis/userApi';
+import LevelBadge from '@/components/atoms/LevelBadge';
+import { useTossPayment } from '@/hooks/useTossPayment';
 
 const PointHeader = () => {
   const [userInfo, setUserInfo] = useState<UserData | null>(null);
-  const [isTossReady, setIsTossReady] = useState(false);
+  const { isTossReady, requestTossPayment } = useTossPayment(userInfo);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -26,45 +26,11 @@ const PointHeader = () => {
     fetchUserInfo();
   }, []);
 
-  useEffect(() => {
-    const script = document.createElement('script');
-
-    script.src = 'https://js.tosspayments.com/v1/payment';
-    script.async = true;
-    script.onload = () => {
-      setIsTossReady(true);
-    };
-    script.onerror = () => {};
-    document.body.appendChild(script);
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
   const handleTossPayment = async () => {
-    const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-    const toss = (window as any).TossPayments;
-
-    if (!toss) {
-      return;
-    }
-
-    const paymentWidget = toss(clientKey!);
-    const orderId = uuidv4();
-    const orderName = 'GymMate 3대 500 도전권';
-
-    try {
-      await paymentWidget.requestPayment('카드', {
-        amount: 50000,
-        orderId,
-        orderName,
-        customerName: userInfo?.memberName ?? '비회원',
-        customerEmail: userInfo?.email ?? 'unknown@example.com',
-        successUrl: `${window.location.origin}/payment/success?orderId=${orderId}`,
-        failUrl: `${window.location.origin}/payment/fail`,
-      });
-    } catch {}
+    await requestTossPayment({
+      orderName: 'GymMate 3대 500 도전권',
+      amount: 50000,
+    });
   };
 
   return (

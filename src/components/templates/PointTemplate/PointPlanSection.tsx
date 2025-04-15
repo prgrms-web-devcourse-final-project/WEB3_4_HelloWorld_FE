@@ -1,10 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import type { UserData } from '@/types/UserData';
+
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+
+import { getUserInfo } from '@/apis/userApi';
+import { useTossPayment } from '@/hooks/useTossPayment';
 
 const PointPlanSection = () => {
   const [activeTab, setActiveTab] = useState<'3대' | '기본'>('3대');
+  const [userInfo, setUserInfo] = useState<UserData | null>(null);
+  const { isTossReady, requestTossPayment } = useTossPayment(userInfo);
 
   const planData = {
     '3대': [
@@ -46,6 +53,24 @@ const PointPlanSection = () => {
         points: '15,000포인트 적립 + 150포인트 추가',
       },
     ],
+  };
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const data = await getUserInfo();
+
+        setUserInfo(data);
+      } catch {}
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  const handleClick = (title: string, discountPrice: string) => {
+    const amount = parseInt(discountPrice.replace(/[^0-9]/g, ''));
+
+    requestTossPayment({ orderName: title, amount });
   };
 
   return (
@@ -92,10 +117,7 @@ const PointPlanSection = () => {
               key={idx}
               className="relative p-6 rounded-2xl border border-[#666] bg-[#2C2C2C] text-white"
               initial={{ opacity: 0, y: 30 }}
-              transition={{
-                duration: 0.5,
-                delay: 0.3 + idx * 0.2,
-              }}
+              transition={{ duration: 0.5, delay: 0.3 + idx * 0.2 }}
               viewport={{ once: true }}
               whileInView={{ opacity: 1, y: 0 }}
             >
@@ -126,7 +148,11 @@ const PointPlanSection = () => {
                   </div>
                 </div>
 
-                <button className="bg-main text-white text-sm w-[90px] h-[35px] rounded-lg mt-[10px] ml-[10px]">
+                <button
+                  className="bg-main text-white text-sm w-[90px] h-[35px] rounded-lg mt-[10px] ml-[10px] disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!isTossReady}
+                  onClick={() => handleClick(item.title, item.discountPrice)}
+                >
                   구매하기
                 </button>
               </div>
