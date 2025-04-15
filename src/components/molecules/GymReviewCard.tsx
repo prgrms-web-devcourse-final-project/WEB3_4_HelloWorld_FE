@@ -28,7 +28,7 @@ export default function GymReviewCard({
   const showOverlay = images.length > 5;
 
   return (
-    <div className="w-full p-5 rounded-xl border border-mono_100 shadow-sm bg-white flex flex-col gap-4">
+    <div className="w-full p-5 rounded-xl border border-mono_100 shadow-sm bg-mono_100 flex flex-col gap-4">
       {/* 상단 - 유저 정보 */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
@@ -79,7 +79,7 @@ export default function GymReviewCard({
               src={img}
             />
             {showOverlay && idx === 4 && (
-              <span className="absolute inset-0 flex items-center justify-center text-white text-sm font-semibold">
+              <span className="absolute inset-0 flex items-center justify-center text-mono_100 text-sm font-semibold">
                 +{images.length - 4}
               </span>
             )}

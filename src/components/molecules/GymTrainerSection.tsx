@@ -32,7 +32,7 @@ export default function GymTrainerSection({
 
   return (
     <div className="flex flex-col gap-2">
-      <h4 className="text-[16px] font-semibold font-pretendard text-mono_800">
+      <h4 className="text-[16px] font-semibold font-pretendard text-mono_800 ">
         PT 강사
       </h4>
 

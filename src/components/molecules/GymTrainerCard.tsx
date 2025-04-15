@@ -1,5 +1,5 @@
 // components/molecules/GymTrainerCard.tsx
-import Image from 'next/image';
+import { Image } from '@heroui/react';
 
 interface GymTrainerCardProps {
   name: string;
@@ -26,7 +26,7 @@ export default function GymTrainerCard({
   image,
 }: GymTrainerCardProps) {
   return (
-    <button className="w-full flex justify-between items-start p-4 rounded-xl border border-mono_100 shadow-sm bg-white text-left gap-4">
+    <button className="w-full flex justify-between items-start p-4 rounded-xl border border-mono_100 shadow-sm bg-mono_100 text-left gap-4">
       {/* 텍스트 영역 */}
       <div className="flex-1 flex flex-col gap-1">
         <h5 className="text-[20px] font-medium font-pretendard text-mono_900">

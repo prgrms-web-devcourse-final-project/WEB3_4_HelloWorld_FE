@@ -240,7 +240,7 @@ export default function GymPage() {
           <div style="
             white-space: nowrap;
             padding: 4px 8px;
-            background: white;
+            background: mono_100;
             border-radius: 6px;
             font-size: 13px;
             font-weight: bold;
@@ -399,7 +399,7 @@ export default function GymPage() {
                   const popupContent = `
                     <div style="
                       width: 230px;
-                      background-color: white;
+                      background-color: mono_100;
                       padding: 12px 14px;
                       border-radius: 10px;
                       box-shadow: 2px 2px 10px rgba(0,0,0,0.15);
@@ -564,7 +564,7 @@ export default function GymPage() {
       <div
         className={`
           absolute top-[64px] left-0 h-[calc(100%-64px)] z-20
-          bg-white w-[420px] rounded-tr-2xl rounded-br-2xl shadow-2xl
+          bg-mono_100 w-[420px] rounded-tr-2xl rounded-br-2xl shadow-2xl
           flex flex-col gap-4 overflow-hidden
           transition-transform duration-500
           ${sidebarX}
@@ -669,7 +669,7 @@ export default function GymPage() {
                 {gymList.map((gym) => (
                   <div
                     key={gym.gymId}
-                    className="flex items-center justify-between w-[368px] h-[140px] p-3 bg-white rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm"
+                    className="flex items-center justify-between w-[368px] h-[140px] p-3 bg-mono_100 rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm"
                     role="button"
                     tabIndex={0}
                     onClick={() => {
@@ -726,7 +726,7 @@ export default function GymPage() {
 
                 <div className="flex justify-center pt-4">
                   <Pagination
-                    className="[&_[data-slot=page]]:bg-mono_100 [&_[data-slot=page]]:text-mono_700 [&_[data-slot=page][data-selected=true]]:bg-main [&_[data-slot=page][data-selected=true]]:text-white"
+                    className="[&_[data-slot=page]]:bg-mono_100 [&_[data-slot=page]]:text-mono_700 [&_[data-slot=page][data-selected=true]]:bg-main [&_[data-slot=page][data-selected=true]]:text-mono_100"
                     initialPage={page}
                     total={totalPages}
                     onChange={(newPage: number) => setPage(newPage)}
@@ -823,7 +823,7 @@ export default function GymPage() {
                         mapCenterMarkerRef.current = marker;
 
                         const popupContent = `
-                          <div style="width: 230px; background-color: white; padding: 12px 14px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.15); font-family: Pretendard, sans-serif; font-size: 13px; color: #333;">
+                          <div style="width: 230px; background-color: mono_100; padding: 12px 14px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.15); font-family: Pretendard, sans-serif; font-size: 13px; color: #333;">
                             <div style="font-weight: 600; margin-bottom: 6px;">선택한 위치</div>
                             <div>${address || '-'}</div>
                           </div>
@@ -966,7 +966,7 @@ export default function GymPage() {
         <button
           className="absolute top-[50%] left-0 translate-y-[-50%] z-30
           transition-transform duration-500 ease-in-out
-          w-8 h-8 shadow-md bg-white border border-mono_200
+          w-8 h-8 shadow-md bg-mono_100 border border-mono_200
           flex items-center justify-center hover:bg-mono_100"
           style={{
             transform: `translateX(${isOpen ? (isPanelVisible ? 896 : 436) : 16}px) translateY(-50%)`,

@@ -216,13 +216,13 @@ export default function GymDetailPanel({
 
   return (
     <div
-      className={`absolute top-[80px] left-0 h-[calc(100%-96px)] w-[440px] bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden transition-transform duration-500 ease-in-out ${panelTranslateX}`}
+      className={`absolute top-[80px] left-0 h-[calc(100%-96px)] w-[440px] bg-mono_100 rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden transition-transform duration-500 ease-in-out ${panelTranslateX}`}
     >
       <button
         className="absolute top-2 right-2 z-20 hover:opacity-70 transition"
         onClick={onClose}
       >
-        <XMarkIcon className="w-8 h-8 text-white" />
+        <XMarkIcon className="w-8 h-8 text-mono_100" />
       </button>
 
       <div className="flex gap-[2px] w-full h-[220px] rounded-tl-2xl rounded-tr-2xl overflow-hidden">
