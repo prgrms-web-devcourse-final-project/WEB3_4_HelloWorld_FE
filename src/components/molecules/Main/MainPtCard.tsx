@@ -66,8 +66,8 @@ export default function MainPtCard({
             group-hover:after:opacity-100 group-hover:after:transform group-hover:after:translate-y-0
           "
           >
-            <div className="flex w-full  py-1 items-center justify-between">
-              <h1 className="text-lg font-semibold translate-z-[45px] text-shadow-[0_10px_10px_rgba(0,0,0,0.5)] relative z-[1]">
+            <div className="flex w-full transform-3d   py-1 items-center justify-between">
+              <h1 className="text-lg translate-z-4 font-semibold translate-z-[45px] text-shadow-[0_10px_10px_rgba(0,0,0,0.5)] relative z-[1]">
                 {productName ? productName : title}
               </h1>
               <div className="z-10  flex items-center mb-1 gap-1">
