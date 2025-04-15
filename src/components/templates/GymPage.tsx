@@ -148,12 +148,6 @@ export default function GymPage() {
         : 'translate-x-0'
       : 'translate-x-0';
 
-  const toggleTranslateX = isOpen
-    ? isPanelVisible
-      ? 'translate-x-[896px]'
-      : 'translate-x-[436px]'
-    : 'translate-x-[16px]';
-
   const sidebarX = isRouteMode
     ? '-translate-x-[420px]'
     : isOpen
@@ -227,8 +221,9 @@ export default function GymPage() {
 
     // 새 마커 생성 (이건 기존 그대로 두면 됨)
     gyms.forEach((gym) => {
-      const lat = parseFloat(String(gym.yField));
-      const lon = parseFloat(String(gym.yField));
+      const lat = gym.yField;
+      const lon = gym.xField;
+
       const position = new window.Tmapv2.LatLng(lat, lon);
 
       const marker = new window.Tmapv2.Marker({
@@ -245,7 +240,8 @@ export default function GymPage() {
           <div style="
             white-space: nowrap;
             padding: 4px 8px;
-            background: white;
+            background: #F5F5F4;
+            border: 2px solid #006FEE;
             border-radius: 6px;
             font-size: 13px;
             font-weight: bold;
@@ -255,7 +251,7 @@ export default function GymPage() {
           </div>
         `,
         type: 2,
-        background: false,
+        background: true,
         border: '0px',
         map,
       });
@@ -272,23 +268,16 @@ export default function GymPage() {
   // ✅ 위치 기반 헬스장 조회
   useEffect(() => {
     if (myLocation) fetchAndSetGyms();
-  }, [myLocation, selected, isPartnerOnly, page, searchTerm, searchOption]);
+  }, [myLocation, selected, isPartnerOnly, page]);
 
   useEffect(() => {
     if (!mapInstanceRef.current || gymList.length === 0) return;
 
     const map = mapInstanceRef.current;
 
-    console.log(map);
-    console.log(gymList);
-    const latSum = gymList.reduce(
-      (sum, gym) => sum + parseFloat(String(gym.yField)),
-      0,
-    );
-    const lonSum = gymList.reduce(
-      (sum, gym) => sum + parseFloat(String(gym.xField)),
-      0,
-    );
+    const latSum = gymList.reduce((sum, gym) => sum + gym.yField, 0);
+    const lonSum = gymList.reduce((sum, gym) => sum + gym.xField, 0);
+
     const avgLat = latSum / gymList.length;
     const avgLon = lonSum / gymList.length;
 
@@ -381,11 +370,12 @@ export default function GymPage() {
 
               setRealMyLocation({ lat, lon });
               setMyLocation({ lat, lon });
+
               const marker = new window.Tmapv2.Marker({
                 position: new window.Tmapv2.LatLng(lat, lon),
-                icon: '/gym/icons/mapmarker.svg',
-                iconSize: new window.Tmapv2.Size(46, 50),
-                offset: new window.Tmapv2.Point(23, 50),
+                icon: '/gym/icons/mapmarker.png',
+                iconSize: new window.Tmapv2.Size(36, 36),
+                offset: new window.Tmapv2.Point(18, 36),
                 map,
               });
 
@@ -410,7 +400,8 @@ export default function GymPage() {
                   const popupContent = `
                     <div style="
                       width: 230px;
-                      background-color: white;
+                      background-color: #F5F5F4;
+                      border: 2px solid #f25267;
                       padding: 12px 14px;
                       border-radius: 10px;
                       box-shadow: 2px 2px 10px rgba(0,0,0,0.15);
@@ -429,7 +420,7 @@ export default function GymPage() {
                     position: new window.Tmapv2.LatLng(lat, lon),
                     content: popupContent,
                     type: 2,
-                    background: false,
+                    background: true,
                     border: '0px',
                     map,
                   });
@@ -496,6 +487,7 @@ export default function GymPage() {
         const linestring = leg.passShape?.linestring;
 
         if (!linestring) return null;
+        console.log('🚏 구간 mode:', leg.mode);
 
         const coords = linestring.split(' ').map((point: string) => {
           const [lon, lat] = point.split(',').map(Number);
@@ -508,8 +500,9 @@ export default function GymPage() {
 
         let color = '#999999';
 
-        if (leg.mode === 'BUS') color = '#0078FF';
-        if (leg.mode === 'SUBWAY') color = '#2DB400';
+        if (leg.mode === 'WALK') color = '#999999';
+        if (leg.mode === 'BUS') color = '#2DB400';
+        if (leg.mode === 'SUBWAY') color = '#0078FF';
 
         return new window.Tmapv2.Polyline({
           path: coords,
@@ -575,7 +568,7 @@ export default function GymPage() {
       <div
         className={`
           absolute top-[64px] left-0 h-[calc(100%-64px)] z-20
-          bg-white w-[420px] rounded-tr-2xl rounded-br-2xl shadow-2xl
+          bg-mono_100 w-[420px] rounded-tr-2xl rounded-br-2xl shadow-2xl
           flex flex-col gap-4 overflow-hidden
           transition-transform duration-500
           ${sidebarX}
@@ -680,15 +673,12 @@ export default function GymPage() {
                 {gymList.map((gym) => (
                   <div
                     key={gym.gymId}
-                    className="flex items-center justify-between w-[368px] h-[140px] p-3 bg-white rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm"
+                    className="flex items-center justify-between w-[368px] h-[140px] p-3 bg-mono_100 rounded-xl border border-mono_100 hover:bg-mono_100 transition cursor-pointer shadow-sm"
                     role="button"
                     tabIndex={0}
                     onClick={() => {
                       setSelectedGym(gym);
-                      focusGymWithOffset(
-                        parseFloat(String(gym.yField)),
-                        parseFloat(String(gym.yField)),
-                      );
+                      focusGymWithOffset(gym.yField, gym.xField);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ')
@@ -706,16 +696,16 @@ export default function GymPage() {
                       <div className="text-[14px] gap-2 text-mono_400">
                         <span
                           className={`${
-                            isGymOpenNow(gym.startTime || '', gym.endTime)
+                            isGymOpenNow(gym.startTime ?? '', gym.endTime ?? '')
                               ? 'text-[#5BA744]'
                               : 'text-red-500'
                           } font-medium`}
                         >
                           ●{' '}
-                          {isGymOpenNow(gym.startTime || '', gym.endTime)
+                          {isGymOpenNow(gym.startTime ?? '', gym.endTime ?? '')
                             ? '운영중'
                             : '운영 종료'}
-                        </span>{' '}
+                        </span>
                         |{' '}
                         <span className="text-mono_400 font-normal">
                           {gym.startTime === '00:00' && gym.endTime === '24:00'
@@ -732,7 +722,7 @@ export default function GymPage() {
                       alt="gym"
                       className="rounded-lg object-cover"
                       height={100}
-                      src={gym.thumbnailImage || ''}
+                      src={gym.thumbnailImage ?? '/gym_sample.jpg'} // ✅ null, undefined 대응
                       width={160}
                     />
                   </div>
@@ -740,7 +730,7 @@ export default function GymPage() {
 
                 <div className="flex justify-center pt-4">
                   <Pagination
-                    className="[&_[data-slot=page]]:bg-mono_100 [&_[data-slot=page]]:text-mono_700 [&_[data-slot=page][data-selected=true]]:bg-main [&_[data-slot=page][data-selected=true]]:text-white"
+                    className="[&_[data-slot=page]]:bg-mono_100 [&_[data-slot=page]]:text-mono_700 [&_[data-slot=page][data-selected=true]]:bg-main [&_[data-slot=page][data-selected=true]]:text-mono_100"
                     initialPage={page}
                     total={totalPages}
                     onChange={(newPage: number) => setPage(newPage)}
@@ -837,7 +827,7 @@ export default function GymPage() {
                         mapCenterMarkerRef.current = marker;
 
                         const popupContent = `
-                          <div style="width: 230px; background-color: white; padding: 12px 14px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.15); font-family: Pretendard, sans-serif; font-size: 13px; color: #333;">
+                          <div style="width: 230px; background-color: #F5F5F4; border: 2px solid #f25267; padding: 12px 14px; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.15); font-family: Pretendard, sans-serif; font-size: 13px; color: #333;">
                             <div style="font-weight: 600; margin-bottom: 6px;">선택한 위치</div>
                             <div>${address || '-'}</div>
                           </div>
@@ -850,7 +840,7 @@ export default function GymPage() {
                           ),
                           content: popupContent,
                           type: 2,
-                          background: false,
+                          background: true,
                           border: '0px',
                           map: mapInstanceRef.current,
                         });
@@ -937,7 +927,7 @@ export default function GymPage() {
       {/* 상세 패널 */}
       {selectedGym && (
         <GymDetailPanel
-          gymId={selectedGym.gymId || 0}
+          gymId={selectedGym!.gymId as number} // ✅ 타입을 number로 단언
           map={mapInstanceRef.current}
           myLocation={myLocation}
           panelTranslateX={detailPanelX}
@@ -948,7 +938,6 @@ export default function GymPage() {
             setSelectedRouteIndex(0);
             setIsPanelVisible(false);
             setIsRouteVisible(true);
-            setIsRouteMode(true);
           }}
         />
       )}
@@ -981,7 +970,7 @@ export default function GymPage() {
         <button
           className="absolute top-[50%] left-0 translate-y-[-50%] z-30
           transition-transform duration-500 ease-in-out
-          w-8 h-8 shadow-md bg-white border border-mono_200
+          w-8 h-8 shadow-md bg-mono_100 border border-mono_200
           flex items-center justify-center hover:bg-mono_100"
           style={{
             transform: `translateX(${isOpen ? (isPanelVisible ? 896 : 436) : 16}px) translateY(-50%)`,

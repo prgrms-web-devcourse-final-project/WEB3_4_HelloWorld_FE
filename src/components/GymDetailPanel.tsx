@@ -18,6 +18,7 @@ import GymTimeFeeSection from './molecules/GymTimeFeeSection';
 import SelectedFacilitySection from './molecules/SelectedFacilitySection';
 import GymTrainerSection from './molecules/GymTrainerSection';
 import GymReviewSection from './molecules/GymReviewSection';
+import GymPurchaseModal from './molecules/GymPurchaseModal';
 
 import {
   fetchGymDetail,
@@ -95,6 +96,7 @@ export default function GymDetailPanel({
   const [availableFacilities, setAvailableFacilities] = useState<string[]>([]);
   const [reviews, setReviews] = useState<any[]>([]);
   const polylineRef = useRef<any>(null);
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -128,12 +130,12 @@ export default function GymDetailPanel({
           const reviewRes = await fetchGymReviews(gymId);
           const parsedReviews = reviewRes.content.map((r: any) => ({
             id: r.gymReviewId,
-            nickname: '익명', // 닉네임 필드 없으므로 가공 필요
+            nickname: r.memberName || '익명',
             date: r.createdAt.split('T')[0],
             rating: r.score,
             images: r.images.map((img: any) => img.imageUrl),
             content: r.content,
-            profileImage: '/default_profile.png', // 기본 이미지
+            profileImage: r.memberProfileUrl || '/gym/icons/defaultprofile.svg',
           }));
 
           setReviews(parsedReviews);
@@ -214,13 +216,13 @@ export default function GymDetailPanel({
 
   return (
     <div
-      className={`absolute top-[80px] left-0 h-[calc(100%-96px)] w-[440px] bg-white rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden transition-transform duration-500 ease-in-out ${panelTranslateX}`}
+      className={`absolute top-[80px] left-0 h-[calc(100%-96px)] w-[440px] bg-mono_100 rounded-2xl shadow-2xl z-10 flex flex-col overflow-hidden transition-transform duration-500 ease-in-out ${panelTranslateX}`}
     >
       <button
         className="absolute top-2 right-2 z-20 hover:opacity-70 transition"
         onClick={onClose}
       >
-        <XMarkIcon className="w-8 h-8 text-white" />
+        <XMarkIcon className="w-8 h-8 text-mono_100" />
       </button>
 
       <div className="flex gap-[2px] w-full h-[220px] rounded-tl-2xl rounded-tr-2xl overflow-hidden">
@@ -294,6 +296,7 @@ export default function GymDetailPanel({
             className="w-[100px] h-[32px] text-[14px] bg-main text-white hover:opacity-90"
             radius="sm"
             size="sm"
+            onClick={() => setIsPurchaseModalOpen(true)} // ✅ 이 부분 추가
           >
             등록
           </Button>
@@ -329,10 +332,10 @@ export default function GymDetailPanel({
             </div>
             {/* <div className="mt-6">
               <EquipmentSection equipments={mappedMachines} />
-            </div>
-            <div className="mt-6">
-              <GymReviewSection reviews={mappedReviews} />
             </div> */}
+            <div className="mt-6">
+              <GymReviewSection reviews={reviews} />
+            </div>
           </>
         )}
 
@@ -368,6 +371,12 @@ export default function GymDetailPanel({
         imageList={gymImages}
         isOpen={isGalleryOpen}
         onOpenChange={() => setIsGalleryOpen(false)}
+      />
+      <GymPurchaseModal
+        gymName={gymName}
+        isOpen={isPurchaseModalOpen}
+        products={gymProductResponses}
+        onClose={() => setIsPurchaseModalOpen(false)}
       />
     </div>
   );

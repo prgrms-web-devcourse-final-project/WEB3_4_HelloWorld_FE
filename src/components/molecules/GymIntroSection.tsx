@@ -28,7 +28,7 @@ export default function GymIntroSection({ content }: GymIntroSectionProps) {
     rounded-xl
     border border-mono_100 shadow-sm
     p-3
-    bg-white
+    bg-mono_100
   `}
       >
         {content}

@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 
 import Loading from '@/app/loading';
-
 const PaymentSuccessPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -47,6 +46,12 @@ const PaymentSuccessPage = () => {
 
     confirmPayment();
   }, [orderId, paymentKey, amount, router]);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {};
+
+    fetchUserInfo();
+  }, [isSuccess]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen text-black px-4">

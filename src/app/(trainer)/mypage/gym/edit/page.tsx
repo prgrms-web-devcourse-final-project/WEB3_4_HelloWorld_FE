@@ -1,63 +1,28 @@
 'use client';
+
 import Image from 'next/image';
-import { useState } from 'react';
-import { Time } from '@internationalized/date';
+import { useEffect, useState } from 'react';
+import { Time, parseTime } from '@internationalized/date';
 import {
-  Autocomplete,
   AutocompleteItem,
   NumberInput,
   Button,
   Input,
   TimeInput,
+  Autocomplete,
 } from '@heroui/react';
 import {
   StarIcon,
   MapPinIcon,
-  TrashIcon,
   PhoneIcon,
   PlusIcon,
 } from '@heroicons/react/24/solid';
+import { TrashIcon as OutlineTrashIcon } from '@heroicons/react/24/outline';
 
 import { NumberInputBase } from '@/components/atoms/NumberInputBase';
 import { CustomTextarea } from '@/components/atoms/TextareaBase';
 import { FacilityButton } from '@/components/atoms/FacilityButton';
-const gyms = [
-  {
-    label: '비헬씨 서초점',
-    key: 'gym1',
-    location: '서울시 강남구 역삼동',
-    rating: 4.66,
-    phone: '02-123-4567', // 추가
-  },
-  {
-    label: '머슬팩토리',
-    key: 'gym2',
-    location: '서울시 강남구 강남대로',
-    rating: 4.5,
-    phone: '02-234-5678',
-  },
-  {
-    label: '강남 피트니스',
-    key: 'gym3',
-    location: '서울시 강남구 테헤란로',
-    rating: 4.7,
-    phone: '02-345-6789',
-  },
-  {
-    label: '스파르탄짐',
-    key: 'gym4',
-    location: '서울시 서초구 반포동',
-    rating: 4.4,
-    phone: '02-456-7890',
-  },
-  {
-    label: '아이언짐',
-    key: 'gym5',
-    location: '서울시 강남구 논현동',
-    rating: 4.55,
-    phone: '02-567-8901',
-  },
-];
+import { fetchGymListOwnerApi } from '@/apis/gymApi';
 
 const allFacilities = [
   '수건',
@@ -69,17 +34,6 @@ const allFacilities = [
   '와이파이',
   '인바디',
 ];
-
-const facilityKeys = {
-  수건: 'towel',
-  샤워실: 'showerRoom',
-  주차장: 'parking',
-  사우나: 'sauna',
-  개인락커: 'locker',
-  운동복: 'sportswear',
-  와이파이: 'wifi',
-  인바디: 'inbody',
-};
 
 const facilityIcons: Record<string, string> = {
   수건: '/gym/icons/towel.svg',
@@ -96,28 +50,58 @@ const maxSlots = 8;
 
 export default function GymEditPage() {
   const [selectedGym, setSelectedGym] = useState<any>(null);
-  const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
-  const [intro, setIntro] = useState('');
+  const [gymOptions, setGymOptions] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [startTime, setStartTime] = useState<Time | null>(null);
   const [endTime, setEndTime] = useState<Time | null>(null);
-
-  // const [productMonth, setProductMonth] = useState<number | null>(1);
+  const [intro, setIntro] = useState('');
   const [productFee, setProductFee] = useState<number | null>(0);
+  const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
   const [equipmentName, setEquipmentName] = useState('');
   const [equipmentCount, setEquipmentCount] = useState<number | null>(null);
+  const [equipmentImage, setEquipmentImage] = useState<File | undefined>();
+  const [equipmentImageName, setEquipmentImageName] = useState('');
   const [equipments, setEquipments] = useState<
     { name: string; count: number; image?: File }[]
   >([]);
-
   const [images, setImages] = useState<File[]>([]);
 
-  const [equipmentImage, setEquipmentImage] = useState<File | undefined>(
-    undefined,
-  );
+  useEffect(() => {
+    const delayDebounce = setTimeout(async () => {
+      if (!searchTerm) return setGymOptions([]);
+      const result = await fetchGymListOwnerApi(0, 10, searchTerm);
+      const mapped = result.map((gym) => ({
+        key: String(gym.gymId),
+        label: gym.gymName,
+        location: gym.address,
+        rating: gym.avgScore ?? 0,
+        startTime: gym.startTime,
+        endTime: gym.endTime,
+        xField: gym.xField,
+        yField: gym.yField,
+        thumbnailImage: gym.thumbnailImage,
+        phone: gym.phone || '',
+      }));
 
-  const [equipmentImageName, setEquipmentImageName] = useState<string>('');
+      setGymOptions(mapped);
+    }, 300);
 
-  // 파일 핸들러 수정
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (selectedGym?.startTime) {
+      try {
+        setStartTime(parseTime(selectedGym.startTime));
+      } catch {}
+    }
+    if (selectedGym?.endTime) {
+      try {
+        setEndTime(parseTime(selectedGym.endTime));
+      } catch {}
+    }
+  }, [selectedGym]);
+
   const handleEquipmentImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
       setEquipmentImage(e.target.files[0]);
@@ -125,34 +109,16 @@ export default function GymEditPage() {
     }
   };
 
-  // 기구 추가
   const addEquipment = () => {
     if (!equipmentName || !equipmentCount || equipmentCount <= 0) return;
-    setEquipments([
-      ...equipments,
-      {
-        name: equipmentName,
-        count: equipmentCount,
-        image: equipmentImage, // 추가됨
-      },
+    setEquipments((prev) => [
+      ...prev,
+      { name: equipmentName, count: equipmentCount, image: equipmentImage },
     ]);
-    // 입력값 초기화
     setEquipmentName('');
     setEquipmentCount(null);
     setEquipmentImage(undefined);
     setEquipmentImageName('');
-  };
-
-  const removeEquipment = (name: string) => {
-    setEquipments((prev) => prev.filter((eq) => eq.name !== name));
-  };
-
-  const toggleFacility = (facility: string) => {
-    setSelectedFacilities((prev) =>
-      prev.includes(facility)
-        ? prev.filter((f) => f !== facility)
-        : [...prev, facility],
-    );
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -165,56 +131,101 @@ export default function GymEditPage() {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const toggleFacility = (facility: string) => {
+    setSelectedFacilities((prev) =>
+      prev.includes(facility)
+        ? prev.filter((f) => f !== facility)
+        : [...prev, facility],
+    );
+  };
+
+  const removeEquipment = (name: string) => {
+    setEquipments((prev) => prev.filter((eq) => eq.name !== name));
+  };
+
   const handleSubmit = async () => {
     if (!selectedGym) return alert('헬스장을 선택해주세요.');
 
-    const formData = new FormData();
-    const gymId = selectedGym.key;
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const accessToken = localStorage.getItem('accessToken');
 
-    formData.append(
-      'content',
-      JSON.stringify({
-        gym: {
-          gymName: selectedGym.label,
-          startTime,
-          endTime,
-          phoneNumber: selectedGym.phone,
-          isPartner: true,
-          address: selectedGym.location,
-          xField: '0',
-          yField: '0',
-          intro,
-          deleteImageIds: [],
-        },
-        facility: Object.fromEntries(
-          Object.entries(facilityKeys).map(([kor, eng]) => [
-            eng,
-            selectedFacilities.includes(kor),
-          ]),
-        ),
-        machine: equipments.map((eq) => ({
-          machineName: eq.name,
-          account: eq.count,
-        })),
-        gymProduct: {
-          gymProductFee: productFee,
-        },
-      }),
+    const formData = new FormData();
+
+    const facilityKeys = {
+      주차장: 'parking',
+      샤워실: 'showerRoom',
+      인바디: 'inBody',
+      개인락커: 'locker',
+      와이파이: 'wifi',
+      운동복: 'sportsWear',
+      수건: 'towel',
+      사우나: 'sauna',
+    };
+
+    const facilityRequest = Object.fromEntries(
+      Object.entries(facilityKeys).map(([kor, eng]) => [
+        eng,
+        selectedFacilities.includes(kor),
+      ]),
     );
 
-    images.forEach((file) => {
-      formData.append('gymImages', file);
-    });
-
-    await fetch(`/gym/${gymId}`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer YOUR_ACCESS_TOKEN`,
+    const payload = {
+      gymId: Number(selectedGym.key),
+      gymInfoRequest: {
+        gymRequest: {
+          startTime: startTime ? startTime.toString() : '00:00',
+          endTime: endTime ? endTime.toString() : '00:00',
+          intro,
+        },
+        facilityRequest, //
+        gymProductRequest: [
+          {
+            gymProductId: '',
+            gymProductName: ' GymMate 제휴 헬스장 1달 이용권',
+            gymProductMonth: '1',
+            gymProductFee: productFee ?? 0,
+          },
+        ],
+        gymProductDeleteIds: [],
       },
-      body: formData,
+    };
+
+    formData.append(
+      'request',
+      new Blob([JSON.stringify(payload)], { type: 'application/json' }),
+    );
+
+    // 이미지 파일들 append
+    images.forEach((img) => formData.append('images', img));
+
+    console.log('요청 데이터:', {
+      payload,
+      images: images.map((img) => ({
+        name: img.name,
+        size: img.size,
+        type: img.type,
+      })),
     });
 
-    alert('수정 완료!');
+    try {
+      const response = await fetch(`${API_BASE_URL}/partnergym`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        credentials: 'include',
+        body: formData,
+      });
+
+      const responseData = await response.json();
+
+      console.log('응답 데이터:', responseData);
+
+      if (!response.ok) throw new Error(`요청 실패: ${response.status}`);
+      alert('헬스장 등록 완료!');
+    } catch {
+      alert('헬스장 등록 실패!');
+    }
   };
 
   return (
@@ -254,13 +265,64 @@ export default function GymEditPage() {
             {/* 헬스장 검색 */}
             <div className="max-w-md">
               <Autocomplete
-                defaultItems={gyms}
+                inputValue={searchTerm}
+                items={gymOptions}
                 label="헬스장 이름 검색"
                 placeholder="헬스장 이름으로 검색하세요"
                 selectedKey={selectedGym?.key}
-                onSelectionChange={(key) =>
-                  setSelectedGym(gyms.find((g) => g.key === key) || null)
-                }
+                onInputChange={setSearchTerm}
+                onSelectionChange={(key: string | number | null) => {
+                  if (!key) return;
+
+                  const selected = gymOptions.find(
+                    (g) => g.key === String(key),
+                  );
+
+                  if (!selected) return;
+
+                  setSelectedGym(selected);
+                  setSearchTerm(selected.label);
+
+                  const { gymInfo, facility, gymProducts, images } = selected;
+
+                  if (gymInfo?.intro) setIntro(gymInfo.intro);
+                  if (gymInfo?.startTime)
+                    setStartTime(parseTime(gymInfo.startTime));
+                  if (gymInfo?.endTime) setEndTime(parseTime(gymInfo.endTime));
+
+                  if (Array.isArray(gymProducts)) {
+                    setProductFee(gymProducts[0]?.gymProductFee ?? 0);
+                  }
+
+                  if (facility) {
+                    const reverseFacilityKeys = {
+                      parking: '주차장',
+                      showerRoom: '샤워실',
+                      inBody: '인바디',
+                      locker: '개인락커',
+                      wifi: '와이파이',
+                      sportsWear: '운동복',
+                      towel: '수건',
+                      sauna: '사우나',
+                    };
+
+                    const selectedFacilityList = Object.entries(facility)
+                      .filter(([, val]) => val)
+                      .map(
+                        ([key]) =>
+                          reverseFacilityKeys[
+                            key as keyof typeof reverseFacilityKeys
+                          ],
+                      )
+                      .filter(Boolean);
+
+                    setSelectedFacilities(selectedFacilityList);
+                  }
+
+                  if (Array.isArray(images)) {
+                    setImages(images.map((img) => img.url));
+                  }
+                }}
               >
                 {(item) => (
                   <AutocompleteItem key={item.key}>
@@ -383,8 +445,7 @@ export default function GymEditPage() {
                   추가
                 </Button>
               </div>
-
-              {/* 운동기구 리스트 */}
+              운동기구 리스트
               <div className="flex flex-wrap gap-3 pt-2">
                 {equipments.map((eq) => (
                   <div
@@ -399,7 +460,7 @@ export default function GymEditPage() {
                       variant="light"
                       onClick={() => removeEquipment(eq.name)}
                     >
-                      <TrashIcon className="w-6 h-6 text-mono_900 group-hover:text-main" />
+                      <OutlineTrashIcon className="w-6 h-6 text-mono_900 group-hover:text-main" />
                     </Button>
 
                     {/* 이미지 */}
@@ -411,7 +472,7 @@ export default function GymEditPage() {
                         src={
                           eq.image
                             ? URL.createObjectURL(eq.image)
-                            : '/default-image.png'
+                            : '/assets/images/pointpagesub.jpg'
                         }
                       />
                     </div>
@@ -457,7 +518,7 @@ export default function GymEditPage() {
                       className="absolute top-2 right-2 bg-white rounded-full p-1 shadow"
                       onClick={() => handleRemoveImage(index)}
                     >
-                      <TrashIcon className="w-4 h-4 text-red-500" />
+                      <OutlineTrashIcon className="w-4 h-4 text-red-500" />
                     </button>
                   </div>
                 ))}
@@ -501,7 +562,7 @@ export default function GymEditPage() {
               color="primary"
               onClick={handleSubmit}
             >
-              수정 완료
+              등록 완료
             </Button>
           </div>
         </div>

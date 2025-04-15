@@ -32,7 +32,7 @@ export default function GymTrainerSection({
 
   return (
     <div className="flex flex-col gap-2">
-      <h4 className="text-[16px] font-semibold font-pretendard text-mono_800">
+      <h4 className="text-[16px] font-semibold font-pretendard text-mono_800 ">
         PT 강사
       </h4>
 
@@ -44,7 +44,7 @@ export default function GymTrainerSection({
 
       {!fullView && trainers.length > 2 && (
         <button
-          className="w-full h-[32px] bg-mono_100 hover:bg-mono_300 flex justify-center items-center rounded-md transition"
+          className="w-full h-[32px] bg-mono_200 hover:bg-mono_300 flex justify-center items-center rounded-md transition"
           onClick={() => setExpanded((prev) => !prev)}
         >
           <span className="text-sm text-mono_500">
