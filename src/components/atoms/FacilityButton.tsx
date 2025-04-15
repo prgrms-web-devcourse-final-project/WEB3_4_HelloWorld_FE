@@ -37,7 +37,7 @@ export const FacilityButton = ({
     >
       <Image
         alt={label}
-        className="w-10 h-10 object-contain"
+        className="w-10 h-10 object-contain dark:invert"
         height={40}
         src={icon}
         width={40}
