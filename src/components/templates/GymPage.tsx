@@ -715,7 +715,9 @@ export default function GymPage() {
                       </div>
                       <div className="text-[14px] text-mono_400">
                         <StarIcon className="w-3 h-3 mr-1 text-yellow-400 inline" />{' '}
-                        {gym.avgScore}
+                        {gym.avgScore !== undefined
+                          ? gym.avgScore.toFixed(2)
+                          : '평점 없음'}
                       </div>
                     </div>
                     <Image
