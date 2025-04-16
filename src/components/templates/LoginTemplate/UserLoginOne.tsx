@@ -48,7 +48,7 @@ export default function Step1Form({
       recentDeadlift: 0,
     });
 
-    // setStep(2);
+    setStep(2);
   };
 
   return (
