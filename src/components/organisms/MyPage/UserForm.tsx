@@ -103,7 +103,7 @@ const UserForm = () => {
           onChange={handleImageChange}
         />
 
-        <LevelBadge level={4} />
+        <LevelBadge level={userInfo.level as 0 | 1 | 2 | 3 | 4} />
 
         <div className="text-[18px] font-semibold text-mono_900">
           {userInfo.memberName || '이름 없음'} ✏️
