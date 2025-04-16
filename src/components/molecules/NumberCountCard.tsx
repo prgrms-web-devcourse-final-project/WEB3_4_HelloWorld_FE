@@ -21,10 +21,15 @@ export default function NumberCountCard({
       radius="sm"
       shadow="none"
     >
-      <p className="text-4xl flex gap-1 font-semibold text-stone-100">
-        {countNumber}
+      <div className=" flex gap-1">
+        <p
+          className="text-4xl flex gap-1 font-semibold text-stone-100"
+          id="number"
+        >
+          {countNumber}
+        </p>
         <span className=" text-4xl text-stone-100">명</span>
-      </p>
+      </div>
       <span className="text-sm text-stone-100">{title}</span>
     </Card>
   );
