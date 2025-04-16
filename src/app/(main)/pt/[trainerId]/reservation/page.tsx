@@ -151,12 +151,6 @@ export default function PtReservationPage() {
 
       return res;
     },
-    onError: () => {
-      showToast({
-        title: '불러오기 실패',
-        description: '트레이너 일정 불러오기를 실패했습니다.',
-      });
-    },
   });
 
   useEffect(() => {
@@ -170,7 +164,7 @@ export default function PtReservationPage() {
     mutate({ year, month });
   }, [trainerTime]);
   useEffect(() => {
-    if (userType && userType !== 'member') {
+    if (!userType && userType !== 'member') {
       showToast({
         title: '일반 유저만 사용 가능합니다',
         description: '예약 기능은 유저만 사용 가능합니다',
