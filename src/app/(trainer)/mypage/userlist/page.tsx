@@ -76,7 +76,7 @@ export default function UserList() {
               ))}
             {data?.content?.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} style={{ textAlign: 'center' }}>
+                <TableCell colSpan={4} style={{ textAlign: 'center' }}>
                   회원이 없습니다.
                 </TableCell>
               </TableRow>

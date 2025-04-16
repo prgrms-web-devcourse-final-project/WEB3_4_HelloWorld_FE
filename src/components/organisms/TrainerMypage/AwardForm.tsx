@@ -83,7 +83,7 @@ export default function AwardForm() {
         value={formData.awardInfo}
         onChange={(e) => handleChange('awardInfo', e.target.value)}
       />
-      <Button className="w-fit" type="button" onPress={() => handleAddAward}>
+      <Button className="w-fit" type="button" onPress={() => handleAddAward()}>
         <PlusIcon className="w-4 h-4 mr-1" />
         수상 내역 추가
       </Button>

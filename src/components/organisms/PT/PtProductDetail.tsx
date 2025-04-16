@@ -220,7 +220,7 @@ export default function PtProductDetail() {
           <div className="flex py-8 justify-between items-center">
             <div className="flex items-center h-full gap-6">
               <p className="text-mono_700 text-5xl font-semibold">
-                {data.trainer?.trainerScore}
+                {data.trainer?.trainerScore?.toFixed(1)}
               </p>
               <div className="flex flex-col h-full justify-between">
                 <Star
@@ -230,7 +230,7 @@ export default function PtProductDetail() {
                   w={'w-5'}
                 />
                 <p className="text-mono_400  text-sm">
-                  {reviewPages?.pages[0].content.length}개의 후기
+                  {reviewPages?.pages[0].totalElements || 0}개의 후기
                 </p>
               </div>
             </div>

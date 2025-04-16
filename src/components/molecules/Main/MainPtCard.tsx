@@ -74,7 +74,7 @@ export default function MainPtCard({
               <div className="z-10  flex items-center mb-1 gap-1">
                 <StarIconSolid className="w-5 h-5" />
                 {/* <Star h="h-5" rate={score} readonly={true} w="w-5" /> */}
-                <span className="text-sm text-gray200">{score}</span>
+                <span className="text-sm text-gray200">{score.toFixed(1)}</span>
               </div>
             </div>
             <div
