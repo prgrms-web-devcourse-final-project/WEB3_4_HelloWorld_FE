@@ -1,6 +1,8 @@
 import type { GymDetailResponse } from '@/types/gym';
 
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 import NextImage from 'next/image';
 import { Button } from '@heroui/react';
 import {
@@ -97,6 +99,16 @@ export default function GymDetailPanel({
   const [reviews, setReviews] = useState<any[]>([]);
   const polylineRef = useRef<any>(null);
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const pathname = usePathname();
+  const handleShare = () => {
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const url = `${baseUrl}/gym/${gymId}`;
+
+    navigator.clipboard
+      .writeText(url)
+      .then(() => toast.success('링크가 복사되었습니다!'))
+      .catch(() => toast.error('복사에 실패했습니다.'));
+  };
 
   useEffect(() => {
     if (visible) {
@@ -288,7 +300,12 @@ export default function GymDetailPanel({
             >
               <MapIcon className="w-6 h-6 text-mono_600 hover:text-main" />
             </Button>
-            <Button isIconOnly radius="sm" variant="light">
+            <Button
+              isIconOnly
+              radius="sm"
+              variant="light"
+              onClick={handleShare}
+            >
               <ShareIcon className="w-6 h-6 text-mono_600 hover:text-main" />
             </Button>
           </div>

@@ -55,7 +55,16 @@ export default function GymEditPage() {
   const [startTime, setStartTime] = useState<Time | null>(null);
   const [endTime, setEndTime] = useState<Time | null>(null);
   const [intro, setIntro] = useState('');
+  const [productName, setProductName] = useState('');
   const [productFee, setProductFee] = useState<number | null>(0);
+  const [productMonth, setProductMonth] = useState<number | null>(1);
+  const [productList, setProductList] = useState<
+    {
+      gymProductName: string;
+      gymProductFee: number;
+      gymProductMonth: number;
+    }[]
+  >([]);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
   const [equipmentName, setEquipmentName] = useState('');
   const [equipmentCount, setEquipmentCount] = useState<number | null>(null);
@@ -65,6 +74,25 @@ export default function GymEditPage() {
     { name: string; count: number; image?: File }[]
   >([]);
   const [images, setImages] = useState<File[]>([]);
+
+  const addProduct = () => {
+    if (!productName || !productFee || !productMonth) return;
+    setProductList((prev) => [
+      ...prev,
+      {
+        gymProductName: productName,
+        gymProductFee: productFee,
+        gymProductMonth: productMonth,
+      },
+    ]);
+    setProductName('');
+    setProductFee(null);
+    setProductMonth(1);
+  };
+
+  const removeProduct = (name: string) => {
+    setProductList((prev) => prev.filter((p) => p.gymProductName !== name));
+  };
 
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
@@ -177,15 +205,8 @@ export default function GymEditPage() {
           endTime: endTime ? endTime.toString() : '00:00',
           intro,
         },
-        facilityRequest, //
-        gymProductRequest: [
-          {
-            gymProductId: '',
-            gymProductName: ' GymMate 제휴 헬스장 1달 이용권',
-            gymProductMonth: '1',
-            gymProductFee: productFee ?? 0,
-          },
-        ],
+        facilityRequest,
+        gymProductRequest: productList,
         gymProductDeleteIds: [],
       },
     };
@@ -374,18 +395,64 @@ export default function GymEditPage() {
               </div>
             </div>
             {/* 이용 요금 (무조건 아래 줄) */}
-            <div className="space-y-2 w-[200px]">
+            <div className="space-y-2">
               <h3 className="text-[16px] font-semibold font-pretendard text-mono_900">
                 이용 요금
               </h3>
-              <NumberInput
-                className="w-full"
-                label="1시간 요금 (원)"
-                min={0}
-                placeholder="ex) 10000"
-                value={productFee ?? undefined} // ✅ null → undefined로 변경
-                onChange={(val) => setProductFee(Number(val))}
-              />
+              <div className="flex gap-2 items-center">
+                <Input
+                  className="w-[160px]"
+                  placeholder="이용권 이름"
+                  size="lg"
+                  value={productName}
+                  onChange={(e) => setProductName(e.target.value)}
+                />
+                <NumberInput
+                  className="w-[120px]"
+                  min={0}
+                  placeholder="금액"
+                  size="sm"
+                  value={productFee ?? undefined}
+                  onChange={(val) => setProductFee(Number(val))}
+                />
+                <NumberInput
+                  className="w-[100px]"
+                  min={1}
+                  placeholder="개월 수"
+                  size="sm"
+                  value={productMonth ?? undefined}
+                  onChange={(val) => setProductMonth(Number(val))}
+                />
+                <Button className="h-10 px-4" size="sm" onClick={addProduct}>
+                  추가
+                </Button>
+              </div>
+
+              <div className="flex gap-3 flex-wrap pt-2">
+                {productList.map((p) => (
+                  <div
+                    key={p.gymProductName}
+                    className="relative border p-3 rounded-xl w-[220px] shadow-sm bg-white"
+                  >
+                    <Button
+                      isIconOnly
+                      className="absolute top-2 right-2"
+                      size="sm"
+                      variant="light"
+                      onClick={() => removeProduct(p.gymProductName)}
+                    >
+                      <OutlineTrashIcon className="w-5 h-5 text-red-500" />
+                    </Button>
+                    <div className="text-[16px] font-semibold text-mono_900">
+                      {p.gymProductName}
+                    </div>
+                    <div className="text-sm text-mono_500">
+                      {p.gymProductFee.toLocaleString()}원 / {p.gymProductMonth}
+                      개월
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* --- 편의시설 영역 --- */}
@@ -455,7 +522,7 @@ export default function GymEditPage() {
                     {/* 삭제버튼 (오른쪽 상단) */}
                     <Button
                       isIconOnly
-                      className="absolute top-2 right-2 transition-colors"
+                      className="absolute top-2 right-2 z-10 transition-colors"
                       size="sm"
                       variant="light"
                       onClick={() => removeEquipment(eq.name)}
@@ -468,7 +535,7 @@ export default function GymEditPage() {
                       <Image
                         fill
                         alt="equipment"
-                        className="object-cover"
+                        className="object-cover z-0"
                         src={
                           eq.image
                             ? URL.createObjectURL(eq.image)
