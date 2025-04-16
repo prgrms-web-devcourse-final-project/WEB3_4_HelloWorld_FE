@@ -37,7 +37,7 @@ export default function MainPtCard({
           className="
           relative flex-none max-w-96 w-full h-[500px] bg-stone-800 overflow-hidden rounded-xl
           transition duration-1000 ease-out
-          group-hover:shadow-[rgba(255,255,255,0.2)_0_0_40px_5px,rgba(255,255,255,1)_0_0_0_1px,rgba(0,0,0,0.66)_0_30px_60px_0,inset_#333_0_0_0_5px,inset_white_0_0_0_6px]
+          group-hover:shadow-[rgba(255,255,255,0.2)_0_0_10px_5px,rgba(255,255,255,1)_0_0_0_1px,rgba(0,0,0,0.66)_0_20px_30px_0,inset_#333_0_0_0_5px,inset_white_0_0_0_6px]
           group-hover:transition-[box-shadow] group-hover:duration-1000 group-hover:ease-out
         "
         >
@@ -50,11 +50,12 @@ export default function MainPtCard({
             group-hover:opacity-80 group-hover:transition-[opacity] group-hover:duration-300 group-hover:ease-out
           "
             style={{
-              backgroundImage: `url(${backgroundImage || '/gym/icons/healthboy.jpg'})`,
+              backgroundImage: `url(${backgroundImage || '/gym/icons/default.png'})`,
             }}
           />
           <div
             className="
+            perspective-[800px]
             p-5 w-full absolute bottom-0 text-white transform translate-y-[20%]
             transition duration-600  ease-[cubic-bezier(0.215,0.61,0.355,1)]
             group-hover:transform group-hover:translate-y-0
@@ -66,14 +67,14 @@ export default function MainPtCard({
             group-hover:after:opacity-100 group-hover:after:transform group-hover:after:translate-y-0
           "
           >
-            <div className="flex w-full  py-1 items-center justify-between">
-              <h1 className="text-lg font-semibold translate-z-[45px] text-shadow-[0_10px_10px_rgba(0,0,0,0.5)] relative z-[1]">
+            <div className="flex w-full  py-1 items-center  justify-between">
+              <h1 className="text-lg font-semibold transform transform-preserve-3d perspective-[800px] translate-z-[45px] text-shadow-[0_10px_10px_rgba(0,0,0,0.5)] relative z-[1]">
                 {productName ? productName : title}
               </h1>
               <div className="z-10  flex items-center mb-1 gap-1">
                 <StarIconSolid className="w-5 h-5" />
                 {/* <Star h="h-5" rate={score} readonly={true} w="w-5" /> */}
-                <span className="text-sm text-gray200">{score}</span>
+                <span className="text-sm text-gray200">{score.toFixed(1)}</span>
               </div>
             </div>
             <div

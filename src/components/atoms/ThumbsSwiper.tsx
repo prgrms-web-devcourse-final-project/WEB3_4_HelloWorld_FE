@@ -11,7 +11,7 @@ import 'swiper/css/free-mode';
 import { Image } from '@heroui/react';
 
 type Props = {
-  images: string[];
+  images?: string[];
 };
 
 export default function SyncedGallerySwiper({ images }: Props) {
@@ -27,7 +27,7 @@ export default function SyncedGallerySwiper({ images }: Props) {
         spaceBetween={10}
         thumbs={{ swiper: thumbsSwiper }}
       >
-        {images.map((src, idx) => (
+        {images?.map((src, idx) => (
           <SwiperSlide key={idx} className="w-full  ">
             <div className="w-full flex max-h-96 justify-center items-center">
               <Image
@@ -63,7 +63,7 @@ export default function SyncedGallerySwiper({ images }: Props) {
         spaceBetween={5}
         onSwiper={(swiper) => setThumbsSwiper(swiper)}
       >
-        {images.map((src, idx) => (
+        {images?.map((src, idx) => (
           <SwiperSlide key={idx}>
             <Image
               className="w-full h-20 object-cover aspect-square cursor-pointer opacity-80 hover:opacity-100 transition"

@@ -17,13 +17,13 @@ export default function PtProductItem({ item }: { item: PtProduct }) {
       });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myPtProducts'] });
       showToast({
         title: '삭제 성공',
         description: '성공적으로 상품을 삭제 했습니다',
       });
     },
     onError: () => {
-      queryClient.invalidateQueries({ queryKey: ['myPtProducts'] });
       showToast({
         title: '삭제 실패',
         description: '삭제가 완료되지 않았습니다',
@@ -43,6 +43,7 @@ export default function PtProductItem({ item }: { item: PtProduct }) {
             alt="Card background"
             className="object-cover rounded-xl"
             height={300}
+            loading="eager"
             src={item.images[0]}
             width={270}
           />

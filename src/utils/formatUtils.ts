@@ -15,3 +15,12 @@ export const mapGenderToApi = (gender: string): string => {
 
   return '';
 };
+export const isPastDate = (inputDateStr: string): boolean => {
+  const today = new Date();
+  const inputDate = new Date(inputDateStr);
+
+  today.setHours(0, 0, 0, 0);
+  inputDate.setHours(0, 0, 0, 0);
+
+  return inputDate <= today;
+};

@@ -76,7 +76,30 @@ class Animation {
       });
     },
   };
+  static gymmateSection = {
+    main: () => {
+      const numberElements = document.querySelectorAll('#number');
 
+      numberElements.forEach((num, index) => {
+        const randomValue = Math.floor((index + 1) * (5000 + 1));
+
+        gsap.to(num, {
+          innerText: randomValue,
+          duration: 2,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#number',
+            toggleActions: 'restart none reverse none',
+          },
+          onUpdate: function () {
+            (num as HTMLElement).innerText = Math.floor(
+              parseFloat(num.textContent || '0'),
+            ).toLocaleString();
+          },
+        });
+      });
+    },
+  };
   static ptSection = {
     main: () => {
       const cards = document.querySelectorAll<HTMLElement>('.pt-card');

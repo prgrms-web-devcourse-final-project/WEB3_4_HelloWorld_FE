@@ -6,10 +6,16 @@ import {
   Textarea,
   useDisclosure,
 } from '@heroui/react';
-import { PencilIcon, PhotoIcon, TrophyIcon } from '@heroicons/react/24/outline';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  ArrowDownIcon,
+  PencilIcon,
+  PhotoIcon,
+  TrophyIcon,
+} from '@heroicons/react/24/outline';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { parseAbsolute } from '@internationalized/date';
 
 import MainPtCard from '@/components/molecules/Main/MainPtCard';
 import { MyButton } from '@/components/atoms/Button';
@@ -19,51 +25,57 @@ import GymListCardItem from '@/components/molecules/GYM/GymListCardItem';
 import Star from '@/components/molecules/StarGroup';
 import PtReviewItem from '@/components/molecules/PT/PtReviewItem';
 import fetcher from '@/utils/apiInstance';
-import { PtDetailResponse, PtProduct } from '@/types/pt.types';
+import { PtProduct } from '@/types/pt.types';
 import Loading from '@/app/loading';
 import useToast from '@/hooks/useToast';
 import { formatCash } from '@/utils/formatter';
 import MulitpleImageUploader from '@/components/molecules/MultipleImageUpload';
 import { TrainerReviewResponse } from '@/types/review';
+import { useAuthStore } from '@/stores/memberTypeStore';
+import {
+  usePtDetailQuery,
+  useReservationQuery,
+  useSubmitReviewMutation,
+} from '@/hooks/hooks';
+import { isPastDate } from '@/utils/formatUtils';
 export default function PtProductDetail() {
   const params = useParams();
   const { trainerId } = params;
+  const { userType } = useAuthStore();
+  const queryClient = useQueryClient();
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
   const [content, setContent] = useState<string>('');
+  const [isReservate, setIsReservate] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
-  const queryClient = useQueryClient();
   const { onOpen, isOpen, onClose } = useDisclosure();
   const { showToast } = useToast();
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['ptProductDetail'],
-    queryFn: async () => {
-      const response = await fetcher<PtDetailResponse>(
-        `/ptProduct/trainer/${trainerId}`,
+  const { data, isLoading, isError } = usePtDetailQuery(trainerId as string);
+  const { data: reservationMember, isSuccess } = useReservationQuery(
+    userType === 'member',
+  );
+  const {
+    data: reviewPages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['ptProductReview', trainerId],
+    queryFn: async ({ pageParam = 0 }) => {
+      const res = await fetcher<TrainerReviewResponse>(
+        `/trainer/${trainerId}/review?size=5&page=${pageParam}`,
         {
           method: 'GET',
           token: false,
         },
       );
 
-      return response;
+      return res;
     },
-    staleTime: 0,
-  });
-  const { data: review } = useQuery({
-    queryKey: ['ptProductDetail', 'review'],
-    queryFn: async () => {
-      const response = await fetcher<TrainerReviewResponse>(
-        `/trainer/${trainerId}/trainerreview`,
-        {
-          method: 'GET',
-          token: false,
-        },
-      );
-
-      return response;
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.hasNext ? allPages.length : undefined;
     },
-    staleTime: 0,
   });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,34 +116,43 @@ export default function PtProductDetail() {
     });
     mutate(formData);
   };
-  const { mutate } = useMutation({
-    mutationFn: async (formData: FormData) => {
-      await fetcher(`/trainerreview`, {
-        method: 'POST',
-        body: formData,
-      });
-    },
+  const { mutate } = useSubmitReviewMutation({
     onSuccess: () => {
-      // queryClient.invalidateQueries({
-      //   queryKey: ['myPtProducts'],
-      // });
+      queryClient.invalidateQueries({
+        queryKey: ['ptProductReview', trainerId],
+      });
       showToast({
         title: '등록 성공',
-        lazy: true,
         description: '리뷰가 등록되었습니다.',
+        lazy: true,
       });
-      router.replace('/mypage/pt');
     },
     onError: () => {
       showToast({
         title: '등록 실패',
-        lazy: true,
         description: '리뷰 등록에 실패했습니다.',
         type: 'danger',
+        lazy: true,
       });
     },
   });
 
+  useEffect(() => {
+    const nowUtcISOString = new Date().toISOString();
+    const abs = parseAbsolute(nowUtcISOString, 'Asia/Seoul');
+
+    if (isSuccess) {
+      const data = reservationMember.content
+        .slice()
+        .reverse()
+        .find((item) => item.trainerId === Number(trainerId));
+
+      if (!data) return;
+      const isTrue = isPastDate(data.date);
+
+      setIsReservate(isTrue && abs.hour >= data.time);
+    }
+  }, [reservationMember, isReservate]);
   if (isError) {
     showToast({
       title: '등록된 상품이 없습니다',
@@ -196,10 +217,10 @@ export default function PtProductDetail() {
           <GymListCardItem gym={data?.gym!} />
         </PtCardSection>
         <PtCardSection title="PT 수강 후기">
-          <div className="flex py-8 justify-between">
+          <div className="flex py-8 justify-between items-center">
             <div className="flex items-center h-full gap-6">
               <p className="text-mono_700 text-5xl font-semibold">
-                {data.trainer?.trainerScore}
+                {data.trainer?.trainerScore?.toFixed(1)}
               </p>
               <div className="flex flex-col h-full justify-between">
                 <Star
@@ -209,17 +230,23 @@ export default function PtProductDetail() {
                   w={'w-5'}
                 />
                 <p className="text-mono_400  text-sm">
-                  {review?.content.length}개의 후기
+                  {reviewPages?.pages[0].totalElements || 0}개의 후기
                 </p>
               </div>
             </div>
-            <MyButton
-              size="xl"
-              startContent={<PencilIcon className="w-5 h-5 text-stone-100" />}
-              onPress={() => (isOpen ? onClose() : onOpen())}
-            >
-              리뷰 작성하기
-            </MyButton>
+            {isReservate ? (
+              <MyButton
+                size="xl"
+                startContent={<PencilIcon className="w-5 h-5 text-stone-100" />}
+                onPress={() => (isOpen ? onClose() : onOpen())}
+              >
+                리뷰 작성하기
+              </MyButton>
+            ) : (
+              <small>
+                리뷰는 예약 후<br /> 예약 시간이 지나야 작성 가능합니다.
+              </small>
+            )}
           </div>
         </PtCardSection>
         {isOpen && (
@@ -264,27 +291,53 @@ export default function PtProductDetail() {
                 }
                 onChange={reviewChange}
               />
-              <MyButton className="max-h-20" onPress={onSumbitHandler}>
-                리뷰등록
-              </MyButton>
+              {userType === 'member' && (
+                <MyButton className="max-h-20" onPress={onSumbitHandler}>
+                  리뷰등록
+                </MyButton>
+              )}
             </div>
           </PtCardSection>
         )}
 
         <PtCardSection>
           <div className="flex flex-col gap-10 py-5">
-            {review &&
-              review?.content?.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <PtReviewItem
-                      content={item.content}
-                      imageUrls={item.imageUrls}
-                      score={item.score}
-                    />
-                  </div>
-                );
-              })}
+            {reviewPages?.pages.length === 0 ||
+            reviewPages?.pages[0]?.content?.length === 0 ? (
+              <p className="w-full text-center py-3 text-mono_400">
+                등록된 리뷰가 없습니다
+              </p>
+            ) : (
+              reviewPages?.pages.flatMap((page) =>
+                page.content.map((item) => (
+                  <PtReviewItem
+                    key={item.trainerReviewId}
+                    content={item.content}
+                    createAt={item.createdAt}
+                    imageUrls={item.imageUrls}
+                    memberLevel={item.memberLevel}
+                    memberName={item.memberName}
+                    memerProfileUrl={item.memberProfileUrl}
+                    score={item.score}
+                  />
+                )),
+              )
+            )}
+
+            {hasNextPage && (
+              <div className="flex justify-center pt-4">
+                <MyButton
+                  fullWidth
+                  isIconOnly
+                  disabled={isFetchingNextPage}
+                  startContent={<ArrowDownIcon className="w-5 h-5" />}
+                  variant="flat"
+                  onPress={() => fetchNextPage()}
+                >
+                  {isFetchingNextPage ? '불러오는 중...' : ''}
+                </MyButton>
+              </div>
+            )}
           </div>
         </PtCardSection>
       </div>

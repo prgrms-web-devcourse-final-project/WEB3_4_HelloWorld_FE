@@ -1,10 +1,12 @@
 'use client';
 import dynamic from 'next/dynamic';
+import { useEffect } from 'react';
 
 import Section from '@/components/atoms/Section';
 import Wave from '@/components/molecules/Wave';
 import NumberCountCard from '@/components/molecules/NumberCountCard';
 import MainSection from '@/components/organisms/Main/MainSection';
+import Animation from '@/utils/animations';
 
 const BarChart = dynamic(
   () => import('@/components/molecules/Chart/BarChartTemplate'),
@@ -14,6 +16,10 @@ const BarChart = dynamic(
 );
 
 export default function MainGymMateSection() {
+  useEffect(() => {
+    Animation.gymmateSection.main();
+  }, []);
+
   return (
     <div>
       <Wave />
@@ -28,18 +34,18 @@ export default function MainGymMateSection() {
               subTitle="WHIT GYM MATE"
               title={`GYM MATE 함께 하는 사람들`}
             >
-              <div className="flex flex-col gap-4">
-                <NumberCountCard countNumber={120000} title={'누적 회원수'} />
+              <div className="flex max-w-xl flex-col gap-4">
+                <NumberCountCard countNumber={0} title={'누적 회원수'} />
                 <div className="flex w-full gap-4">
                   <NumberCountCard
                     fullWidth
-                    countNumber={120000}
-                    title={'누적 회원수'}
+                    countNumber={0}
+                    title={'누적 PT 매칭수'}
                   />
                   <NumberCountCard
                     fullWidth
-                    countNumber={120000}
-                    title={'누적 회원수'}
+                    countNumber={0}
+                    title={'제휴 헬스장 누적 등록 수 '}
                   />
                 </div>
               </div>
