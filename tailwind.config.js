@@ -9,6 +9,9 @@ export default {
   ],
   theme: {
     extend: {
+      transform: {
+        'preserve-3d': 'preserve-3d',
+      },
       fontFamily: {
         sans: ['var(--font-sans)'],
         mono: ['var(--font-mono)'],

@@ -55,7 +55,7 @@ export default function MainPtSection() {
         style={{ maxWidth: 'unset !important' }}
       >
         {data?.content.map((item, index) => (
-          <SwiperSlide key={index} virtualIndex={index}>
+          <SwiperSlide key={index} className="py-10" virtualIndex={index}>
             <MainPtCard
               key={index}
               backgroundImage={item.trainer.profile || ''}

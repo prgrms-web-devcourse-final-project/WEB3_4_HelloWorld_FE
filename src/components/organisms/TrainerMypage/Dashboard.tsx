@@ -165,14 +165,14 @@ export default function Dashboard() {
           <NumberCountCard
             fillColor
             fullWidth
-            countNumber={100}
-            title={'회원 수'}
+            countNumber={reservation?.content.length || 0}
+            title={'PT 예약'}
           />
           <NumberCountCard
             fillColor
             fullWidth
-            countNumber={100}
-            title={'회원 수'}
+            countNumber={reservation?.content.length / 2 || 0}
+            title={'전체 수강생'}
           />
         </div>
       </DashboardItemWrap>
