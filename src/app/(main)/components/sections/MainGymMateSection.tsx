@@ -40,12 +40,12 @@ export default function MainGymMateSection() {
                   <NumberCountCard
                     fullWidth
                     countNumber={0}
-                    title={'누적 회원수'}
+                    title={'누적 PT 매칭수'}
                   />
                   <NumberCountCard
                     fullWidth
                     countNumber={0}
-                    title={'누적 회원수'}
+                    title={'제휴 헬스장 누적 등록 수 '}
                   />
                 </div>
               </div>
