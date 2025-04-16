@@ -1,7 +1,7 @@
 'use client';
 
-import { Calendar, Chip, RadioGroup, useDisclosure } from '@heroui/react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { Calendar, Chip, useDisclosure } from '@heroui/react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date';
 import { useEffect, useState } from 'react';
@@ -11,9 +11,7 @@ import PtCardSection from '@/components/molecules/PT/PtCardSection';
 import ScheduleTimeCheckGroup from '@/components/organisms/ScheduleTimeCheckGroup';
 import fetcher from '@/utils/apiInstance';
 import { PtDetailResponse } from '@/types/pt.types';
-import { PtPlanGroup } from '@/components/molecules/PT/PtPlanGroup';
 import useToast from '@/hooks/useToast';
-import { formatCash } from '@/utils/formatter';
 import { getDayOfWeek } from '@/utils/dateUtils';
 interface Props {
   reservationData: any;
@@ -29,11 +27,11 @@ type AvailableTimesType = {
 
 export default function PtReservationForm({ reservationData }: Props) {
   const [selectedDate, setSelectedDate] = useState<number>(0);
-  const [productId, setProductId] = useState<string>('');
   const [disabledTime, setDisabledTime] = useState<number[]>([]);
   const [reservationTime, setReservationTime] = useState<number>(0);
   const [lastMonth, setLastMonth] = useState<number | null>(null);
   const [date, setDate] = useState<string>('null');
+  const queryClient = useQueryClient();
   const { onOpen, onOpenChange, isOpen, onClose } = useDisclosure();
   const { showToast } = useToast();
   const params = useParams();
@@ -104,11 +102,11 @@ export default function PtReservationForm({ reservationData }: Props) {
       completedDate: null,
     };
 
-    onSubmitReservation({ productId, payload });
+    onSubmitReservation({ payload });
   };
 
   const { mutate: onSubmitReservation } = useMutation({
-    mutationFn: async ({ payload }: { productId: string; payload: any }) => {
+    mutationFn: async ({ payload }: { payload: any }) => {
       return await fetcher(`/reservation/${reservationData.reservationId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -116,6 +114,9 @@ export default function PtReservationForm({ reservationData }: Props) {
       });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['mypage', 'user'],
+      });
       showToast({ title: '예약 변경 성공', description: '성공' });
       onClose();
     },
@@ -157,22 +158,6 @@ export default function PtReservationForm({ reservationData }: Props) {
     <div>
       <div className="flex  gap-8">
         <div className="w-full flex flex-col gap-8">
-          <PtCardSection title="상품선택">
-            <RadioGroup onValueChange={(e) => setProductId(e)}>
-              {data?.ptProducts?.map((item, index) => (
-                <PtPlanGroup
-                  key={index}
-                  description={formatCash(item.fee) + '원'}
-                  imageSrc={item.images[0]}
-                  value={String(item.ptProductId)}
-                >
-                  <p className="text-lg font-semibold">{item.productName}</p>
-                  <div className="text-mono_500">{item.ptInfo}</div>
-                </PtPlanGroup>
-              ))}
-            </RadioGroup>
-          </PtCardSection>
-
           <PtCardSection>
             <Calendar
               aria-label="날짜 선택"
