@@ -16,6 +16,7 @@ interface InputFieldProps {
   containerMarginBottom?: string;
   labelInputGap?: string;
   value?: string;
+  max?: number;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
   readOnly?: boolean;
@@ -36,6 +37,7 @@ const InputField: FC<InputFieldProps> = ({
   value,
   onChange,
   onFocus,
+  max,
   readOnly,
 }) => (
   <div
@@ -52,6 +54,7 @@ const InputField: FC<InputFieldProps> = ({
         className={className}
         isRequired={required}
         labelPlacement="outside"
+        max={max}
         name={name}
         placeholder={placeholder}
         radius="sm"

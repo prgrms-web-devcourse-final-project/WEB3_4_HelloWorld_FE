@@ -15,6 +15,7 @@ import GymDetailModal from '@/components/templates/LoginTemplate/Modal';
 import { fetchGymList } from '@/apis/gymApi';
 import { GymType } from '@/types/gym';
 import useToast from '@/hooks/useToast';
+import { normalizePhoneNumber } from '@/utils/formatter';
 
 const TrainerLoginForm = () => {
   const [selectedGender, setSelectedGender] = useState('');
@@ -34,7 +35,7 @@ const TrainerLoginForm = () => {
 
     const finalData = {
       trainerName: result.name as string,
-      phoneNumber: result.phone as string,
+      phoneNumber: normalizePhoneNumber(result.phone as string),
       email: result.email as string,
       gender: mapGenderToApi(selectedGender),
       bank: selectedBank,

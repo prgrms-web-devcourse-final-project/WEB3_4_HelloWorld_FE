@@ -6,6 +6,7 @@ import BirthdayInputGroup from '@/components/molecules/BirthdayInputGroup';
 import CustomButton from '@/app/(main)/login/components/CustomButton';
 import ReturnHomeMessage from '@/app/(main)/login/components/HomeLink/HomeReturnMsg';
 import { UserData } from '@/types/UserData';
+import { normalizePhoneNumber } from '@/utils/formatter';
 
 interface Step1FormProps {
   birth: string;
@@ -34,7 +35,7 @@ export default function Step1Form({
     const formattedBirth = formatDate(birth); // → 'YYYY.MM.DD'
 
     setFormData({
-      phoneNumber: result.phone as string,
+      phoneNumber: normalizePhoneNumber(result.phone as string),
       memberName: result.name as string,
       email: result.email as string,
       birthday: formattedBirth,
@@ -47,7 +48,7 @@ export default function Step1Form({
       recentDeadlift: 0,
     });
 
-    setStep(2);
+    // setStep(2);
   };
 
   return (
@@ -68,6 +69,7 @@ export default function Step1Form({
         height="62px"
         label="전화번호"
         labelInputGap="5px"
+        max={11}
         name="phone"
         placeholder="010-0000-0000"
         width="452px"

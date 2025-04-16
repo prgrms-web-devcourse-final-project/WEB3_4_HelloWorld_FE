@@ -14,3 +14,7 @@ export const calculateRate = (rate: number, index: number) => {
 export const formatCash = (cash: number) => {
   return cash.toLocaleString('ko-KR');
 };
+
+export const normalizePhoneNumber = (phone: string): string => {
+  return phone.replace(/-/g, '');
+};

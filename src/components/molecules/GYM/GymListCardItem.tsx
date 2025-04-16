@@ -21,7 +21,8 @@ export default function GymListCardItem({ gym }: { gym: Gym }) {
           </span>
         </div>
         <div className="flex items-center text-[14px] text-mono_400 font-normal font-pretendard">
-          <StarIcon className="w-3 h-3 mr-1 text-yellow-400" /> {gym?.gymScore}
+          <StarIcon className="w-3 h-3 mr-1 text-yellow-400" />{' '}
+          {gym?.gymScore.toFixed(1) || 0}
         </div>
       </div>
 
